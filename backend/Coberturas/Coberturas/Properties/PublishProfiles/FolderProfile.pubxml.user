@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\Publicados\Coberturas</_PublishTargetUrl>
+    <History>True|2024-02-12T17:13:49.5730440Z;True|2024-02-12T11:00:44.5553451-06:00;True|2024-02-12T10:55:48.1470969-06:00;True|2024-02-12T10:43:51.6185071-06:00;True|2024-02-12T10:40:29.5463593-06:00;True|2024-02-12T10:18:11.2464549-06:00;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+</Project>

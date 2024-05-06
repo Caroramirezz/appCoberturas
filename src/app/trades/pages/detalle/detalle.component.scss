@@ -1,0 +1,24 @@
+mat-cell, mat-footer-cell, mat-header-cell{
+	text-align: center !important;
+	justify-content: center !important;
+	overflow: inherit !important; 
+	display: flex !important;
+	word-break: inherit !important;		
+    width: 100%;  
+}
+mat-header-cell{
+	justify-content: center !important;
+	text-overflow: ellipsis !important;
+}
+
+mat-row, mat-header-row, mat-footer-row {
+  width: 100%;
+}
+
+.div-detalle1{
+	width: 95%;
+}
+
+.inputs-detalle1 {
+	width: 95%;
+}

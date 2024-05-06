@@ -1,0 +1,125 @@
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+
+<div style="margin-bottom: 20px; margin-top: 5px;">
+	<p class="title">Venta/Compra Espejo</p>
+</div>
+
+<mat-card>
+	<mat-card-header fxLayout="row" fxLayout.xs="column">
+	
+	<div fxFlex="100" fxFlex.xs="100" fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.xs="center center">
+		<mat-card-title>Clients</mat-card-title>
+		<mat-card-subtitle>Please fill out all fields</mat-card-subtitle>
+	</div>
+	
+	</mat-card-header>
+	<mat-card-content>
+        <div fxLayout="row" fxLayoutAlign="space-between center">		
+			<div fxFlex="33">
+				<mat-form-field class="example-full-width" appearance="outline" style="width: 90%;">
+					<mat-label># Plants</mat-label> 
+					<input matInput placeholder="# Plants" [(ngModel)]="no_plants">
+				 </mat-form-field>
+			</div>
+			<div fxFlex="33">
+				<mat-form-field appearance="outline" style="width: 90%;">
+					<mat-label>Choose Plants</mat-label>                                
+					<mat-select [(ngModel)]="plants_choose" multiple>                                
+					  <mat-option *ngFor="let t of listClients" [value]="t">
+						 {{t.client}}
+					  </mat-option>
+					</mat-select>            
+			  </mat-form-field>      			    
+			</div>			
+			<div fxFlex="33">
+                <div style="margin-bottom: 10px;">
+                    <button class="buttons button-create-list" color="accent" mat-raised-button (click)="createPlants()">Create list</button>
+                </div>
+			</div>
+		</div>
+    </mat-card-content>
+</mat-card>
+
+<br>
+
+<mat-card *ngFor="let p of dataPlants" class="space-cards-plants">
+    <mat-card-header fxLayout="row" fxLayout.xs="column">	
+        <!-- <div fxFlex="100" fxFlex.xs="100" fxLayoutAlign="center start" fxLayoutAlign.xs="center center">-->
+			<div fxFlex="100" fxLayout="row" fxLayoutAlign="space-between" style="margin-bottom: 10px;">						
+					<div fxFlex="50" fxLayoutAlign="start center">
+						<span class="title">{{p.name_client}}</span>
+					</div>
+					<div fxFlex="50" fxLayoutAlign="space-around center">
+						<div style="font-size: 13px;">
+							<mat-checkbox class="example-margin" [(ngModel)]="p.fill_down" >Fill down Daily/Monthly</mat-checkbox>
+						</div>						
+						<div style="font-size: 13px;">
+							<mat-checkbox class="example-margin" [(ngModel)]="p.fill_down_price">Fill down Price</mat-checkbox>
+						</div>	
+					</div>												
+				</div>
+            <!-- <mat-card-subtitle>Subtitle</mat-card-subtitle>     -->
+        <!-- </div>         -->
+        </mat-card-header>
+        <mat-card-content>
+
+            <div>		
+				 <p-table [value]="p.table" dataKey="id" responsiveLayout="scroll">
+					<ng-template pTemplate="header">
+						<tr>
+							<th>Date</th>
+							<th>Volume Daily</th>
+							<th>Volume Monthly</th>
+							<th>Price</th>
+						</tr>
+					</ng-template>
+					<ng-template pTemplate="body" let-product>
+						<tr>
+							<td>
+								{{product.date | date}}
+							</td>							
+							<td pEditableColumn>
+								<p-cellEditor>
+									<ng-template pTemplate="input">
+										<input pInputText type="number" [(ngModel)]="product.vol_daily" (change)="updateVolume(product,'D', p); fillDown(product, 'D', p)" (keydown.enter)="updateVolume(product,'D', p); fillDown(product, 'D', p)">
+									</ng-template>
+									<ng-template pTemplate="output">
+										{{product.vol_daily | number}}
+									</ng-template>
+								</p-cellEditor>
+							</td>
+							<td pEditableColumn>
+								<p-cellEditor>
+									<ng-template pTemplate="input">
+										<input pInputText [(ngModel)]="product.vol_monthly" (change)="updateVolume(product,'M', p); fillDown(product, 'M', p)" (keydown.enter)="updateVolume(product,'M', p); fillDown(product, 'M', p)">
+									</ng-template>
+									<ng-template pTemplate="output">
+										{{product.vol_monthly | number}}
+									</ng-template>
+								</p-cellEditor>
+							</td>
+							<td pEditableColumn>
+								<p-cellEditor>
+									<ng-template pTemplate="input">
+										<input pInputText type="number" mode="currency" [(ngModel)]="product.price" (change)="fillDownPrice(product, p)" (keydown.enter)="fillDownPrice(product, p)">
+									</ng-template>
+									<ng-template pTemplate="output">
+										{{product.price | currency: 'USD'}}
+									</ng-template>
+								</p-cellEditor>
+							</td>
+						</tr>
+					</ng-template>
+				</p-table>
+			</div>
+        </mat-card-content>    
+</mat-card>
+
+<!-- BUTTON -->
+<div style="margin-top:20px" fxLayoutAlign="space-between center">
+    <button class="buttons btn-back" mat-raised-button color="primary" (click)="back()">Back</button>
+    <button class="buttons" mat-raised-button color="primary" (click)="save()">Save</button>
+</div>
+
+
+

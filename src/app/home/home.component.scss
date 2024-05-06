@@ -1,0 +1,53 @@
+mat-sidenav {
+    /* width: auto; */
+    width: 230px;
+    padding:15px;
+}
+.title {
+    font-size: 18px;
+    font-weight: 400;
+    text-align: center;
+}
+.mat-drawer { 
+    /* background-color: #0f172a;     */
+    background-color: #02109C;
+    color:#fff;
+    max-width: auto;
+}
+
+.neg-logo{
+    min-width: 130px;
+    height: auto;   
+    margin-bottom: 10px; 
+}
+
+.main-content {
+    padding:20px;    
+}
+
+.mat-toolbar-style {
+    background-color: #fff;
+}
+
+.btn-space {
+    margin-right: 7px;
+    margin-left: 5px;
+    color: #fff;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+}  
+
+.mat-nav-list a.active {
+    background: #26319e;
+}
+
+.style-links {
+    color: #ffff
+}
+
+.shadow {
+    --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px  -1px rgb(0 0 0 / 0.1) !important;
+    --tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color) !important;
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
+}

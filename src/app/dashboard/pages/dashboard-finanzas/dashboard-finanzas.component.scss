@@ -1,0 +1,40 @@
+// input.mat-input-element {
+//     color:black !important;
+// }
+
+
+.cards-info {
+    width: 90%;        
+    border-radius: 10px;
+}
+
+.header-card-info{
+    font-size: 12px;
+    font-style: italic; 
+    margin-bottom: 15px;   
+}
+
+.number-card-info{
+    font-size: 46px;
+    font-style: normal;
+    font-weight: 500;
+    margin: 10px;
+}
+
+.sub-number-card-info{
+    font-size: 14px;
+    margin: 5px;
+}
+
+.chart-container {
+    margin-top: 10px;
+}
+
+.card-graphs{
+    border-radius: 10px;      
+    width: 100%;
+}
+
+.demo-chart {
+    min-height: 400px;
+  }

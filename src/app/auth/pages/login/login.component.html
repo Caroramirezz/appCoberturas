@@ -1,0 +1,38 @@
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+
+<div fxLayout="row" class="img-fondo">
+    <div fxFlex="100" fxLayoutAlign="center center">
+        <mat-card class="card-size">
+            <div fxLayoutAlign="center center">
+                <img class="logo-neg" src="http://10.128.47.70/SolicitudesApp/assets/images/NEG%20logo-01.png" alt="NEG Natural">
+            </div>
+            <div fxLayoutAlign="center center">
+                <h2 style="text-align: center;">Portal | Coberturas</h2>
+            </div>
+            <div fxLayoutAlign="center center">
+                <form [formGroup]="formLogin" novalidate style="width: 80%;">
+                    <div fxLayout="row" fxLayoutAlign="center center" style="width: 100%;">
+                        <mat-form-field appearance="outline" style="width: 100%;">
+                            <mat-label>Email</mat-label>
+                            <input matInput placeholder="Email" formControlName="email" >
+                            <mat-icon matSuffix style="color:#0a6393;">person</mat-icon>      
+                            <mat-error *ngIf="this.formLogin.get('email')?.hasError('required')">{{'Es necesario ingresar Email'}}</mat-error>            
+                        </mat-form-field>
+                    </div> 
+                    <div fxLayout="row" fxLayoutAlign="center center" style="width: 100%;">
+                        <mat-form-field appearance="outline" style="width: 100%;">
+                            <mat-label>Contraseña</mat-label>                    
+                            <input matInput placeholder="Contraseña" type="password" formControlName="password">
+                            <mat-icon matSuffix style="color:#0a6393;">password</mat-icon>     
+                            <mat-error *ngIf="this.formLogin.get('password')?.hasError('required')">{{'Es necesario ingresar la Contraseña'}}</mat-error>                                   
+                        </mat-form-field>
+                    </div> 
+                </form>      
+            </div>
+            <div fxLayoutAlign="center center" fxLayout="column" style="margin-top: 15px;">
+                <button class="btn-iniciar" mat-raised-button type="button" (click)="iniciar()">Iniciar Sesión</button>
+                <!-- <a routerLink="/auth/register">¿Aún no estás registrado?</a>  -->
+            </div>
+        </mat-card>
+    </div>    
+</div>

@@ -1,0 +1,126 @@
+<div fxLayout="column">
+
+    <div fxFlex="100">
+        <div fxLayout="row" fxFlex="50" fxFlex.xs="100">    
+            <div fxFlex="70">
+                <mat-form-field appearance="outline" style="width: 90%;">
+                    <mat-label>Selecciona rango de fechas</mat-label>
+                    <mat-date-range-input [rangePicker]="picker">
+                      <input matStartDate  [(ngModel)]="fechaInicio">
+                      <input matEndDate  [(ngModel)]="fechaFin">
+                    </mat-date-range-input>
+                    <!-- <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint> -->
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-date-range-picker #picker>
+                        <mat-date-range-picker-actions>
+                            <button mat-button matDateRangePickerCancel>Cancelar</button>
+                            <button mat-raised-button color="primary" matDateRangePickerApply (click)="consultarTarjetas()">Aceptar</button>
+                          </mat-date-range-picker-actions>
+                    </mat-date-range-picker>
+                  </mat-form-field>
+            </div>        
+        </div>        
+    </div>
+    
+    <!-- CARDS -->
+    <div >
+        <div fxLayout="row" fxLayout.xs="column" fxFlex="100">
+            <div fxFlex="33" fxLayoutAlign="center center" style="padding:5px">
+                <mat-card class="cards-info">
+                    <div>
+                        <div fxLayoutAlign="start center" class="header-card-info">
+                            # de Solicitudes
+                        </div>
+                        <div fxLayout="column" fxLayoutAlign="center center">
+                            <div class="number-card-info">
+                                {{pedientes_pagar}}
+                            </div>
+                            <div class="sub-number-card-info">
+                                Pendientes de pagar
+                            </div>
+                        </div>                    
+                    </div>
+                </mat-card>
+            </div>
+            <div fxFlex="33" fxLayoutAlign="center center" style="padding:5px">
+                <mat-card class="cards-info">
+                    <div>
+                        <div fxLayoutAlign="start center" class="header-card-info">
+                            # de Solicitudes
+                        </div>
+                        <div fxLayout="column" fxLayoutAlign="center center">
+                            <div class="number-card-info">
+                                {{pagadas}}
+                            </div>
+                            <div class="sub-number-card-info">
+                                Pagadas
+                            </div>
+                        </div>                    
+                    </div>
+                </mat-card>
+            </div>
+            <div fxFlex="33" fxLayoutAlign="center center" style="padding:5px">
+                <mat-card class="cards-info">
+                    <div>
+                        <div fxLayoutAlign="start center" class="header-card-info">
+                            # de Solicitudes
+                        </div>
+                        <div fxLayout="column" fxLayoutAlign="center center">
+                            <div class="number-card-info">
+                                {{total_solicitudes}}
+                            </div>
+                            <div class="sub-number-card-info">
+                                Total de Solicitudes
+                            </div>
+                        </div>                    
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+    
+    
+    <!-- GRAFICAS -->    
+    <div fxLayout="row" fxLayout.xs="column" style="margin-top: 15px;">
+        <div fxFlex="50" style="padding:5px;">
+            <mat-card class="card-graphs">
+                <mat-card-header>
+                    <mat-card-title>Solicitudes Mes Actual</mat-card-title>
+                    <!-- <mat-card-subtitle>Total Pagadas MXN vs USD</mat-card-subtitle> -->
+                  </mat-card-header>
+                  <mat-card-content>
+                      <div class="chart-container" >
+                          <!-- <canvas baseChart
+                              chartType="pie"
+                              [datasets]="pieChartDatasets"
+                              [labels]="pieChartLabels"
+                              [options]="pieChartOptions"
+                              [plugins]="pieChartPlugins"
+                              [legend]="pieChartLegend"
+                          >        
+                          </canvas> -->
+                          <div echarts [options]="PieChartOption" class="demo-chart"></div>
+                      </div>
+                  </mat-card-content>
+            </mat-card>
+        </div>
+
+        <div fxFlex="50" style="padding:5px;">
+            <mat-card class="card-graphs">
+                <mat-card-header>
+                    <mat-card-title>Solicitudes por Mes</mat-card-title>
+                    <!-- <mat-card-subtitle>Total Pagadas MXN vs USD</mat-card-subtitle> -->
+                  </mat-card-header>
+                <mat-card-content>
+                    <div class="chart-container" >
+                        <div echarts [options]="chartOption" class="demo-chart"></div>
+                    </div>
+                </mat-card-content>
+            </mat-card>            
+        </div>
+    </div>
+
+
+</div>
+
+

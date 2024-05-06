@@ -1,0 +1,49 @@
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+
+<mat-sidenav-container fullscreen>
+    <mat-sidenav mode="side" #sidenav opened position="start" color="primary">
+      <p class="title">Planeación Gas & Power</p>
+      <div fxLayoutAlign="center center">
+        <img class="neg-logo" src="http://10.128.47.70/SolicitudesApp/assets/images/NEG%20logo-04.png" alt="NEG">
+      </div>
+
+      <mat-nav-list style="color:white;" *ngFor="let item of arrayMenu">                       
+        <a class="style-links" mat-list-item [routerLink]="[item.link]" routerLinkActive="active">
+          <span class="material-icons btn-space">
+            {{item.icon}}
+          </span>
+          {{item.title}}
+        </a>          
+      </mat-nav-list>  
+        
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <mat-toolbar class="mat-toolbar-style shadow">
+        <div fxFlex="30" fxFlex.xs="100">
+          <button mat-icon-button (click)="sidenav.toggle()">
+            <mat-icon>menu</mat-icon>
+          </button>   
+        </div>
+        <div fxFlex="70" fxLayoutAlign="end center" fxLayoutGap="10px" fxHide.xs fxShow>
+          <div fxFlex="80" fxLayoutAlign="end center">
+            {{nombre_usuario}}
+          </div>
+          
+          <div fxFlex="20" fxLayoutAlign="end center">
+            <button mat-icon-button >
+              <mat-icon>account_circle</mat-icon>
+              </button>   
+    
+              <button mat-icon-button (click)="cerrarSesion()">
+              <mat-icon>login</mat-icon>
+            </button>   
+          </div>
+          
+        </div>
+      </mat-toolbar>
+      <div class="main-content">
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+  

@@ -1,0 +1,27 @@
+.img-fondo {    
+    background: url(../../../../assets/images/bg-login.jpg);     
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;    
+    height: 100%;
+    width: 100%;      
+}
+
+.logo-neg {
+    width: 80%;
+    height: 80%;
+    margin-bottom: 15px;
+}
+
+.card-size {
+    height: auto;
+    width:40%;
+    border-radius: 15px;
+}
+
+.btn-iniciar {
+    width: 80%;
+    margin-bottom: 15px;
+    background-color: #002470;
+    color:white;
+}
