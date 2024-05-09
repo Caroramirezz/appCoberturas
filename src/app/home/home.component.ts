@@ -31,6 +31,16 @@ export class HomeComponent implements OnInit {
       this.arrayMenu = [
         {title:'Dashboard', icon:'dashboard',link:'/home/dashboard/usuario'},
         {title:'Trades', icon:'receipt_long',link:'/home/trade'},
+        {
+          title: 'Administración',
+          icon: 'admin_panel_settings',
+          children: [
+            { title: 'Clientes', icon: 'settings_applications', link: '/home/administracion/clientes' },
+            { title: 'Plantas', icon: 'settings_applications', link: '/home/administracion/bancos' },
+            { title: 'SARS', icon: 'settings_applications', link: '/home/administracion/sars' },
+            { title: 'Bancos', icon: 'settings_applications', link: '/home/administracion/bancos' }
+          ]
+        }
       ];
     }
     else if(this.permiso_usuario === '2') {

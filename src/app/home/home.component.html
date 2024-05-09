@@ -7,14 +7,37 @@
         <img class="neg-logo" src="http://10.128.47.70/SolicitudesApp/assets/images/NEG%20logo-04.png" alt="NEG">
       </div>
 
-      <mat-nav-list style="color:white;" *ngFor="let item of arrayMenu">                       
-        <a class="style-links" mat-list-item [routerLink]="[item.link]" routerLinkActive="active">
-          <span class="material-icons btn-space">
-            {{item.icon}}
-          </span>
-          {{item.title}}
-        </a>          
-      </mat-nav-list>  
+      <mat-nav-list>
+        <ng-container *ngFor="let item of arrayMenu">
+          <!-- Only 'Administración' gets an expansion panel -->
+          <ng-container *ngIf="item.title === 'Administración'; else otherLinks">
+            <mat-expansion-panel class="plain-expansion-panel">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <mat-icon>{{item.icon}}</mat-icon>
+                  {{item.title}}
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <mat-nav-list>
+                <a *ngFor="let child of item.children" mat-list-item [routerLink]="child.link">
+                  <mat-icon>{{child.icon}}</mat-icon>
+                  {{child.title}}
+                </a>
+              </mat-nav-list>
+            </mat-expansion-panel>
+          </ng-container>
+      
+          <!-- Template for all other links -->
+          <ng-template #otherLinks>
+            <a *ngIf="item.link" mat-list-item [routerLink]="item.link">
+              <mat-icon>{{item.icon}}</mat-icon>
+              {{item.title}}
+            </a>
+          </ng-template>
+        </ng-container>
+      </mat-nav-list>
+      
+        
         
     </mat-sidenav>
     <mat-sidenav-content>
@@ -46,4 +69,3 @@
       </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
-  
