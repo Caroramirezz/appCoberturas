@@ -35,10 +35,10 @@ export class HomeComponent implements OnInit {
           title: 'Administración',
           icon: 'admin_panel_settings',
           children: [
-            { title: 'Clientes', icon: 'settings_applications', link: '/home/administracion/clientes' },
-            { title: 'Plantas', icon: 'settings_applications', link: '/home/administracion/bancos' },
-            { title: 'SARS', icon: 'settings_applications', link: '/home/administracion/sars' },
-            { title: 'Bancos', icon: 'settings_applications', link: '/home/administracion/bancos' }
+            { title: 'Clientes', icon: 'settings_applications', link: '/home/admin/clients' },
+            { title: 'Plantas', icon: 'settings_applications', link: '/home/admin/plants' },
+            { title: 'SARS', icon: 'settings_applications', link: '/home/admin/sars' },
+            { title: 'Bancos', icon: 'settings_applications', link: '/home/admin/banks' }
           ]
         }
       ];
