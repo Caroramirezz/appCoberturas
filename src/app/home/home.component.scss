@@ -1,28 +1,28 @@
 mat-sidenav {
-    /* width: auto; */
     width: 230px;
-    padding:15px;
+    padding: 15px;
 }
+
 .title {
     font-size: 18px;
     font-weight: 400;
     text-align: center;
 }
+
 .mat-drawer { 
-    /* background-color: #0f172a;     */
     background-color: #02109C;
-    color:#fff;
+    color: #fff;
     max-width: auto;
 }
 
-.neg-logo{
+.neg-logo {
     min-width: 130px;
     height: auto;   
     margin-bottom: 10px; 
 }
 
 .main-content {
-    padding:20px;    
+    padding: 20px;    
 }
 
 .mat-toolbar-style {
@@ -42,41 +42,36 @@ mat-sidenav {
     background: #26319e;
 }
 
-.style-links {
-    color: #ffff
+.style-links, .mat-expansion-panel-header {
+    color: #fff !important;  // Ensures text color is white for all links and headers
 }
 
 .shadow {
-    --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px  -1px rgb(0 0 0 / 0.1) !important;
-    --tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color) !important;
     box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
 }
-/* Remove all card-like styles from the expansion panel */
-.mat-expansion-panel {
-    background: none !important;
-    box-shadow: none !important;
-    border: none !important;
-  }
-  
-  .mat-expansion-panel-header {
-    background: none !important;
-    border-bottom: none !important; /* Remove the underline */
-  }
-  
-  /* Ensure all icons and text in the nav list are white */
-  mat-nav-list .mat-list-item,
-  mat-nav-list .mat-icon {
-    color: white !important;
-  }
-  
-  /* Styling for the panel title to match other links */
-  .mat-panel-title {
-    flex: 1;
-    justify-content: flex-start;
-  }
-  
-  /* Ensure the expansion indicator arrow matches the color scheme */
-  .mat-expansion-indicator::after {
-    color: white !important;
-  }
-  
+
+/* Angular Material Expansion Panel Adjustments */
+.mat-expansion-panel, .mat-expansion-panel-header {
+    background: transparent !important;  // No background
+    border: none !important;             // No borders
+    box-shadow: none !important;         // No shadow
+    padding: 0 24px;                     // Align padding with other nav items
+    height: auto !important;             // Ensure height is auto to avoid misalignment
+    align-items: center;                 // Vertically center content
+}
+
+.mat-expansion-panel-header.mat-expanded, 
+.mat-expansion-panel-header:hover,
+.mat-expansion-panel-header:focus {
+    background: #02109C !important;  // Matching hover and focus background with sidebar
+    color: #fff !important;          // Ensuring text color remains white on hover/focus
+}
+
+.mat-expansion-indicator::after {
+    color: #fff !important;  // Ensure expansion arrow is white
+}
+
+.mat-icon {
+    color: #fff;              // Icon color set to white
+    vertical-align: middle;   // Align icons vertically in the middle
+}

@@ -1,16 +1,25 @@
 import { Component, OnInit } from '@angular/core';
+import { BanksService } from './services/banks.service';
 
 @Component({
   selector: 'app-banks',
   templateUrl: './banks.component.html',
-  template: `<h1>Banks</h1><p>List of banks will be displayed here.</p>`,
   styleUrls: ['./banks.component.scss']
 })
 export class BanksComponent implements OnInit {
+  banks: any[] = [];
 
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor() {
+    this.banks = [];
   }
 
+  ngOnInit(): void {
+    /*this.banksService.getBanks().subscribe({
+      next: (data) => {
+        this.banks = data;
+      },
+      error: (err) => console.error(err),
+      complete: () => console.log('Banks data retrieval complete')
+    });
+  */}
 }

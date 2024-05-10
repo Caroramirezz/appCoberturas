@@ -83,7 +83,7 @@
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-product let-columns="columns">
-                        <tr [ngClass]="{'settled-row': product.settled === true || product.settled === 1}">
+                        <tr [ngClass]="{'settled-row': product.settled === true || product.settled === 1 || product.settled === 'settled'}">
                             <td style="width:100px">
                                 <p-tableCheckbox [value]="product"></p-tableCheckbox>
                             </td>

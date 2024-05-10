@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  urlBackLocal: 'https://localhost:7260/',    
+  urlBackLocal: 'https://localhost:7260/',
+  apiKey: 'UdqntgWRujWthZwPYfFu',    
 };
 
 /*
