@@ -1,0 +1,7 @@
+<div *ngIf="marketData.length > 0; else noData">
+    <ul>
+      <li *ngFor="let item of marketData">{{ item | json }}</li>
+    </ul>
+  </div>
+  <ng-template #noData><p>No market data available.</p></ng-template>
+  
