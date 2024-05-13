@@ -37,9 +37,8 @@
                     <ng-template pTemplate="header" let-columns>
                         <tr>
                             <th>ID</th>
-                            <th>Name</th>
-                            <th>Location</th>
-                            <th style="width:100px">Action</th>
+                            <th>Nombre</th>
+                            <th>CSA</th>
                             <th style="width:150px" *ngFor="let col of columns" pReorderableColumn>
                                 <!-- <p-columnFilter type="{{col.type}}" field="{{col.field}}" display="menu"></p-columnFilter> -->
                                 {{col.header}}
@@ -49,7 +48,7 @@
                     <ng-template pTemplate="body" let-product let-columns="columns">
                         <td>{{banks.id}}</td>
                         <td>{{banks.name}}</td>
-                        <td>{{banks.location}}</td>
+                        <td>{{banks.csa}}</td>
                     </ng-template>                                        
                 </p-table>
             </div>
