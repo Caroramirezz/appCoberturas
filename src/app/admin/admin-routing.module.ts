@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { BanksComponent } from './banks/banks.component';
-import { ClientsComponent } from './clients/clients.component';
+import { ClientsComponent } from './clients/consulta/clients.component';
 import { PlantsComponent } from './plants/plants.component';
 import { SarsComponent } from './sars/sars.component';
 
