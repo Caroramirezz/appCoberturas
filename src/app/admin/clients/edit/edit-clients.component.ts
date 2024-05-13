@@ -7,11 +7,11 @@ import { Table } from 'primeng/table';
 import { ClientsService } from '../services/clients.service';
 
 @Component({
-  selector: 'app-clients',
-  templateUrl: './clients.component.html',  
-  styleUrls: ['./clients.component.scss']
+  selector: 'app-edit-clients',
+  templateUrl: './edit-clients.component.html',  
+  styleUrls: ['./edit-clients.component.scss']
 })
-export class ClientsComponent implements OnInit {
+export class EditClientsComponent implements OnInit {
   
   products:ClientInterface[] = [];  
   cols: any[] = [];  
