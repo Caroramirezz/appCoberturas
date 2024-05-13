@@ -2,6 +2,9 @@ mat-sidenav {
     width: 230px;
     padding: 15px;
 }
+.mat-nav-list .mat-list-item {
+    color: white !important;
+}
 
 .title {
     font-size: 18px;
@@ -55,7 +58,7 @@ mat-sidenav {
     background: transparent !important;  // No background
     border: none !important;             // No borders
     box-shadow: none !important;         // No shadow
-    padding: 0 24px;                     // Align padding with other nav items
+    //padding: 0 24px;                     // Align padding with other nav items
     height: auto !important;             // Ensure height is auto to avoid misalignment
     align-items: center;                 // Vertically center content
 }

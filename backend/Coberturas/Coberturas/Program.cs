@@ -18,7 +18,7 @@ builder.Services.AddCors(options =>
                     });
 });
 
-var connectionString = builder.Configuration.GetConnectionString("ConnectionProduction");
+var connectionString = builder.Configuration.GetConnectionString("ConnectionWrong");
 builder.Services.AddDbContext<ConnectionSQL>(x => x.UseSqlServer(connectionString));
 
 //SERVICIO AUTORIZACION

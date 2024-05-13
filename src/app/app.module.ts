@@ -14,9 +14,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { DetalleComponent } from './trades/pages/detalle/detalle.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { DialogComponent } from './trades/pages/dialog/dialog.component';
-import { FirstStepComponent } from './trades/pages/new-trade/first-step/first-step.component';
-import { SecondStepComponent } from './trades/pages/new-trade/second-step/second-step.component';
-import { MarketDataComponent } from './market-data/market-data.component';
+
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon'
 
@@ -27,8 +25,7 @@ import { MatIconModule } from '@angular/material/icon'
   declarations: [
     AppComponent,
     HomeComponent,
-    DialogComponent,
-    MarketDataComponent      
+    DialogComponent      
   ],
   imports: [
     BrowserModule,

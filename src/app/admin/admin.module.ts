@@ -5,6 +5,9 @@ import { BanksComponent } from './banks/banks.component';
 import { ClientsComponent } from './clients/clients.component';
 import { SarsComponent } from './sars/sars.component';
 import { PlantsComponent } from './plants/plants.component';
+import { MaterialModule } from '../material/material.module';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   declarations: [
@@ -15,7 +18,10 @@ import { PlantsComponent } from './plants/plants.component';
   ],
   imports: [
     CommonModule,
-    AdminRoutingModule
+    AdminRoutingModule,
+    MaterialModule,
+    FlexLayoutModule,
+    NgxSpinnerModule
   ]
 })
 export class AdminModule { }

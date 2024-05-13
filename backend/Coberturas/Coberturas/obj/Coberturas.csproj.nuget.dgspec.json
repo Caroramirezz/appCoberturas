@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Repos\\Coberturas\\backend\\Coberturas\\Coberturas\\Coberturas.csproj": {}
+    "C:\\Repositorios\\Github\\appCoberturas\\backend\\Coberturas\\Coberturas\\Coberturas.csproj": {}
   },
   "projects": {
-    "C:\\Repos\\Coberturas\\backend\\Coberturas\\Coberturas\\Coberturas.csproj": {
+    "C:\\Repositorios\\Github\\appCoberturas\\backend\\Coberturas\\Coberturas\\Coberturas.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Repos\\Coberturas\\backend\\Coberturas\\Coberturas\\Coberturas.csproj",
+        "projectUniqueName": "C:\\Repositorios\\Github\\appCoberturas\\backend\\Coberturas\\Coberturas\\Coberturas.csproj",
         "projectName": "Coberturas",
-        "projectPath": "C:\\Repos\\Coberturas\\backend\\Coberturas\\Coberturas\\Coberturas.csproj",
-        "packagesPath": "C:\\Users\\aramirezg\\.nuget\\packages\\",
-        "outputPath": "C:\\Repos\\Coberturas\\backend\\Coberturas\\Coberturas\\obj\\",
+        "projectPath": "C:\\Repositorios\\Github\\appCoberturas\\backend\\Coberturas\\Coberturas\\Coberturas.csproj",
+        "packagesPath": "C:\\Users\\eguel\\.nuget\\packages\\",
+        "outputPath": "C:\\Repositorios\\Github\\appCoberturas\\backend\\Coberturas\\Coberturas\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\aramirezg\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\eguel\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -86,7 +86,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
         }
       }
     }
