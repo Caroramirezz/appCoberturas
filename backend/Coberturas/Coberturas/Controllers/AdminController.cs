@@ -24,7 +24,7 @@ namespace Coberturas.Controllers
     }
 
     [HttpGet]
-    [Route("banks")]
+    [Route("banks/consulta")]
     public IActionResult getBanks()
     {
       try

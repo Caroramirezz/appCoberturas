@@ -1,42 +1,39 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { BankInterface } from './interfaces/banks.interface';
+import { IndexInterface } from '../interfaces/indexes.interface';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { Table } from 'primeng/table';
-import { BanksService } from './services/banks.service';
 
 @Component({
-  selector: 'app-clients',
-  templateUrl: './banks.component.html',  
-  styleUrls: ['./banks.component.scss']
+  selector: 'app-indexes',
+  templateUrl: './indexes.component.html',
+  styleUrls: ['./indexes.component.scss']
 })
-export class BanksComponent implements OnInit {
+export class IndexesComponent implements OnInit {
   
-  products:BankInterface[] = [];  
+  products:IndexInterface[] = [];  
   cols: any[] = [];  
   _selectedColumns: any[] = [];
   _selectedColumnsFilter:any[] = [];
   
-  selectedProducts3:BankInterface[] = [];
-  banksService: any;
-  banks: any;
+  selectedProducts3:IndexInterface[] = [];
 
   constructor(
     private router:Router,          
     private spinner: NgxSpinnerService,    
-    private toastr: ToastrService,  
+    private toastr: ToastrService  
     
   ) { 
 
     this.cols = [
-      { field: 'id_bank', header: 'bank', type:"CSA" },
+      { field: 'id_client', header: 'ID', type:"text" },
+      { field: 'name_client', header: 'Cliente', type:"text" },        
     ];
   }
 
   ngOnInit(): void {
-    this.banksService.getBanks().subscribe({
-    });
+    
   }
   
   @Input() get selectedColumns(): any[] {     

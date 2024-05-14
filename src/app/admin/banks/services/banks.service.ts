@@ -17,6 +17,6 @@ export class BanksService {
   constructor(private http: HttpClient) {}
 
   getBanks(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.urlBackLocal}/banks`);
+    return this.http.get<any[]>(`${this.urlBackLocal}admin/banks`);
   }
 }

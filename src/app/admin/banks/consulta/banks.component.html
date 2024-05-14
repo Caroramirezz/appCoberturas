@@ -1,0 +1,40 @@
+<div style="margin-bottom: 20px; margin-top: 5px;">
+    <p class="title">Banks Overview</p>
+</div>
+
+<mat-card>
+    <mat-card-header fxLayout="row" fxLayout.xs="column">
+        <div fxFlex="50" fxFlex.xs="100" fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.xs="center center">
+            <mat-card-title>Lista de Bancos</mat-card-title>
+        </div>
+        <div fxFlex="50" fxFlex.xs="100" fxLayoutAlign="end center" fxLayoutAlign.xs="center center">
+            <button class="button button-nuevo" mat-raised-button (click)="openDialog()">Agregar Banco</button>            
+        </div>           
+    </mat-card-header>
+    <mat-card-content>
+        <p-table [value]="products" [paginator]="true" [rows]="10" responsiveLayout="stack"
+                 currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} elementos"
+                 [rowsPerPageOptions]="[10,25,50,100]">
+
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Actions</th>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>CSA</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-bank>
+                <tr>
+                    <td>
+                        <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text" ></button>
+                        <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text" ></button>
+                    </td>
+                    <td>{{ bank.id_bank }}</td>
+                    <td>{{ bank.bank }}</td>
+                    <td>{{ bank.CSA}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </mat-card-content>
+</mat-card>
