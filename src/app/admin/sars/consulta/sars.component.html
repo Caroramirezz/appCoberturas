@@ -1,18 +1,18 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
 <div style="margin-bottom: 20px; margin-top: 5px;">
-	<p class="title">Catalogo de Bancos</p>
+	<p class="title">Catalogo de SARS</p>
 </div>
 
 <mat-card>
     <mat-card-header fxLayout="row" fxLayout.xs="column">
         <div fxFlex="50" fxFlex.xs="100" fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.xs="center center">
-            <mat-card-title>Lista de Bancos</mat-card-title>
+            <mat-card-title>Lista de SARS</mat-card-title>
             <!-- <mat-card-subtitle>Please fill out all fields</mat-card-subtitle> -->
         </div>
         <div fxFlex="50" fxFlex.xs="100" fxLayoutAlign="end center" fxLayoutAlign.xs="center center" style="margin-bottom: 15px;">
             <button class="button-clear" pButton label="Clear" type="button" icon="pi pi-filter-slash" iconPos="left" (click)="clear(dt1)"></button>
-            <button class="button button-nuevo" mat-raised-button (click)="openAddBankDialog()">Agregar Banco</button>            
+            <button class="button button-nuevo" mat-raised-button >Agregar SAR</button>            
         </div>                
         </mat-card-header>
 
@@ -23,9 +23,8 @@
                     <ng-template pTemplate="header">                        
                         <tr>                            
                             <th pReorderableColumn>Action</th>
-                            <th pReorderableColumn>ID Banco</th>
+                            <th pReorderableColumn>ID SAR</th>
                             <th pReorderableColumn>Nombre</th>   
-                            <th pReorderableColumn>CSA</th>                        
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-product>
@@ -36,15 +35,14 @@
                                         edit
                                     </span>                             
                                 </button>  
-                                <button mat-icon-button matTooltip="Eliminar" (click)="deleteBank(product.id_bank)">                  
+                                <button mat-icon-button matTooltip="Eliminar" (click)="deleteSars(product.id_sar)">                  
                                     <span class="material-icons" style="color:#1D4289">
                                         delete
                                     </span>                             
                                 </button>                                                               
                             </td>                            
-                            <td>{{ product.id_bank }}</td>
-                            <td>{{ product.bank }}</td>
-                            <td>{{ product.csa}}</td>                           
+                            <td>{{ product.id_sar }}</td>
+                            <td>{{ product.number_sar }}</td>
                         </tr>
                     </ng-template>
                 </p-table>

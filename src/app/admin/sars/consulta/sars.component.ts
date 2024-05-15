@@ -1,35 +1,32 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { BankInterface } from '../interfaces/banks.interface';
+import { SarsInterface } from '../interfaces/sars.interface';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { Table } from 'primeng/table';
-import { BanksService } from '../services/banks.service';
-import { AddBankComponent } from '../detalle/addBank.component';
-
+import { SarsService } from '../services/sars.service';
 
 @Component({
-  selector: 'app-clients',
-  templateUrl: './banks.component.html',  
-  styleUrls: ['./banks.component.scss']
+  selector: 'app-sars',
+  templateUrl: './sars.component.html',  
+  styleUrls: ['./sars.component.scss']
 })
-export class BanksComponent implements OnInit {
+export class SarsComponent implements OnInit {
   
-  products:BankInterface[] = [];  
+  products:SarsInterface[] = [];  
   cols: any[] = [];  
   _selectedColumns: any[] = [];
   _selectedColumnsFilter:any[] = [];
-  // banksService: any;
-  selectedProducts3:BankInterface[] = [];
+  selectedProducts3:SarsInterface[] = [];
 
-  banks: any;
+  sars: any;
   dialog: any;
 
   constructor(
     private router: Router,          
     private spinner: NgxSpinnerService,    
     private toastr: ToastrService,  
-    private banksService: BanksService
+    private sarsService: SarsService
 ) { 
     this.cols = [
         { field: 'id_bank', header: 'ID Bank' },
@@ -42,7 +39,7 @@ export class BanksComponent implements OnInit {
 
 ngOnInit(): void {
   this.spinner.show(); // Show spinner before loading data
-  this.banksService.getBanks().subscribe({
+  this.sarsService.getSars().subscribe({
       next: (data) => {
         console.log("Received banks data:", data);
           this.products = data; // Assuming 'data' is the array of banks
@@ -67,32 +64,17 @@ ngOnInit(): void {
     this.selectedProducts3 = []; //
   } 
 
-  deleteBank(id: number): void {
-    this.banksService.deleteBank(id).subscribe({
+  deleteSars(id: number): void {
+    this.sarsService.deleteSars(id).subscribe({
         next: (res) => {
-            this.products = this.products.filter(product => product.id_bank !== id);
-            this.toastr.success('Bank successfully deleted.');
+            this.products = this.products.filter(product => product.id_sar !== id);
+            this.toastr.success('Sars successfully deleted.');
         },
         error: (err) => {
-            this.toastr.error('Failed to delete bank. ' + err.message);
-            console.error('Failed to delete bank', err);
+            this.toastr.error('Failed to delete sars. ' + err.message);
+            console.error('Failed to delete sars', err);
         }
     });
   }
-
-  openAddBankDialog(): void {
-    const dialogRef = this.dialog.open(AddBankComponent, {
-      width: '250px',
-      data: { /* data passed to the dialog */ }
-    });
-
-    dialogRef.afterClosed().subscribe(() => {
-      console.log('The dialog was closed');
-      // Handle result here if needed
-    });
-  }
   
-  
-
-
 }
