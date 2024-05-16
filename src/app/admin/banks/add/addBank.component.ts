@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -8,24 +8,17 @@ import { MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./addBank.component.scss']
 })
 export class AddBankComponent implements OnInit {
-  bankForm: FormGroup = new FormGroup({});
+  bankForm!: FormGroup;
 
   constructor(
     private fb: FormBuilder,
-    public dialogRef: MatDialogRef<AddBankComponent>
-  ) { 
-    this.bankForm = this.fb.group({
-      bank: ['', Validators.required],
-      CSA: ['', Validators.required]
-    });
-  }
+    public dialogRef: MatDialogRef<AddBankComponent>) { }
 
   ngOnInit(): void {
-    // Remove the initialization of bankForm here
-  }
-
-  onNoClick(): void {
-    this.dialogRef.close();
+    this.bankForm = this.fb.group({
+      bankName: ['', Validators.required],
+      CSA: ['', Validators.required]
+    });
   }
 
   onSubmit(): void {

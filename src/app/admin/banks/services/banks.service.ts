@@ -24,8 +24,8 @@ export class BanksService {
     return this.http.delete(`${this.urlBackLocal}admin/banks/${id}`);
   }
 
-  addBank(bankData: { bank: string, CSA: number }): Observable<any> {
-    return this.http.post(`${this.urlBackLocal}admin/banks/add`, bankData);
+  addBank(bankData: { bank: string; CSA: number }): Observable<any> {
+    return this.http.post(`${this.urlBackLocal}/admin/banks/add`, bankData);
   }
   
 

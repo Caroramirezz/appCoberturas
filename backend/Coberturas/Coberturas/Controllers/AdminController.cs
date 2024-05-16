@@ -85,37 +85,31 @@ namespace Coberturas.Controllers
     }
 
 
-    [HttpPost("banks/add")]
+    [HttpPost]
+    [Route("banks/add")]
     public IActionResult AddBank([FromBody] Banks bank)
     {
-      if (bank == null || string.IsNullOrEmpty(bank.bank) || bank.CSA <= 0)
-      {
-        return BadRequest("Invalid bank data.");
-      }
-
       try
       {
-        using (var connection = new SqlConnection(_context.Database.GetConnectionString()))
+        using (var connection = (SqlConnection)_context.Database.GetDbConnection())
         {
-          using (var command = new SqlCommand("sp_ins_banks", connection))
+          connection.Open();
+          var command = new SqlCommand("sp_ins_banks", connection)
           {
-            command.CommandType = CommandType.StoredProcedure;
-            command.Parameters.Add(new SqlParameter("@bank", bank.bank));
-            command.Parameters.Add(new SqlParameter("@CSA", bank.CSA));
+            CommandType = CommandType.StoredProcedure
+          };
+          command.Parameters.Add(new SqlParameter("@bank", SqlDbType.VarChar) { Value = bank.bank });
+          command.Parameters.Add(new SqlParameter("@CSA", SqlDbType.Int) { Value = bank.CSA });
 
-            connection.Open();
-            command.ExecuteNonQuery(); // Execute the insertion
-            connection.Close();
-          }
+          command.ExecuteNonQuery();
         }
-        return Ok(new { message = "Bank added successfully." });
+        return Ok("Bank added successfully.");
       }
       catch (Exception ex)
       {
         return BadRequest($"An error occurred: {ex.Message}");
       }
     }
-
 
 
     [HttpGet]

@@ -24,8 +24,8 @@ export class SarsService {
     return this.http.delete(`${this.urlBackLocal}admin/sars/${id}`);
   }
 
-  addSars(bankData: { number_sar: number }): Observable<any> {
-    return this.http.post(`${this.urlBackLocal}admin/sars/add`, bankData);
+  addSars(sarData: { number_sar: number }): Observable<any> {
+    return this.http.post(`${this.urlBackLocal}admin/sars/add`, sarData);
   }
   
 

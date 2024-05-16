@@ -20,7 +20,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatDialogModule } from '@angular/material/dialog';
+import {MatDialogModule} from "@angular/material/dialog";
 import { MatChipsModule} from '@angular/material/chips';
 import { MatNativeDateModule } from '@angular/material/core';
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -41,7 +41,6 @@ import {CardModule} from 'primeng/card';
 
 @NgModule({
   imports:[
-    
   ],
   exports: [
     MatSidenavModule,
@@ -86,6 +85,6 @@ import {CardModule} from 'primeng/card';
     InputTextModule,
     CardModule,
     
-  ]
+  ],
 })
 export class MaterialModule { }

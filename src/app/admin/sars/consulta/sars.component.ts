@@ -5,6 +5,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { Table } from 'primeng/table';
 import { SarsService } from '../services/sars.service';
+import { MatDialog } from '@angular/material/dialog';
+import { AddSarComponent } from '../add/addSar.component';
 
 @Component({
   selector: 'app-sars',
@@ -20,13 +22,13 @@ export class SarsComponent implements OnInit {
   selectedProducts3:SarsInterface[] = [];
 
   sars: any;
-  dialog: any;
 
   constructor(
     private router: Router,          
     private spinner: NgxSpinnerService,    
     private toastr: ToastrService,  
-    private sarsService: SarsService
+    private sarsService: SarsService,
+    public dialog: MatDialog,
 ) { 
     this.cols = [
         { field: 'id_bank', header: 'ID Bank' },
@@ -35,7 +37,25 @@ export class SarsComponent implements OnInit {
     ];
     this._selectedColumns = this.cols;
 }
+openAddSarsDialog(): void {
+  const dialogRef = this.dialog.open(AddSarComponent, {
+    width: '250px'
+  });
 
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      this.sarsService.addSars(result).subscribe({
+        next: (response) => {
+          this.toastr.success('Sar added successfully');
+        },
+        error: (error) => {
+          console.error('Error adding sar:', error);
+          this.toastr.error('Error adding sar');
+        }
+      });
+    }
+  });
+}
 
 ngOnInit(): void {
   this.spinner.show(); // Show spinner before loading data
@@ -54,7 +74,7 @@ ngOnInit(): void {
   });
 }
 
-  
+
   @Input() get selectedColumns(): any[] {     
     return this._selectedColumns;
   }

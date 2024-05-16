@@ -10,6 +10,8 @@ import { MaterialModule } from '../material/material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { MatDialogModule } from '@angular/material/dialog';
+import { AddBankComponent } from './banks/add/addBank.component';
+import { AddSarComponent } from './sars/add/addSar.component';
 
 
 @NgModule({
@@ -18,7 +20,9 @@ import { MatDialogModule } from '@angular/material/dialog';
     ClientsComponent,
     SarsComponent,
     PlantsComponent,
-    IndexesComponent
+    IndexesComponent,
+    AddBankComponent,
+    AddSarComponent
   ],
   imports: [
     CommonModule,

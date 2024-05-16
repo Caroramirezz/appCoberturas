@@ -5,8 +5,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { Table } from 'primeng/table';
 import { BanksService } from '../services/banks.service';
-import { AddBankComponent } from '../detalle/addBank.component';
-
+import { MatDialog } from '@angular/material/dialog';
+import { AddBankComponent } from '../add/addBank.component';
 
 @Component({
   selector: 'app-clients',
@@ -23,13 +23,13 @@ export class BanksComponent implements OnInit {
   selectedProducts3:BankInterface[] = [];
 
   banks: any;
-  dialog: any;
 
   constructor(
     private router: Router,          
     private spinner: NgxSpinnerService,    
     private toastr: ToastrService,  
-    private banksService: BanksService
+    private banksService: BanksService,
+    public dialog: MatDialog,
 ) { 
     this.cols = [
         { field: 'id_bank', header: 'ID Bank' },
@@ -38,6 +38,27 @@ export class BanksComponent implements OnInit {
     ];
     this._selectedColumns = this.cols;
 }
+
+openAddBankDialog(): void {
+  const dialogRef = this.dialog.open(AddBankComponent, {
+    width: '250px'
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      this.banksService.addBank(result).subscribe({
+        next: (response) => {
+          this.toastr.success('Bank added successfully');
+        },
+        error: (error) => {
+          console.error('Error adding bank:', error);
+          this.toastr.error('Error adding bank');
+        }
+      });
+    }
+  });
+}
+
 
 
 ngOnInit(): void {
@@ -79,20 +100,4 @@ ngOnInit(): void {
         }
     });
   }
-
-  openAddBankDialog(): void {
-    const dialogRef = this.dialog.open(AddBankComponent, {
-      width: '250px',
-      data: { /* data passed to the dialog */ }
-    });
-
-    dialogRef.afterClosed().subscribe(() => {
-      console.log('The dialog was closed');
-      // Handle result here if needed
-    });
-  }
-  
-  
-
-
 }
