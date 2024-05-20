@@ -5,6 +5,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { Table } from 'primeng/table';
 import { ClientsService } from '../services/clients.service';
+import { MatDialog } from '@angular/material/dialog';
+import { EditClientsDialog } from '../edit/edit-clients.component';
 
 @Component({
   selector: 'app-clients',
@@ -24,7 +26,8 @@ export class ClientsComponent implements OnInit {
     private router:Router,          
     private spinner: NgxSpinnerService,    
     private toastr: ToastrService,  
-    private wsClient:ClientsService
+    private wsClient:ClientsService,
+    public dialog: MatDialog
     
   ) { 
 
@@ -51,5 +54,14 @@ export class ClientsComponent implements OnInit {
     table.clear();
     this.selectedProducts3 = [];
   } 
+
+  openDialog(flag:string, row:any) {
+    this.dialog.open(EditClientsDialog, {
+      data: {
+        tipo: flag,
+        data: row
+      },
+    });
+  }
 
 }

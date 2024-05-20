@@ -1,55 +1,38 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ClientInterface } from '../interfaces/clients.interface';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { Table } from 'primeng/table';
-import { ClientsService } from '../services/clients.service';
+import { MAT_DIALOG_DATA, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-edit-clients',
-  templateUrl: './edit-clients.component.html',  
-  styleUrls: ['./edit-clients.component.scss']
+  selector: 'dialog-data-example-dialog',
+  templateUrl: './edit-clients.component.html',
+  styleUrls: ['./edit-clients.component.scss']  
 })
-export class EditClientsComponent implements OnInit {
-  
-  products:ClientInterface[] = [];  
-  cols: any[] = [];  
-  _selectedColumns: any[] = [];
-  _selectedColumnsFilter:any[] = [];
-  
-  selectedProducts3:ClientInterface[] = [];
+export class EditClientsDialog {
 
-  constructor(
-    private router:Router,          
-    private spinner: NgxSpinnerService,    
-    private toastr: ToastrService,  
-    private wsClient:ClientsService
-    
-  ) { 
+  variable:any = "";
+  constructor(public dialogRef: MatDialogRef<EditClientsDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any,) {
 
-    this.cols = [
-      { field: 'id_client', header: 'ID', type:"text" },
-      { field: 'name_client', header: 'Cliente', type:"text" },        
-    ];
+    this.variable = data.tipo;
   }
+
 
   ngOnInit(): void {
-    this.products = [
-      {id_client: 1, name_client: 'Prueba 1'},
-      {id_client: 2, name_client: 'Prueba 2'},
-      {id_client: 3, name_client: 'Prueba 3'},
-      {id_client: 4, name_client: 'Prueba 4'},
-    ];
+   
   }
+
+  cancelar(): void {
+    this.dialogRef.close(0);
+  }
+
+  aceptar(){
+    this.dialogRef.close(1);
+  }
+
+} 
   
-  @Input() get selectedColumns(): any[] {     
-    return this._selectedColumns;
-  }
 
-  clear(table: Table) {
-    table.clear();
-    this.selectedProducts3 = [];
-  } 
 
-}
+
