@@ -1,0 +1,13 @@
+<h1 mat-dialog-title>SAR nuevo</h1>
+<div mat-dialog-content>
+  <form [formGroup]="sarForm">
+    <mat-form-field>
+      <mat-label>SAR</mat-label>
+      <input matInput formControlName="sarNum">
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onSubmit()">Add</button>
+  <button mat-button (click)="dialogRef.close()">Cancel</button>
+</div>

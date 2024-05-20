@@ -17,6 +17,18 @@ export class BanksService {
   constructor(private http: HttpClient) {}
 
   getBanks(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.urlBackLocal}/banks`);
+    return this.http.get<any[]>(`${this.urlBackLocal}admin/banks/consulta`);
   }
+
+  deleteBank(id: number): Observable<any> {
+    return this.http.delete(`${this.urlBackLocal}admin/banks/${id}`);
+  }
+
+  addBank(bankData: { bank: string; CSA: number }): Observable<any> {
+    return this.http.post(`${this.urlBackLocal}/admin/banks/add`, bankData);
+  }
+  
+
+
+
 }

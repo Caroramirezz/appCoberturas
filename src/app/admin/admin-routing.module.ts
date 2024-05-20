@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { BanksComponent } from './banks/banks.component';
+import { BanksComponent } from './banks/consulta/banks.component';
 import { ClientsComponent } from './clients/consulta/clients.component';
 import { PlantsComponent } from './plants/plants.component';
-import { SarsComponent } from './sars/sars.component';
+import { SarsComponent } from './sars//consulta/sars.component';
+import { IndexesComponent } from './indexes/consulta/indexes.component';
 
 // const routes: Routes = [
 //   { path: 'banks', loadChildren: () => import('./banks/banks.module').then(m => m.BanksModule) },
@@ -38,6 +39,13 @@ const routes:Routes = [
     path:'sars',
     children: [
       { path:'consulta', component:SarsComponent },    
+      { path:'**', redirectTo: '' }
+    ]
+  },
+  {
+    path:'indexes',
+    children: [
+      { path:'consulta', component:IndexesComponent },    
       { path:'**', redirectTo: '' }
     ]
   }
