@@ -1,27 +1,47 @@
-<!-- <ngx-spinner type="ball-scale-multiple"></ngx-spinner> -->
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
 <mat-dialog-content>
 
-    <div *ngIf="variable == 'New'">
-        <h2 mat-dialog-title>Dialog with elements</h2>
-        Estoy en:
-        {{ variable }}
+    <div fxLayout="column">
+        <div fxFlex="100" fxLayout="row">
+            <h2 *ngIf="variable == 'Edit'"> Editar: 'Name'</h2>
+            <h2 *ngIf="variable == 'New'"> Nuevo Cliente</h2>
+        </div>
+        <div fxFlex="100" fxLayout="row">
+            <form [formGroup]="formNew" novalidate style="width: 100%;">
+                <div fxLayout="row" fxLayoutAlign="center center" style="width: 100%;">
+                    <mat-form-field appearance="outline" style="width: 100%;">
+                        <mat-label>Nombre</mat-label>
+                        <input matInput placeholder="Nombre del Cliente" formControlName="name_client">                          
+                        <mat-error *ngIf="this.formNew.get('name_client')?.hasError('required')">{{'Es necesario ingresar nombre del Cliente'}}</mat-error>            
+                    </mat-form-field>
+                </div> 
+                <div fxLayout="row" fxLayoutAlign="center center" style="width: 100%;">
+                    <mat-form-field appearance="outline" style="width: 100%;">
+                        <mat-label>Grupo</mat-label>
+                        <input matInput placeholder="group_client" formControlName="group_client">                    
+                        <mat-error *ngIf="this.formNew.get('group_client')?.hasError('required')">{{'Es necesario ingresar grupo del Cliente'}}</mat-error>            
+                    </mat-form-field>
+                </div> 
+                <div fxLayout="row" fxLayoutAlign="center center" style="width: 100%;">
+                    <mat-form-field appearance="outline" style="width: 100%;">
+                        <mat-label>Holding</mat-label>
+                        <input matInput placeholder="holding" formControlName="holding">                
+                        <mat-error *ngIf="this.formNew.get('holding')?.hasError('required')">{{'Es necesario ingresar Holding'}}</mat-error>            
+                    </mat-form-field>
+                </div>            
+            </form>
+        </div>
     </div>
-
-    <div *ngIf="variable == 'Edit'">
-        <h2 mat-dialog-title>Dialog with elements</h2>
-        Estoy en:
-        {{ variable }}
-    </div>
-
+   
     <div *ngIf="variable == 'Delete'">
         Estoy en:
         {{ variable }}
     </div>
 
-    <mat-dialog-actions align="end">
-        <button mat-button mat-dialog-close>Cancel</button>
-        <button mat-button (click)="aceptar()" cdkFocusInitial>Install</button>
+    <mat-dialog-actions align="end" style="padding:0px; margin-bottom: 0px;">
+        <button mat-flat-button color="warn" mat-dialog-close>Salir</button>
+        <button mat-flat-button color="primary" (click)="guardar()" >Guardar</button>
     </mat-dialog-actions>
 
 

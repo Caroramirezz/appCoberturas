@@ -12,7 +12,7 @@
         </div>
         <div fxFlex="50" fxFlex.xs="100" fxLayoutAlign="end center" fxLayoutAlign.xs="center center" style="margin-bottom: 15px;">
             <button class="button-clear" pButton label="Clear" type="button" icon="pi pi-filter-slash" iconPos="left" (click)="clear(dt1)"></button>
-            <button class="button button-nuevo" mat-raised-button >Nuevo Cliente</button>            
+            <button class="button button-nuevo" mat-raised-button (click)="openDialog('New', [])">Nuevo Cliente</button>            
         </div>                
         </mat-card-header>
 
@@ -35,7 +35,7 @@
                                         edit
                                     </span>                             
                                 </button>  
-                                <button mat-icon-button matTooltip="Eliminar">                  
+                                <button mat-icon-button matTooltip="Eliminar" (click)="openDialog('Delete', product)">                  
                                     <span class="material-icons" style="color:#1D4289">
                                         delete
                                     </span>                             

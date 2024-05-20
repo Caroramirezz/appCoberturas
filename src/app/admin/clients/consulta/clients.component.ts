@@ -56,12 +56,22 @@ export class ClientsComponent implements OnInit {
   } 
 
   openDialog(flag:string, row:any) {
-    this.dialog.open(EditClientsDialog, {
+    const dialogRef = this.dialog.open(EditClientsDialog, {
+      height: 'auto',
+      width: '90%',
+      maxWidth:'95%',
+      autoFocus:true,
+      disableClose:true,
       data: {
         tipo: flag,
         data: row
       },
     });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+    });    
   }
+ 
 
 }

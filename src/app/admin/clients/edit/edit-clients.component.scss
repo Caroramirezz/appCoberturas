@@ -1,13 +1,3 @@
-.settled-row {
-    background-color: rgb(188, 219, 255); 
-}
-
-.buttons-filters {
-    margin-bottom:20px;
-    width: 120px;
-    height: 45px;
-}
-
 
 .button-nuevo {
     background-color:#00843b !important;
@@ -29,33 +19,10 @@
     font-weight: 500;
 }
 
-.div-table {
-    margin-top: 20px;
-}
-
-
-mat-cell, mat-footer-cell, mat-header-cell{
-	text-align: center !important;
-	justify-content: center !important;
-	overflow: inherit !important; 
-	display: flex !important;
-	word-break: inherit !important;		
-    width: 100%;  
-}
-mat-header-cell{
-	justify-content: center !important;
-	text-overflow: ellipsis !important;
-}
-
-mat-row, mat-header-row, mat-footer-row {
-  width: 100%;
-}
-
-td, th {
-    text-align: center !important;
-}
-
 p-cellEditor {
     cursor: pointer;
 }
 
+.mat-dialog-content { 
+    overflow: hidden;
+}
