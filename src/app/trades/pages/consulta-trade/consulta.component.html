@@ -95,30 +95,18 @@
                                 </button>                                                              
                             </td>
                             <td style="width:150px" *ngFor="let col of columns">
-                                
-                                <span *ngIf="col.type == 'date'">
-                                    {{product[col.field] | date}}
+                                <span *ngIf="col.type === 'date'">
+                                    {{ product[col.field] | date }}
                                 </span>
-                    
-                                <span *ngIf="col.field == 'vol_daily' || col.field == 'vol_monthly'">
-                                    {{product[col.field] | number}}
-                                </span>    
-                    
-                                <span *ngIf="col.field == 'price'">
-                                    {{product[col.field] | currency}}
-                                </span>    
-                                
-                                <span *ngIf="col.type == 'text'">
-                                    {{product[col.field]}}
-                                </span>    
-                    
-                                <span *ngIf="col.type == 'boolean'">
-                                    {{product[col.field]}}
-                                </span>    
-                                
+                                <span *ngIf="col.type === 'numeric'">
+                                    {{ product[col.field] | number }}
+                                </span>
+                                <span *ngIf="col.type === 'text'">
+                                    {{ product[col.field] }}
+                                </span>
                             </td>
                         </tr>
-                    </ng-template>                                        
+                    </ng-template>                                                            
                 </p-table>
             </div>
         </mat-card-content>
