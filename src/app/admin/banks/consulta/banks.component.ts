@@ -7,6 +7,8 @@ import { Table } from 'primeng/table';
 import { BanksService } from '../services/banks.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AddBankComponent } from '../add/addBank.component';
+import { EditBanksDialog } from '../edit/edit-banks.component';
+
 
 @Component({
   selector: 'app-clients',
@@ -41,24 +43,32 @@ export class BanksComponent implements OnInit {
 
 openAddBankDialog(): void {
   const dialogRef = this.dialog.open(AddBankComponent, {
-    width: '250px'
+      width: '250px'
   });
 
   dialogRef.afterClosed().subscribe(result => {
-    if (result) {
-      this.banksService.addBank(result).subscribe({
-        next: (response) => {
-          this.toastr.success('Bank added successfully');
-        },
-        error: (error) => {
-          console.error('Error adding bank:', error);
-          this.toastr.error('Error adding bank');
-        }
-      });
-    }
+      if (result) {
+          this.banksService.addBank(result).subscribe({
+              next: (newBank) => {
+                  this.products.push(newBank); // Now pushing the full bank object
+                  this.toastr.success('Bank added successfully');
+              },
+              error: (error) => {
+                  this.toastr.error('Error adding bank', error.message);
+              }
+          });
+      }
   });
 }
 
+openDialog(flag:string, row:any) {
+  this.dialog.open(EditBanksDialog, {
+    data: {
+      tipo: flag,
+      data: row
+    },
+  });
+}
 
 
 ngOnInit(): void {

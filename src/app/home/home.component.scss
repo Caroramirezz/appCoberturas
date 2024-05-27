@@ -2,7 +2,15 @@ mat-sidenav {
     width: 230px;
     padding: 15px;
 }
-.mat-nav-list .mat-list-item {
+.mat-nav-list .mat-list-item{
+    color: white !important;
+}
+
+.mat-panel-title {
+    color: white !important;
+}
+
+.mat-expansion-panel-header-title {
     color: white !important;
 }
 
@@ -55,23 +63,29 @@ mat-sidenav {
 
 /* Angular Material Expansion Panel Adjustments */
 .mat-expansion-panel, .mat-expansion-panel-header {
-    background: transparent !important;  // No background
-    border: none !important;             // No borders
-    box-shadow: none !important;         // No shadow
-    //padding: 0 24px;                     // Align padding with other nav items
-    height: auto !important;             // Ensure height is auto to avoid misalignment
-    align-items: center;                 // Vertically center content
+    background: transparent !important;  
+    border: none !important;            
+    box-shadow: none !important;        
+    align-items: center;                
+}
+.mat-expansion-panel-header{
+    padding: 0 16px !important;  // Adjust padding of header
+
 }
 
 .mat-expansion-panel-header.mat-expanded, 
 .mat-expansion-panel-header:hover,
 .mat-expansion-panel-header:focus {
-    background: #02109C !important;  // Matching hover and focus background with sidebar
-    color: #fff !important;          // Ensuring text color remains white on hover/focus
+    background: #02109C !important; 
+    color: #fff !important;        
 }
 
-.mat-expansion-indicator::after {
-    color: #fff !important;  // Ensure expansion arrow is white
+.mat-expansion-panel-header.mat-expanded {
+    height: 48px !important;  // Adjust height of header when expanded
+}
+.mat-expansion-indicator{
+    color: #fff !important;  // Adjust color of expansion indicator
+
 }
 
 .mat-icon {

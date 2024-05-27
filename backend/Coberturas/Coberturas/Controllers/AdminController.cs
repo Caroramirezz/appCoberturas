@@ -84,7 +84,6 @@ namespace Coberturas.Controllers
       }
     }
 
-
     [HttpPost]
     [Route("banks/add")]
     public IActionResult AddBank([FromBody] Banks bank)
@@ -102,14 +101,33 @@ namespace Coberturas.Controllers
           command.Parameters.Add(new SqlParameter("@CSA", SqlDbType.Int) { Value = bank.CSA });
 
           command.ExecuteNonQuery();
+
+          command = new SqlCommand("SELECT TOP 1 * FROM banks ORDER BY id_bank DESC", connection);
+          var reader = command.ExecuteReader();
+          if (reader.Read())
+          {
+            var newBank = new Banks
+            {
+              id_bank = (int)reader["id_bank"],
+              bank = (string)reader["bank"],
+              CSA = (int)reader["CSA"]
+            };
+            return Ok(newBank);
+          }
+          else
+          {
+            throw new Exception("Failed to retrieve new bank data.");
+          }
         }
-        return Ok("Bank added successfully.");
       }
       catch (Exception ex)
       {
-        return BadRequest($"An error occurred: {ex.Message}");
+        return BadRequest(new { error = $"An error occurred: {ex.Message}" });
       }
     }
+
+
+
 
 
     [HttpGet]
@@ -160,7 +178,7 @@ namespace Coberturas.Controllers
             command.CommandType = CommandType.StoredProcedure;
             command.Parameters.Add(new SqlParameter("@id_sar", SqlDbType.Int) { Value = id });
 
-            command.ExecuteNonQuery();  // Execute the command
+            command.ExecuteNonQuery();  
           }
           connection.Close();
           return Ok(new { message = "Bank successfully deleted." });
@@ -169,6 +187,47 @@ namespace Coberturas.Controllers
       catch (Exception ex)
       {
         return BadRequest($"Error deleting bank: {ex.Message}");
+      }
+    }
+
+
+    [HttpPost]
+    [Route("sars/add")]
+    public IActionResult AddSar([FromBody] SAR sar)
+    {
+      try
+      {
+        using (var connection = (SqlConnection)_context.Database.GetDbConnection())
+        {
+          connection.Open();
+          var command = new SqlCommand("sp_ins_sars", connection)
+          {
+            CommandType = CommandType.StoredProcedure
+          };
+          command.Parameters.Add(new SqlParameter("@number_sar", SqlDbType.VarChar) { Value = sar.number_sar });
+
+          command.ExecuteNonQuery();
+
+          command = new SqlCommand("SELECT TOP 1 * FROM sars ORDER BY id_sar DESC", connection);
+          var reader = command.ExecuteReader();
+          if (reader.Read())
+          {
+            var newSar = new SAR
+            {
+              id_sar = (int)reader["id_sar"],
+              number_sar = (string)reader["number_sar"],
+            };
+            return Ok(newSar);
+          }
+          else
+          {
+            throw new Exception("Failed to retrieve new SAR data.");
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+        return BadRequest(new { error = $"An error occurred: {ex.Message}" });
       }
     }
 

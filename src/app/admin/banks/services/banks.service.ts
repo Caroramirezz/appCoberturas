@@ -1,9 +1,10 @@
 // banks.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { BankInterface } from '../interfaces/banks.interface';
 import { environment } from '../../../../environments/environment';
+import { catchError, map } from 'rxjs/operators';
 
 
 @Injectable({
@@ -24,9 +25,17 @@ export class BanksService {
     return this.http.delete(`${this.urlBackLocal}admin/banks/${id}`);
   }
 
-  addBank(bankData: { bank: string; CSA: number }): Observable<any> {
-    return this.http.post(`${this.urlBackLocal}/admin/banks/add`, bankData);
-  }
+  addBank(bankData: BankInterface): Observable<any> {
+    return this.http.post(`${this.urlBackLocal}admin/banks/add`, bankData, { responseType: 'text' })
+        .pipe(
+            map(response => JSON.parse(response)),
+            catchError(error => {
+                console.error('Error adding bank:', error);
+                return throwError(() => new Error('Failed to add bank'));
+            })
+        );
+}
+
   
 
 

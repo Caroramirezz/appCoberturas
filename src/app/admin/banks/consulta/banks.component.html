@@ -31,7 +31,7 @@
                     <ng-template pTemplate="body" let-product>
                         <tr>                           
                             <td style="width:100px">
-                                <button mat-icon-button matTooltip="Editar">                  
+                                <button mat-icon-button matTooltip="Editar" (click)="openDialog('Edit',product)">                  
                                     <span class="material-icons" style="color:#1D4289">
                                         edit
                                     </span>                             

@@ -37,23 +37,24 @@ export class SarsComponent implements OnInit {
     ];
     this._selectedColumns = this.cols;
 }
-openAddSarsDialog(): void {
+
+openAddSarDialog(): void {
   const dialogRef = this.dialog.open(AddSarComponent, {
-    width: '250px'
+      width: '250px'
   });
 
   dialogRef.afterClosed().subscribe(result => {
-    if (result) {
-      this.sarsService.addSars(result).subscribe({
-        next: (response) => {
-          this.toastr.success('Sar added successfully');
-        },
-        error: (error) => {
-          console.error('Error adding sar:', error);
-          this.toastr.error('Error adding sar');
-        }
-      });
-    }
+      if (result) {
+          this.sarsService.addSars(result).subscribe({
+              next: (newSar) => {
+                  this.products.push(newSar);
+                  this.toastr.success('Sar added successfully');
+              },
+              error: (error) => {
+                  this.toastr.error('Error adding sar', error.message);
+              }
+          });
+      }
   });
 }
 

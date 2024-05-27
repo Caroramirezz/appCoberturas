@@ -12,6 +12,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AddBankComponent } from './banks/add/addBank.component';
 import { AddSarComponent } from './sars/add/addSar.component';
+import { EditBanksDialog } from './banks/edit/edit-banks.component';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { AddSarComponent } from './sars/add/addSar.component';
     PlantsComponent,
     IndexesComponent,
     AddBankComponent,
-    AddSarComponent
+    AddSarComponent,
+    EditBanksDialog
   ],
   imports: [
     CommonModule,

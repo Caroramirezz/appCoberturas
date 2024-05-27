@@ -11,7 +11,7 @@
         <ng-container *ngFor="let item of arrayMenu">
           <!-- Only 'Administración' gets an expansion panel -->
           <ng-container *ngIf="item.title === 'Administración'; else otherLinks">
-            <mat-expansion-panel class="plain-expansion-panel">
+            <mat-expansion-panel class="plain-expansion-panel mat-list-item-content">
               <mat-expansion-panel-header>
                 <mat-panel-title>
                   <mat-icon>{{item.icon}}</mat-icon>
