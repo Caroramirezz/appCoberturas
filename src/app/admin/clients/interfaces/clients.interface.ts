@@ -1,4 +1,6 @@
 export interface ClientInterface {
-    id_client?: number;
-    name_client: string;    
+    id_client: number;
+    client: string;
+    holding: string;  
+    editing?: boolean;
 }

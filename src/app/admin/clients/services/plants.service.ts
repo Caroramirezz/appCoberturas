@@ -2,13 +2,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { ClientInterface } from '../interfaces/clients.interface';
+import { PlantsInterface } from '../interfaces/plants.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 
-export class ClientsService {
+export class PlantsService {
 
   private urlBackLocal = environment.urlBackLocal;      
   //private trade:TradeInterface = {} as TradeInterface; 
@@ -26,23 +26,16 @@ export class ClientsService {
 
   }  
  
-  // getTrades(fecha1:Date, fecha2:Date):Observable<any>{   
-  //   let params = {
-  //     fecha1:fecha1,
-  //     fecha2: fecha2
-  //   }
-  //   return this.http.post<any>(this.urlBackLocal + 'Trade/GetHistoryTrades', params, {headers:this.headers});        
-  // }
-
-  getClients(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.urlBackLocal}admin/clients/consulta`);
+  getPlantsByClientId(clientId: number): Observable<PlantsInterface[]> {
+    return this.http.get<PlantsInterface[]>(`${this.urlBackLocal}Admin/plants/consulta?clientId=${clientId}`);
   }
 
-  deleteClient(id: number): Observable<any> {
-    return this.http.delete(`${this.urlBackLocal}admin/clients/${id}`);
+  deletePlant(id: number): Observable<any> {
+    return this.http.delete(`${this.urlBackLocal}admin/plants/${id}`);
   }
 
-  updateClient(client: ClientInterface): Observable<any> {
-    return this.http.put(`${this.urlBackLocal}admin/clients/update/${client.id_client}`, client);
+  updatePlant(plant: PlantsInterface): Observable<any> {
+    return this.http.put(`${this.urlBackLocal}admin/plants/update/${plant.id_plant}`, plant);
   }
+
 }

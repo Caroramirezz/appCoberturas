@@ -173,7 +173,7 @@ namespace Coberturas.Controllers
         using (var connection = (SqlConnection)_context.Database.GetDbConnection())
         {
           connection.Open();
-          using (var command = new SqlCommand("sp_del_banks", connection))
+          using (var command = new SqlCommand("sp_del_sars", connection))
           {
             command.CommandType = CommandType.StoredProcedure;
             command.Parameters.Add(new SqlParameter("@id_sar", SqlDbType.Int) { Value = id });
@@ -228,6 +228,214 @@ namespace Coberturas.Controllers
       catch (Exception ex)
       {
         return BadRequest(new { error = $"An error occurred: {ex.Message}" });
+      }
+    }
+
+
+
+    [HttpGet]
+    [Route("clients/consulta")]
+    public IActionResult getClients()
+    {
+      try
+      {
+        List<Clients> clients = new List<Clients>();
+        SqlConnection conexion = (SqlConnection)_context.Database.GetDbConnection();
+        SqlCommand command = new SqlCommand("sp_get_clients", conexion)
+        {
+          CommandType = CommandType.StoredProcedure
+        };
+
+        conexion.Open();
+        using (SqlDataReader reader = command.ExecuteReader())
+        {
+          while (reader.Read())
+          {
+            Clients client = new Clients
+            {
+              id_client = reader.GetInt32(reader.GetOrdinal("id_client")),
+              client = reader.GetString(reader.GetOrdinal("client")),
+              holding = reader.GetString(reader.GetOrdinal("holding"))
+            };
+            clients.Add(client);
+          }
+        }
+        conexion.Close();
+        return Ok(clients);
+      }
+      catch (Exception ex)
+      {
+        return BadRequest($"An error occurred: {ex.Message}");
+      }
+    }
+
+
+    [HttpGet]
+    [Route("plants/consulta")]
+    public IActionResult getPlants(int? clientId)
+    {
+      try
+      {
+        List<Plants> plants = new List<Plants>();
+        using (var conexion = (SqlConnection)_context.Database.GetDbConnection())
+        {
+          var query = "SELECT * FROM plants WHERE @clientId IS NULL OR client_id = @clientId";
+          var command = new SqlCommand(query, conexion)
+          {
+            CommandType = CommandType.Text
+          };
+          command.Parameters.Add(new SqlParameter("@clientId", clientId ?? (object)DBNull.Value));
+
+          conexion.Open();
+          using (var reader = command.ExecuteReader())
+          {
+            while (reader.Read())
+            {
+              Plants plant = new Plants
+              {
+                id_plant = reader.GetInt32(reader.GetOrdinal("id_plant")),
+                name_plant = reader.GetString(reader.GetOrdinal("name_plant")),
+                inicio_contrato = reader.GetDateTime(reader.GetOrdinal("inicio_contrato")),
+                fin_contrato = reader.GetDateTime(reader.GetOrdinal("fin_contrato")),
+                client_id = reader.GetInt32(reader.GetOrdinal("client_id")) // Make sure to add client_id to the Plants model if it's not already there
+              };
+              plants.Add(plant);
+            }
+          }
+        }
+        return Ok(plants);
+      }
+      catch (Exception ex)
+      {
+        return BadRequest($"An error occurred: {ex.Message}");
+      }
+    }
+
+    [HttpPut("plants/update/{id}")]
+    public IActionResult UpdatePlant(int id, [FromBody] Plants plant)
+    {
+      try
+      {
+        if (id != plant.id_plant)
+        {
+          return BadRequest("Plant ID mismatch");
+        }
+
+        using (var connection = (SqlConnection)_context.Database.GetDbConnection())
+        {
+          connection.Open();
+          var command = new SqlCommand("sp_update_plant", connection)
+          {
+            CommandType = CommandType.StoredProcedure
+          };
+          command.Parameters.Add(new SqlParameter("@id_plant", id));
+          command.Parameters.Add(new SqlParameter("@name_plant", plant.name_plant));
+          command.Parameters.Add(new SqlParameter("@inicio_contrato", plant.inicio_contrato));
+          command.Parameters.Add(new SqlParameter("@fin_contrato", plant.fin_contrato));
+          command.Parameters.Add(new SqlParameter("@client_id", plant.client_id));
+
+          int result = command.ExecuteNonQuery();
+          if (result > 0)
+          {
+            return Ok(new { message = "Plant updated successfully." });
+          }
+          else
+          {
+            return NotFound("Plant not found.");
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+        return BadRequest($"An error occurred: {ex.Message}");
+      }
+    }
+
+    [HttpPut("clients/update/{id}")]
+    public IActionResult UpdateClient(int id, [FromBody] Clients client)
+    {
+      try
+      {
+        if (id != client.id_client)
+        {
+          return BadRequest("Client ID mismatch");
+        }
+
+        using (var connection = (SqlConnection)_context.Database.GetDbConnection())
+        {
+          connection.Open();
+          var command = new SqlCommand("sp_update_client", connection)
+          {
+            CommandType = CommandType.StoredProcedure
+          };
+          command.Parameters.Add(new SqlParameter("@id_client", id));
+          command.Parameters.Add(new SqlParameter("@client", client.client));
+          command.Parameters.Add(new SqlParameter("@holding", client.holding));
+
+          int result = command.ExecuteNonQuery();
+          if (result > 0)
+          {
+            return Ok(new { message = "Client updated successfully." });
+          }
+          else
+          {
+            return NotFound("Client not found.");
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+        return BadRequest($"An error occurred: {ex.Message}");
+      }
+    }
+
+    [HttpDelete("clients/{id}")]
+    public IActionResult DeleteClient(int id)
+    {
+      try
+      {
+        using (var connection = (SqlConnection)_context.Database.GetDbConnection())
+        {
+          connection.Open();
+          using (var command = new SqlCommand("sp_del_clients", connection))
+          {
+            command.CommandType = CommandType.StoredProcedure;
+            command.Parameters.Add(new SqlParameter("@id_client", SqlDbType.Int) { Value = id });
+
+            command.ExecuteNonQuery(); 
+          }
+          connection.Close();
+          return Ok(new { message = "Client successfully deleted." });
+        }
+      }
+      catch (Exception ex)
+      {
+        return BadRequest($"Error deleting client: {ex.Message}");
+      }
+    }
+
+    [HttpDelete("plants/{id}")]
+    public IActionResult DeletePlant(int id)
+    {
+      try
+      {
+        using (var connection = (SqlConnection)_context.Database.GetDbConnection())
+        {
+          connection.Open();
+          using (var command = new SqlCommand("sp_del_plants", connection))
+          {
+            command.CommandType = CommandType.StoredProcedure;
+            command.Parameters.Add(new SqlParameter("@id_plant", SqlDbType.Int) { Value = id });
+
+            command.ExecuteNonQuery();  
+          }
+          connection.Close();
+          return Ok(new { message = "Plant successfully deleted." });
+        }
+      }
+      catch (Exception ex)
+      {
+        return BadRequest($"Error deleting plant: {ex.Message}");
       }
     }
 

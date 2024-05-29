@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { BanksComponent } from './banks/consulta/banks.component';
 import { ClientsComponent } from './clients/consulta/clients.component';
-import { PlantsComponent } from './plants/plants.component';
 import { SarsComponent } from './sars//consulta/sars.component';
 import { IndexesComponent } from './indexes/consulta/indexes.component';
 
@@ -28,13 +27,13 @@ const routes:Routes = [
       { path:'**', redirectTo: '' }
     ]
   },
-  {
+  /*{
     path:'plants',
     children: [
       { path:'consulta', component:PlantsComponent },    
       { path:'**', redirectTo: '' }
     ]
-  },
+  },*/
   {
     path:'sars',
     children: [

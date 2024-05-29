@@ -34,10 +34,6 @@ export class BanksService {
                 return throwError(() => new Error('Failed to add bank'));
             })
         );
-}
-
-  
-
-
+  }
 
 }
