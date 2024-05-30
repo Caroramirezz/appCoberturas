@@ -4,13 +4,14 @@ import { AdminRoutingModule } from './admin-routing.module';
 import { BanksComponent } from './banks/consulta/banks.component';
 import { ClientsComponent } from './clients/consulta/clients.component';
 import { SarsComponent } from './sars/consulta/sars.component';
-import { IndexesComponent } from './indexes/consulta/indexes.component';
+import { IndexComponent } from './indexes/consulta/index.component';
 import { MaterialModule } from '../material/material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AddBankComponent } from './banks/add/addBank.component';
 import { AddSarComponent } from './sars/add/addSar.component';
+import { AddIndexComponent } from './indexes/add/addIndex.component';
 import { EditBanksDialog } from './banks/edit/edit-banks.component';
 
 
@@ -19,10 +20,11 @@ import { EditBanksDialog } from './banks/edit/edit-banks.component';
     BanksComponent,
     ClientsComponent,
     SarsComponent,
-    IndexesComponent,
+    IndexComponent,
     AddBankComponent,
     AddSarComponent,
-    EditBanksDialog
+    EditBanksDialog,
+    AddIndexComponent
   ],
   imports: [
     CommonModule,

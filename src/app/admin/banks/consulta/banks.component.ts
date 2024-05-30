@@ -110,4 +110,22 @@ ngOnInit(): void {
         }
     });
   }
+
+  toggleEdit(bank: BankInterface, value: boolean): void {
+    bank.editing = value; // Toggle edit state
+}
+
+saveBank(bank: BankInterface): void {
+    this.banksService.updateBank(bank).subscribe({
+        next: () => {
+            this.toastr.success('Bank updated successfully!');
+            bank.editing = false; // Turn off edit mode on success
+            // Optionally reload banks or update the local state
+        },
+        error: (error) => {
+            this.toastr.error('Error updating bank');
+            console.error('Error updating bank', error);
+        }
+    });
+}
 }

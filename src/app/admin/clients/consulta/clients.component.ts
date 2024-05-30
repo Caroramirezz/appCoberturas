@@ -84,16 +84,35 @@ export class ClientsComponent implements OnInit {
         this.toastr.error('Failed to load plants for the selected client');
       }
     });
-  }
-  
+  }  
 
-  toggleEdit(client: ClientInterface, value: boolean): void {
-    client.editing = value;
-    if (!value) {
-      // Optionally, save the client here or handle cancel
-      this.saveClient(client);
+  toggleEdit(client: ClientInterface, value: boolean, event?: MouseEvent): void {
+    if (event) {
+        event.stopPropagation();  // Stop the event from bubbling up
     }
+    client.editing = value;
+
+    if (!value) {
+        // Save the client here or handle cancel
+        this.saveClient(client);
+    }
+}
+
+onRowSelect(event: any): void {
+    if (!event.data.editing) {
+        this.selectedClient = event.data;
+        this.loadPlantsForClient(this.selectedClient?.id_client);
+    }
+}
+
+selectRow(client: ClientInterface): void {
+  if (!client.editing) {
+      this.selectedClient = client;
+      this.loadPlantsForClient(client.id_client);
   }
+}
+
+
   
 
   saveClient(client: ClientInterface): void {

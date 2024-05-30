@@ -8,9 +8,9 @@
 <div class="tables-container" style="display: flex; width: 100%;">
 
     <!-- Clients Table -->
-    <mat-card style="flex: 1; margin-right: 20px;">
+    <mat-card class="client-table">
         <mat-card-content>
-            <p-table [value]="products" dataKey="id_client" [(selection)]="selectedClient" (onRowSelect)="onClientSelect($event)" selectionMode="single">
+            <p-table [value]="products" dataKey="id_client">
                 <ng-template pTemplate="header">
                     <tr>
                         <th>Edit</th>
@@ -19,24 +19,37 @@
                         <th>Holding</th>
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+                <ng-template pTemplate="body" let-rowData>
                     <tr [pSelectableRow]="rowData">
                         <td>
-                            <button *ngIf="!rowData.editing" mat-icon-button matTooltip="Edit" (click)="toggleEdit(rowData, true)">
+                            <!-- Edit button shows when not editing -->
+                            <button *ngIf="!rowData.editing" (click)="toggleEdit(rowData, true)" mat-icon-button matTooltip="Edit">
                                 <mat-icon>edit</mat-icon>
                             </button>
-                            <button *ngIf="rowData.editing" mat-icon-button matTooltip="Save" (click)="toggleEdit(rowData, false)">
+                            <!-- Save button shows when editing -->
+                            <button *ngIf="rowData.editing" (click)="saveClient(rowData)" mat-icon-button matTooltip="Save">
                                 <mat-icon>save</mat-icon>
                             </button>
                         </td>
-                        <td>{{ rowData.id_client }}</td>
-                        <td>{{ rowData.client }}</td>
-                        <td>{{ rowData.holding }}</td>
+                        <td *ngIf="!rowData.editing">{{ rowData.id_client }}</td>
+                        <td *ngIf="rowData.editing">
+                            <input type="text" [(ngModel)]="rowData.id_client" disabled>
+                        </td>
+                        <td *ngIf="!rowData.editing">{{ rowData.client }}</td>
+                        <td *ngIf="rowData.editing">
+                            <input type="text" [(ngModel)]="rowData.client">
+                        </td>
+                        <td *ngIf="!rowData.editing">{{ rowData.holding }}</td>
+                        <td *ngIf="rowData.editing">
+                            <input type="text" [(ngModel)]="rowData.holding">
+                        </td>
                     </tr>
                 </ng-template>
             </p-table>
         </mat-card-content>
     </mat-card>
+    
+    
 
     <!-- Plants Table -->
     <mat-card *ngIf="selectedClient" style="flex: 1;">

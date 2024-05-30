@@ -97,5 +97,22 @@ ngOnInit(): void {
         }
     });
   }
+
+  toggleEdit(sar: SarsInterface, value: boolean): void {
+    sar.editing = value;
+}
+
+saveSar(sar: SarsInterface): void {
+    this.sarsService.updateSar(sar).subscribe({
+        next: () => {
+            this.toastr.success('Sar updated successfully!');
+            sar.editing = false; 
+        },
+        error: (error) => {
+            this.toastr.error('Error updating sar');
+            console.error('Error updating sar', error);
+        }
+    });
+}
   
 }

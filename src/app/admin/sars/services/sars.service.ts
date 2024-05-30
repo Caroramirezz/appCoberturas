@@ -1,9 +1,11 @@
 // banks.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { SarsInterface } from '../interfaces/sars.interface';
 import { environment } from '../../../../environments/environment';
+import { catchError, map } from 'rxjs/operators';
+
 
 
 @Injectable({
@@ -24,9 +26,21 @@ export class SarsService {
     return this.http.delete(`${this.urlBackLocal}admin/sars/${id}`);
   }
 
-  addSars(sarData: { number_sar: number }): Observable<any> {
-    return this.http.post(`${this.urlBackLocal}admin/sars/add`, sarData);
+  addSars(bankData: SarsInterface): Observable<any> {
+    return this.http.post(`${this.urlBackLocal}admin/sars/add`, bankData, { responseType: 'text' })
+        .pipe(
+            map(response => JSON.parse(response)),
+            catchError(error => {
+                console.error('Error adding bank:', error);
+                return throwError(() => new Error('Failed to add sar'));
+            })
+        );
   }
+
+  updateSar(bank: SarsInterface): Observable<any> {
+    return this.http.put(`${this.urlBackLocal}admin/sars/update/${bank.id_sar}`, this.sars);
+  }
+
   
 
 

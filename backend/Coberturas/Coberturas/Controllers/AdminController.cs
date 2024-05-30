@@ -126,7 +126,112 @@ namespace Coberturas.Controllers
       }
     }
 
+    [HttpGet]
+    [Route("index/consulta")]
+    public IActionResult getIndexes()
+    {
+      try
+      {
+        List<IndexTypes> indexTypes = new List<IndexTypes>();
+        SqlConnection conexion = (SqlConnection)_context.Database.GetDbConnection();
+        SqlCommand command = new SqlCommand("sp_get_index_types", conexion)
+        {
+          CommandType = CommandType.StoredProcedure
+        };
 
+        conexion.Open();
+        using (SqlDataReader reader = command.ExecuteReader())
+        {
+          while (reader.Read())
+          {
+            IndexTypes indextypes = new IndexTypes
+            {
+              id_index = reader.GetInt32(reader.GetOrdinal("id_index")),
+              index_name = reader.GetString(reader.GetOrdinal("index_name")),
+              index_symbol = reader.GetString(reader.GetOrdinal("index_symbol")),
+              source = reader.GetString(reader.GetOrdinal("source")),
+            };
+            indexTypes.Add(indextypes);
+          }
+        }
+        conexion.Close();
+        return Ok(indexTypes);
+      }
+      catch (Exception ex)
+      {
+        return BadRequest($"An error occurred: {ex.Message}");
+      }
+    }
+
+    [HttpDelete("index/{id}")]
+    public IActionResult DeleteIndex(int id)
+    {
+      try
+      {
+        using (var connection = (SqlConnection)_context.Database.GetDbConnection())
+        {
+          connection.Open();
+          using (var command = new SqlCommand("sp_del_index_type", connection))
+          {
+            command.CommandType = CommandType.StoredProcedure;
+            command.Parameters.Add(new SqlParameter("@id_index", SqlDbType.Int) { Value = id });
+
+            command.ExecuteNonQuery();
+          }
+          connection.Close();
+          return Ok(new { message = "Index successfully deleted." });
+        }
+      }
+      catch (Exception ex)
+      {
+        return BadRequest($"Error deleting index: {ex.Message}");
+      }
+    }
+
+    [HttpPost]
+    [Route("index/add")]
+    public IActionResult AddIndex([FromBody] IndexTypes indextypes)
+    {
+      try
+      {
+        using (var connection = (SqlConnection)_context.Database.GetDbConnection())
+        {
+          connection.Open();
+          var command = new SqlCommand("sp_ins_index_type", connection)
+          {
+            CommandType = CommandType.StoredProcedure
+          };
+          command.Parameters.Add(new SqlParameter("@index_name", SqlDbType.VarChar) { Value = indextypes.index_name });
+          command.Parameters.Add(new SqlParameter("@index_symbol", SqlDbType.VarChar) { Value = indextypes.index_symbol });
+          command.Parameters.Add(new SqlParameter("@source", SqlDbType.VarChar) { Value = indextypes.source });
+
+
+          command.ExecuteNonQuery();
+
+          command = new SqlCommand("SELECT TOP 1 * FROM IndexTypes ORDER BY id_index DESC", connection);
+          var reader = command.ExecuteReader();
+          if (reader.Read())
+          {
+            var newIndex = new IndexTypes
+            {
+              id_index = (int)reader["id_index"],
+              index_name = (string)reader["index_name"],
+              index_symbol = (string)reader["index_symbol"],
+              source = (string)reader["source"]
+            };
+            return Ok(newIndex);
+          }
+          else
+          {
+            throw new Exception("Failed to retrieve new index data.");
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+        return BadRequest(new { error = $"An error occurred: {ex.Message}" });
+      }
+    }
 
 
 
@@ -190,6 +295,44 @@ namespace Coberturas.Controllers
       }
     }
 
+    [HttpPut("banks/update/{id}")]
+    public IActionResult UpdateClient(int id, [FromBody] Banks bank)
+    {
+      try
+      {
+        if (id != bank.id_bank)
+        {
+          return BadRequest("Bank ID mismatch");
+        }
+
+        using (var connection = (SqlConnection)_context.Database.GetDbConnection())
+        {
+          connection.Open();
+          var command = new SqlCommand("sp_upd_banks", connection)
+          {
+            CommandType = CommandType.StoredProcedure
+          };
+          command.Parameters.Add(new SqlParameter("@id_bank", bank.id_bank));
+          command.Parameters.Add(new SqlParameter("@bank", bank.bank));
+          command.Parameters.Add(new SqlParameter("@CSA", bank.CSA));
+
+          int result = command.ExecuteNonQuery();
+          if (result > 0)
+          {
+            return Ok(new { message = "Bank updated successfully." });
+          }
+          else
+          {
+            return NotFound("Bank not found.");
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+        return BadRequest($"An error occurred: {ex.Message}");
+      }
+    }
+
 
     [HttpPost]
     [Route("sars/add")]
@@ -208,7 +351,7 @@ namespace Coberturas.Controllers
 
           command.ExecuteNonQuery();
 
-          command = new SqlCommand("SELECT TOP 1 * FROM sars ORDER BY id_sar DESC", connection);
+          command = new SqlCommand("SELECT TOP 1 * FROM sars_number ORDER BY id_sar DESC", connection);
           var reader = command.ExecuteReader();
           if (reader.Read())
           {
@@ -324,7 +467,7 @@ namespace Coberturas.Controllers
         using (var connection = (SqlConnection)_context.Database.GetDbConnection())
         {
           connection.Open();
-          var command = new SqlCommand("sp_update_plant", connection)
+          var command = new SqlCommand("sp_upd_plant", connection)
           {
             CommandType = CommandType.StoredProcedure
           };
@@ -364,11 +507,11 @@ namespace Coberturas.Controllers
         using (var connection = (SqlConnection)_context.Database.GetDbConnection())
         {
           connection.Open();
-          var command = new SqlCommand("sp_update_client", connection)
+          var command = new SqlCommand("sp_upd_clients", connection)
           {
             CommandType = CommandType.StoredProcedure
           };
-          command.Parameters.Add(new SqlParameter("@id_client", id));
+          command.Parameters.Add(new SqlParameter("@id_client", client.id_client));
           command.Parameters.Add(new SqlParameter("@client", client.client));
           command.Parameters.Add(new SqlParameter("@holding", client.holding));
 
