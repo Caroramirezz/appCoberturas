@@ -16,7 +16,7 @@ export class AddBankComponent implements OnInit {
 
   ngOnInit(): void {
     this.bankForm = this.fb.group({
-      bankName: ['', Validators.required],
+      bank: ['', Validators.required],
       CSA: ['', Validators.required]
     });
   }

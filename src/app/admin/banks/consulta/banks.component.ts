@@ -7,6 +7,8 @@ import { Table } from 'primeng/table';
 import { BanksService } from '../services/banks.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AddBankComponent } from '../add/addBank.component';
+import { EditBanksDialog } from '../edit/edit-banks.component';
+
 
 @Component({
   selector: 'app-clients',
@@ -41,24 +43,32 @@ export class BanksComponent implements OnInit {
 
 openAddBankDialog(): void {
   const dialogRef = this.dialog.open(AddBankComponent, {
-    width: '250px'
+      width: '250px'
   });
 
   dialogRef.afterClosed().subscribe(result => {
-    if (result) {
-      this.banksService.addBank(result).subscribe({
-        next: (response) => {
-          this.toastr.success('Bank added successfully');
-        },
-        error: (error) => {
-          console.error('Error adding bank:', error);
-          this.toastr.error('Error adding bank');
-        }
-      });
-    }
+      if (result) {
+          this.banksService.addBank(result).subscribe({
+              next: (newBank) => {
+                  this.products.push(newBank); // Now pushing the full bank object
+                  this.toastr.success('Bank added successfully');
+              },
+              error: (error) => {
+                  this.toastr.error('Error adding bank', error.message);
+              }
+          });
+      }
   });
 }
 
+openDialog(flag:string, row:any) {
+  this.dialog.open(EditBanksDialog, {
+    data: {
+      tipo: flag,
+      data: row
+    },
+  });
+}
 
 
 ngOnInit(): void {
@@ -100,4 +110,22 @@ ngOnInit(): void {
         }
     });
   }
+
+  toggleEdit(bank: BankInterface, value: boolean): void {
+    bank.editing = value; // Toggle edit state
+}
+
+saveBank(bank: BankInterface): void {
+    this.banksService.updateBank(bank).subscribe({
+        next: () => {
+            this.toastr.success('Bank updated successfully!');
+            bank.editing = false; // Turn off edit mode on success
+            // Optionally reload banks or update the local state
+        },
+        error: (error) => {
+            this.toastr.error('Error updating bank');
+            console.error('Error updating bank', error);
+        }
+    });
+}
 }

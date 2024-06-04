@@ -421,7 +421,6 @@ namespace Coberturas.Controllers
 
           array.id_client = (int)reader["id_client"];
           array.client = (string)reader["client"];
-          array.group_client = (string)reader["group_client"];
           array.holding = (string)reader["holding"];
 
           data.Add(array);

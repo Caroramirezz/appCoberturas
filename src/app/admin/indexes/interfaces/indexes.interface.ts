@@ -1,4 +1,7 @@
 export interface IndexInterface {
-    id_client?: number;
-    name_client: string;    
+    id_index: number;
+    index_name: string; 
+    index_symbol: string;
+    source: string;
+    editing?: boolean;  
 }

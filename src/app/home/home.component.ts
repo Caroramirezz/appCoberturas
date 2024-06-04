@@ -35,10 +35,11 @@ export class HomeComponent implements OnInit {
           title: 'Administración',
           icon: 'admin_panel_settings',
           children: [
-            { title: 'Clientes', icon: 'settings_applications', link: '/home/admin/clients/consulta' },
-            { title: 'Plantas', icon: 'settings_applications', link: '/home/admin/plants/consulta' },
-            { title: 'SARS', icon: 'settings_applications', link: '/home/admin/sars/consulta' },
-            { title: 'Bancos', icon: 'settings_applications', link: '/home/admin/banks/consulta' }
+            { title: 'Clients', icon: 'groups', link: '/home/admin/clients/consulta' },
+            //{ title: 'Plantas', icon: 'settings_applications', link: '/home/admin/plants/consulta' },
+            { title: 'SARS', icon: 'trending_up', link: '/home/admin/sars/consulta' },
+            { title: 'Banks', icon: 'account_balance', link: '/home/admin/banks/consulta' },
+            { title: 'Indexes', icon: 'pin', link: '/home/admin/indexes/consulta' },
           ]
         }
       ];

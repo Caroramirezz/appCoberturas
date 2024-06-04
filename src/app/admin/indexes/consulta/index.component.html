@@ -1,17 +1,17 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
 <div style="margin-bottom: 20px; margin-top: 5px;">
-	<p class="title">Catalogo de Bancos</p>
+	<p class="title">Catalogo de Indices</p>
 </div>
 
 <mat-card>
     <mat-card-header fxLayout="row" fxLayout.xs="column">
         <div fxFlex="50" fxFlex.xs="100" fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.xs="center center">
-            <mat-card-title>Lista de Bancos</mat-card-title>
+            <mat-card-title>Lista de Indices</mat-card-title>
         </div>
         <div fxFlex="50" fxFlex.xs="100" fxLayoutAlign="end center" fxLayoutAlign.xs="center center" style="margin-bottom: 15px;">
             <button class="button-clear" pButton label="Clear" type="button" icon="pi pi-filter-slash" iconPos="left" (click)="clear(dt1)"></button>
-            <button class="button button-nuevo" mat-raised-button (click)="openAddBankDialog()">Agregar Banco</button>            
+            <button class="button button-nuevo" mat-raised-button (click)="openAddIndexDialog()">Agregar Indice</button>            
         </div>                
     </mat-card-header>
 
@@ -22,9 +22,10 @@
                 <ng-template pTemplate="header">                        
                     <tr>                            
                         <th pReorderableColumn>Action</th>
-                        <th pReorderableColumn>ID Banco</th>
-                        <th pReorderableColumn>Nombre</th>   
-                        <th pReorderableColumn>CSA</th>                        
+                        <th pReorderableColumn>ID Index</th>
+                        <th pReorderableColumn>Index Name</th>   
+                        <th pReorderableColumn>Index Symbol</th>
+                        <th pReorderableColumn>Source</th>                     
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-rowData>
@@ -33,24 +34,28 @@
                             <button *ngIf="!rowData.editing" (click)="toggleEdit(rowData, true)" mat-icon-button matTooltip="Editar">
                                 <mat-icon>edit</mat-icon>                             
                             </button>  
-                            <button *ngIf="rowData.editing" (click)="saveBank(rowData)" mat-icon-button matTooltip="Save">
+                            <button *ngIf="rowData.editing" (click)="saveIndex(rowData)" mat-icon-button matTooltip="Save">
                                 <mat-icon>save</mat-icon>
                             </button>
-                            <button *ngIf="!rowData.editing" (click)="deleteBank(rowData.id_bank)" mat-icon-button matTooltip="Eliminar">
+                            <button *ngIf="!rowData.editing" (click)="deleteIndex(rowData.id_index)" mat-icon-button matTooltip="Eliminar">
                                 <mat-icon>delete</mat-icon>
                             </button>                                                               
                         </td>                            
-                        <td *ngIf="!rowData.editing">{{ rowData.id_bank }}</td>
+                        <td *ngIf="!rowData.editing">{{ rowData.id_index }}</td>
                         <td *ngIf="rowData.editing">
-                            <input type="text" [(ngModel)]="rowData.id_bank" disabled>
+                            <input type="text" [(ngModel)]="rowData.id_index" disabled>
                         </td>
-                        <td *ngIf="!rowData.editing">{{ rowData.bank }}</td>
+                        <td *ngIf="!rowData.editing">{{ rowData.index_name }}</td>
                         <td *ngIf="rowData.editing">
-                            <input type="text" pInputText [(ngModel)]="rowData.bank">
+                            <input type="text" pInputText [(ngModel)]="rowData.index_name">
                         </td>
-                        <td *ngIf="!rowData.editing">{{ rowData.csa }}</td>
+                        <td *ngIf="!rowData.editing">{{ rowData.index_symbol }}</td>
                         <td *ngIf="rowData.editing">
-                            <input type="text" pInputText [(ngModel)]="rowData.csa">
+                            <input type="text" pInputText [(ngModel)]="rowData.index_symbol">
+                        </td> 
+                        <td *ngIf="!rowData.editing">{{ rowData.source }}</td>
+                        <td *ngIf="rowData.editing">
+                            <input type="text" pInputText [(ngModel)]="rowData.source">
                         </td>                         
                     </tr>
                 </ng-template>
