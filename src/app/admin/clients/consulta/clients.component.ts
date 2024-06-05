@@ -185,16 +185,16 @@ deletePlant(plant: PlantsInterface): void {
     this.selectedProducts3 = [];
   }
 
-  openDialog(flag: string, row: any): void {
-    this.dialog.open(EditClientsDialog, {
-      data: {
-        tipo: flag,
-        data: row
-      },
-    });
+//   openDialog(flag: string, row: any): void {
+//     this.dialog.open(EditClientsDialog, {
+//       data: {
+//         tipo: flag,
+//         data: row
+//       },
+//     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
-    });    
-  }
+//     dialogRef.afterClosed().subscribe(result => {
+//       console.log(result);
+//     });    
+//   }
 }

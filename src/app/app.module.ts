@@ -18,6 +18,7 @@ import { DialogComponent } from './trades/pages/dialog/dialog.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon'
 import { EditClientsDialog } from './admin/clients/edit/edit-clients.component';
+import { PlattsComponent } from './platts/platts.component';
 
 
 
@@ -27,7 +28,8 @@ import { EditClientsDialog } from './admin/clients/edit/edit-clients.component';
     AppComponent,
     HomeComponent,
     DialogComponent,
-    EditClientsDialog
+    EditClientsDialog,
+    PlattsComponent
   ],
   imports: [
     BrowserModule,
