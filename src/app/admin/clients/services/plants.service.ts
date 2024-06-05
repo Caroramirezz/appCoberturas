@@ -38,4 +38,8 @@ export class PlantsService {
     return this.http.put(`${this.urlBackLocal}admin/plants/update/${plant.id_plant}`, plant);
   }
 
+  addPlant(plant: PlantsInterface): Observable<any> {
+    return this.http.post(`${this.urlBackLocal}admin/plants/add`, plant);
+  }
+
 }
