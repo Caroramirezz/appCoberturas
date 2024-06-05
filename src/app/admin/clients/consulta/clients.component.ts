@@ -1,200 +1,121 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ClientInterface } from '../interfaces/clients.interface';
 import { PlantsInterface } from '../interfaces/plants.interface';
-import { Router } from '@angular/router';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { ToastrService } from 'ngx-toastr';
-import { Table } from 'primeng/table';
 import { ClientsService } from '../services/clients.service';
 import { PlantsService } from '../services/plants.service';
-import { MatDialog } from '@angular/material/dialog';
-import { EditClientsDialog } from '../edit/edit-clients.component';
-import { MatSidenavModule } from '@angular/material/sidenav';
-
+import { ToastrService } from 'ngx-toastr';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { PlantDialogComponent } from '../plants/plant-dialog.component';
 
 @Component({
   selector: 'app-clients',
   templateUrl: './clients.component.html',
-  styleUrls: ['./clients.component.scss']
+  styleUrls: ['./clients.component.scss'],
+  providers: [DialogService]
 })
 export class ClientsComponent implements OnInit {
 
   products: ClientInterface[] = [];
-  plants: PlantsInterface[] = [];
-  cols: any[] = [];
-  _selectedColumns: any[] = [];
-  _selectedColumnsFilter: any[] = [];
-  selectedProducts3: ClientInterface[] = [];
   selectedClient: ClientInterface | null = null;
+  ref: DynamicDialogRef | undefined;
 
   constructor(
-    private router: Router,
-    private spinner: NgxSpinnerService,
-    private toastr: ToastrService,
-    public dialog: MatDialog,
     private clientsService: ClientsService,
     private plantsService: PlantsService,
-    public sidenav: MatSidenavModule
-  ) {
-    this.cols = [
-      { field: 'id_client', header: 'ID', type: "text" },
-      { field: 'client', header: 'Client', type: "text" },
-      { field: 'holding', header: 'Holding', type: "text" }
-    ];
-  }
+    private toastr: ToastrService,
+    public dialogService: DialogService
+  ) {}
 
   ngOnInit(): void {
     this.loadClients();
   }
 
   loadClients(): void {
+    console.log('Loading clients...');
     this.clientsService.getClients().subscribe({
       next: (clients) => {
+        console.log('Clients loaded:', clients);
         this.products = clients;
-        this.spinner.hide();
       },
       error: (error) => {
         console.error('Failed to load clients', error);
         this.toastr.error('Failed to load clients');
-        this.spinner.hide();
       }
     });
   }
 
-  onClientSelect(event: any): void {
-    this.selectedClient = event.data;
-    if (this.selectedClient) {
-      this.loadPlantsForClient(this.selectedClient?.id_client);
-    }
+  onRowEditInit(client: ClientInterface): void {
+    console.log('Row edit initialized', client);
   }
 
-  loadPlantsForClient(clientId?: number): void {
-    if (!clientId) {
-      console.log('No clientId provided');
-      this.toastr.error('No client selected');
-      return;
-    }
-    this.plantsService.getPlantsByClientId(clientId).subscribe({
+  onRowEditSave(client: ClientInterface): void {
+    this.clientsService.updateClient(client).subscribe({
+      next: () => {
+        this.toastr.success('Client updated successfully');
+      },
+      error: (error) => {
+        this.toastr.error('Error updating client');
+        console.error('Error updating client', error);
+      }
+    });
+  }
+
+  onRowEditCancel(client: ClientInterface, index: number): void {
+    console.log('Row edit cancelled', client, index);
+  }
+
+  addClient(): void {
+    const newClient: ClientInterface = { id_client: 0, client: '', holding: '' };
+    this.products = [...this.products, newClient];
+  }
+
+  deleteClient(client: ClientInterface): void {
+    this.clientsService.deleteClient(client.id_client).subscribe({
+      next: () => {
+        this.toastr.success('Client deleted successfully');
+        this.loadClients(); // Reload clients to reflect changes
+      },
+      error: (error) => {
+        this.toastr.error('Error deleting client');
+        console.error('Failed to delete client', error);
+      }
+    });
+  }
+
+  openPlantDialog(client: ClientInterface): void {
+    console.log('Loading plants for clientId:', client.id_client);
+    this.plantsService.getPlantsByClientId(client.id_client).subscribe({
       next: (plants) => {
-        console.log('Plants loaded:', plants);
-        this.plants = plants;
+        console.log('Plants loaded for client:', plants);
+        this.selectedClient = client;
+        this.openDialog(plants);
       },
       error: (err) => {
         console.error('Failed to load plants', err);
         this.toastr.error('Failed to load plants for the selected client');
       }
     });
-  }  
-
-  toggleEdit(client: ClientInterface, value: boolean, event?: MouseEvent): void {
-    if (event) {
-        event.stopPropagation();  // Stop the event from bubbling up
-    }
-    client.editing = value;
-
-    if (!value) {
-        // Save the client here or handle cancel
-        this.saveClient(client);
-    }
-}
-
-onRowSelect(event: any): void {
-    if (!event.data.editing) {
-        this.selectedClient = event.data;
-        this.loadPlantsForClient(this.selectedClient?.id_client);
-    }
-}
-
-selectRow(client: ClientInterface): void {
-  if (!client.editing) {
-      this.selectedClient = client;
-      this.loadPlantsForClient(client.id_client);
   }
-}
 
+  openDialog(plants: PlantsInterface[]): void {
+    if (this.selectedClient) {
+      console.log('Opening dialog for client:', this.selectedClient); // Log client data
+      this.ref = this.dialogService.open(PlantDialogComponent, {
+        header: `Plants for ${this.selectedClient.client}`,
+        width: '70%',
+        contentStyle: { "max-height": "500px", "overflow": "auto" },
+        baseZIndex: 10000,
+        data: {
+          client: this.selectedClient,
+          plants: plants
+        }
+      });
 
-  
-
-  saveClient(client: ClientInterface): void {
-    if (client.editing) {
-      this.clientsService.updateClient(client).subscribe({
-        next: (response) => {
-          this.toastr.success('Client updated successfully');
-          client.editing = false;  // Turn off edit mode on success
-        },
-        error: (error) => {
-          this.toastr.error('Error updating client');
-          console.error('Failed to update client', error);
+      this.ref.onClose.subscribe((message) => {
+        if (message) {
+          this.toastr.success(message);
         }
       });
     }
   }
-
-deleteClient(client: ClientInterface): void {
-    // Call service to delete client
-    this.clientsService.deleteClient(client.id_client).subscribe({
-        next: () => {
-            this.toastr.success('Client deleted successfully');
-            this.loadClients();  // Reload clients to reflect changes
-        },
-        error: (error) => {
-            this.toastr.error('Error deleting client');
-            console.error('Failed to delete client', error);
-        }
-    });
-}
-
-savePlant(plant: PlantsInterface): void {
-    // Call service to update plant
-    this.plantsService.updatePlant(plant).subscribe({
-        next: () => {
-            this.toastr.success('Plant updated successfully');
-            this.loadPlantsForClient(this.selectedClient!.id_client);  // Reload plants for current client
-            plant.editing = false;
-        },
-        error: (error) => {
-            this.toastr.error('Error updating plant');
-            console.error('Failed to update plant', error);
-        }
-    });
-}
-
-deletePlant(plant: PlantsInterface): void {
-    // Call service to delete plant
-    this.plantsService.deletePlant(plant.id_plant).subscribe({
-        next: () => {
-            this.toastr.success('Plant deleted successfully');
-            this.loadPlantsForClient(this.selectedClient!.id_client);  // Reload plants for current client
-        },
-        error: (error) => {
-            this.toastr.error('Error deleting plant');
-            console.error('Failed to delete plant', error);
-        }
-    });
-}
-
-
-  
-
-  @Input() get selectedColumns(): any[] {
-    return this._selectedColumns;
-  }
-
-  clear(table: Table): void {
-    table.clear();
-    this.selectedProducts3 = [];
-  }
-
-//   openDialog(flag: string, row: any): void {
-//     this.dialog.open(EditClientsDialog, {
-//       data: {
-//         tipo: flag,
-//         data: row
-//       },
-//     });
-
-//     dialogRef.afterClosed().subscribe(result => {
-//       console.log(result);
-//     });    
-//   }
 }

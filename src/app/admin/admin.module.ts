@@ -13,6 +13,18 @@ import { AddBankComponent } from './banks/add/addBank.component';
 import { AddSarComponent } from './sars/add/addSar.component';
 import { AddIndexComponent } from './indexes/add/addIndex.component';
 import { EditBanksDialog } from './banks/edit/edit-banks.component';
+import { PlantDialogComponent } from './clients/plants/plant-dialog.component';
+import { FormsModule } from '@angular/forms';
+import { TableModule } from 'primeng/table';
+import { ToolbarModule } from 'primeng/toolbar';
+import { ButtonModule } from 'primeng/button';
+import { RippleModule } from 'primeng/ripple';
+import { DropdownModule } from 'primeng/dropdown';
+import { TagModule } from 'primeng/tag';
+import { MessageService } from 'primeng/api';
+import { DynamicDialogModule } from 'primeng/dynamicdialog';
+import { ToastModule } from 'primeng/toast';
+
 
 
 @NgModule({
@@ -24,7 +36,8 @@ import { EditBanksDialog } from './banks/edit/edit-banks.component';
     AddBankComponent,
     AddSarComponent,
     EditBanksDialog,
-    AddIndexComponent
+    AddIndexComponent,
+    PlantDialogComponent
   ],
   imports: [
     CommonModule,
@@ -33,6 +46,16 @@ import { EditBanksDialog } from './banks/edit/edit-banks.component';
     FlexLayoutModule,
     NgxSpinnerModule,
     MatDialogModule,
-  ]
+    FormsModule,
+    TableModule,
+    ToolbarModule,
+    ButtonModule,
+    RippleModule,
+    DropdownModule,
+    TagModule,
+    DynamicDialogModule,
+    ToastModule
+  ],
+  providers: [MessageService],
 })
 export class AdminModule { }
