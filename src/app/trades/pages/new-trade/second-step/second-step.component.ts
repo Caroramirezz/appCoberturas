@@ -28,7 +28,7 @@ export class SecondStepComponent implements OnInit {
 
   dataPlants:any[] = [];
   dataPlantsEdit:any[] = [];
-  listClients:any[] = [];
+  listPlants:any[] = [];
 
   fill_down:boolean = false;  
   fill_down_price:boolean = false;
@@ -44,7 +44,7 @@ export class SecondStepComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getListClients();    
+    this.getListPlants();    
      //Jalar ID de la URL
     this.route.params.subscribe(params => {
       if(params['id']){
@@ -97,7 +97,7 @@ export class SecondStepComponent implements OnInit {
           aux.push(result.data[x]);           
           
           //Mapear clientes        
-          auxClientes.push(result.data[x].id_client);
+          auxClientes.push(result.data[x].id_plant);
           auxNEGID.push(result.data[x].id_neg);
         }       
         //Quitar repetidos
@@ -116,14 +116,14 @@ export class SecondStepComponent implements OnInit {
       let auxClientes2 = 0;
       let primeraVez = true;
       
-      for(var z = 0; z < this.listClients.length; z++){
+      for(var z = 0; z < this.listPlants.length; z++){
         if(primeraVez){
           aux2 = clientes[auxClientes2];
           primeraVez = false;
         }
   
-        if(aux2 == this.listClients[z].id_client){
-          this.plants_chooseEdit.splice(auxClientes2, 0, this.listClients[z]);
+        if(aux2 == this.listPlants[z].id_plant){
+          this.plants_chooseEdit.splice(auxClientes2, 0, this.listPlants[z]);
           primeraVez = true;
           auxClientes2++;          
         }
@@ -142,17 +142,18 @@ export class SecondStepComponent implements OnInit {
       for(var y = 0; y < this.plants_chooseEdit.length; y++){
 
         if(flag){
-          auxID = this.plants_chooseEdit[y].id_client;
+          auxID = this.plants_chooseEdit[y].id_plant;
           flag = false;
         }
 
-        if(auxID == this.plants_chooseEdit[y].id_client){
+        if(auxID == this.plants_chooseEdit[y].id_plant){
           //Se crea el cliente. 
           if(Object.keys(this.trade_object).length > 0){ 
             this.dataPlants.push({
               position:y,
-              id_client: this.plants_choose[y].id_client,
+              id_plant: this.plants_choose[y].id_plant,
               name_client: this.plants_choose[y].client,
+              name_plant: this.plants_choose[y].name_plant,
               neg_id:this.ids_neg[y],
               id_trade:this.trade_object.id_trade,  
               fill_down:false,
@@ -181,7 +182,7 @@ export class SecondStepComponent implements OnInit {
       //Agregar valores restantes
       for(var x = 0; x < this.dataPlants.length; x++){                
         for(var y = 0; y < this.dataPlantsEdit.length; y++){          
-          if(this.dataPlants[x].id_client == this.dataPlantsEdit[y].id_client){
+          if(this.dataPlants[x].id_plant == this.dataPlantsEdit[y].id_plant){
             for(var e = 0; e < this.dataPlants[x].table.length; e++){
               if(this.dataPlants[x].table[e].month == moment(this.dataPlantsEdit[y].trade_month).get('month')){
                 this.dataPlants[x].table[e].vol_daily = this.dataPlantsEdit[y].vol_daily;
@@ -206,9 +207,17 @@ export class SecondStepComponent implements OnInit {
     })
   }
 
+  getListPlants(){
+    this.wsTrade.getPlants().subscribe(result => {
+      this.listPlants = result.data;
+    }, error => {
+      console.log(error);
+    })
+  }
+
   getListClients(){
     this.wsTrade.getClients().subscribe(result => {
-      this.listClients = result.data;
+      this.listPlants = result.data;
     }, error => {
       console.log(error);
     })
@@ -247,8 +256,9 @@ export class SecondStepComponent implements OnInit {
             for(var x = this.trade_object.list_trades_plants.length; x < this.plants_choose.length; x++){
               this.dataPlants.push({
                 position:x,
-                id_client: this.plants_choose[x].id_client,
-                name_client: this.plants_choose[x].client,
+                id_plant: this.plants_choose[x].id_plant,
+                name_plant: this.plants_choose[x].name_plant,
+                id_client:this.plants_choose[x].client_id,
                 neg_id:0,
                 id_trade:this.trade_object.id_trade,  
                 fill_down:false,
@@ -277,9 +287,10 @@ export class SecondStepComponent implements OnInit {
           //Crear tabla
           for(var x = 0; x < this.plants_choose.length; x++){
             this.dataPlants.push({
-              position:x,
-              id_client: this.plants_choose[x].id_client,
-              name_client: this.plants_choose[x].client,
+              position:x,             
+              id_plant: this.plants_choose[x].id_plant,
+              name_plant: this.plants_choose[x].name_plant,
+              id_client:this.plants_choose[x].client_id,
               neg_id:0,
               id_trade:this.trade_object.id_trade,  
               fill_down:false,
@@ -443,9 +454,9 @@ export class SecondStepComponent implements OnInit {
       for(var z = 0; z < this.dataPlants.length; z++){
         objectService.push({
           id_neg:this.dataPlants[z].id_neg,
-          id_client: this.dataPlants[z].id_client,
-          id_trade: this.dataPlants[z].id_trade,
-          name_client: this.dataPlants[z].name_client,
+          id_plant: this.dataPlants[z].id_plant,
+          id_trade: this.dataPlants[z].id_trade,          
+          name_plant: this.dataPlants[z].name_plant,
           fill_down:this.dataPlants[z].fill_down,
           fill_down_price:this.dataPlants[z].fill_down_price,
           table: this.dataPlants[z].table
@@ -515,8 +526,8 @@ export class SecondStepComponent implements OnInit {
           settled:false,
           id_trade_type: this.trade_object.id_trade_type,
           bank_leg:false,
-          counterparty:this.trade_object.list_trades_plants[x].id_client,
-          id_client:this.trade_object.list_trades_plants[x].id_client,
+          counterparty:this.trade_object.list_trades_plants[x].id_plant,
+          id_plant:this.trade_object.list_trades_plants[x].id_plant,
           id_bank:undefined,
           trade_date: new Date(this.trade_object.trade_date),
           id_sar: this.trade_object.id_sar,

@@ -125,5 +125,9 @@ export class TradesService {
     return this.http.get<any>(this.urlBackLocal + 'FiltrosTrade/ListClients');        
   }
 
+  getPlants():Observable<any>{   
+    return this.http.get<any>(this.urlBackLocal + 'FiltrosTrade/ListPlants');        
+  }
+
 
 }

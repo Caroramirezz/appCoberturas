@@ -38,8 +38,8 @@ export interface ListTrade {
 
 export interface ListPlants {    
     id_neg:number;
-    id_client:number;
-    name_client:string;
+    id_plant:number;
+    name_plant:string;
     id_trade:string;
     fill_down:boolean;    
     fill_down_price:boolean;    
@@ -58,6 +58,7 @@ export interface SaveTrade {
     counterparty:number;
     id_bank?:number;
     id_client?:number;
+    id_plant?:number;
     trade_date:Date;
     id_sar:number;
     trade_month:Date;

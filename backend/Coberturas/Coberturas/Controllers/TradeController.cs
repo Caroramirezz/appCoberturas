@@ -59,7 +59,7 @@ namespace Coberturas.Controllers
             comando.Parameters.Add("price", System.Data.SqlDbType.Decimal).Value = t.price;
             comando.Parameters.Add("id_unit", System.Data.SqlDbType.Int).Value = t.id_unit;
             comando.Parameters.Add("id_bank", System.Data.SqlDbType.Int).Value = t.id_bank == null ? DBNull.Value : t.id_bank;
-            comando.Parameters.Add("id_client", System.Data.SqlDbType.Int).Value = t.id_client == null ? DBNull.Value : t.id_client;
+            comando.Parameters.Add("id_plant", System.Data.SqlDbType.Int).Value = t.id_plant == null ? DBNull.Value : t.id_plant;
 
             SqlDataReader reader = comando.ExecuteReader();
             conexion.Close();
@@ -133,7 +133,7 @@ namespace Coberturas.Controllers
           array.volume_unit = (string)reader["volume_unit"];
           array.id_bank = reader["id_bank"] == DBNull.Value ? null : (int)reader["id_bank"];
           array.bank = reader["bank"] == DBNull.Value ? null : (string)reader["bank"];
-          array.id_client = reader["id_client"] == DBNull.Value ? null : (int)reader["id_client"]; 
+          array.id_plant = reader["id_plant"] == DBNull.Value ? null : (int)reader["id_plant"]; 
           array.client = reader["client"] == DBNull.Value ? null : (string)reader["client"];
           array.effective_price = (Decimal)reader["effective_price"];
 
@@ -202,7 +202,7 @@ namespace Coberturas.Controllers
           array.volume_unit = (string)reader["volume_unit"];
           array.id_bank = reader["id_bank"] == DBNull.Value ? null : (int)reader["id_bank"];
           array.bank = reader["bank"] == DBNull.Value ? null : (string)reader["bank"];
-          array.id_client = reader["id_client"] == DBNull.Value ? null : (int)reader["id_client"];
+          array.id_plant = reader["id_plant"] == DBNull.Value ? null : (int)reader["id_plant"];
           array.client = reader["client"] == DBNull.Value ? null : (string)reader["client"];
 
           data.Add(array);
@@ -267,7 +267,7 @@ namespace Coberturas.Controllers
             comando.Parameters.Add("price", System.Data.SqlDbType.Decimal).Value = t.price;
             comando.Parameters.Add("id_unit", System.Data.SqlDbType.Int).Value = t.id_unit;
             comando.Parameters.Add("id_bank", System.Data.SqlDbType.Int).Value = t.id_bank == null ? DBNull.Value : t.id_bank;
-            comando.Parameters.Add("id_client", System.Data.SqlDbType.Int).Value = t.id_client == null ? DBNull.Value : t.id_client;
+            comando.Parameters.Add("id_plant", System.Data.SqlDbType.Int).Value = t.id_plant == null ? DBNull.Value : t.id_plant;
 
             SqlDataReader reader = comando.ExecuteReader();
             conexion.Close();

@@ -25,8 +25,8 @@
 				<mat-form-field appearance="outline" style="width: 90%;">
 					<mat-label>Choose Plants</mat-label>                                
 					<mat-select [(ngModel)]="plants_choose" multiple>                                
-					  <mat-option *ngFor="let t of listClients" [value]="t">
-						 {{t.client}}
+					  <mat-option *ngFor="let t of listPlants" [value]="t">
+						 {{t.name_plant}}
 					  </mat-option>
 					</mat-select>            
 			  </mat-form-field>      			    
@@ -47,7 +47,7 @@
         <!-- <div fxFlex="100" fxFlex.xs="100" fxLayoutAlign="center start" fxLayoutAlign.xs="center center">-->
 			<div fxFlex="100" fxLayout="row" fxLayoutAlign="space-between" style="margin-bottom: 10px;">						
 					<div fxFlex="50" fxLayoutAlign="start center">
-						<span class="title">{{p.name_client}}</span>
+						<span class="title">{{p.name_plant}}</span>
 					</div>
 					<div fxFlex="50" fxLayoutAlign="space-around center">
 						<div style="font-size: 13px;">

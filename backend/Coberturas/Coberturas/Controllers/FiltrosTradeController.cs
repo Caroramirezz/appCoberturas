@@ -436,5 +436,47 @@ namespace Coberturas.Controllers
       }
     }
 
+
+    [HttpGet]
+    [Route("ListPlants")]
+    public IActionResult ListPlants()
+    {
+      try
+      {
+        List<Plants> data = new List<Plants>();
+
+        SqlConnection conexion = (SqlConnection)_context.Database.GetDbConnection();
+        SqlCommand comando = conexion.CreateCommand();
+        conexion.Open();
+        comando.CommandType = System.Data.CommandType.StoredProcedure;
+        comando.CommandText = "sp_get_plants";
+
+        SqlDataReader reader = comando.ExecuteReader();
+        while (reader.Read())
+        {
+          Plants array = new Plants();
+
+          array.id_plant = (int)reader["id_plant"];
+          array.name_plant = (string)reader["name_plant"];
+          array.inicio_contrato = (DateTime)reader["inicio_contrato"];
+          array.fin_contrato = (DateTime)reader["fin_contrato"];
+          array.client_id = (int)reader["client_id"];
+          array.client = (string)reader["client"];
+          array.holding = (string)reader["holding"];
+
+          data.Add(array);
+        }
+        conexion.Close();
+
+        var result = new ResponseGeneral() { msg = "Consulta Realizada", data = data, success = true };
+        return Ok(result);
+      }
+      catch (Exception ex)
+      {
+        return BadRequest(ex);
+      }
+    }
+
+
   }
 }

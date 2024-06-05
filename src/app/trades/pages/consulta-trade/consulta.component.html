@@ -1,7 +1,12 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
-<div style="margin-bottom: 20px; margin-top: 5px;">
-	<p class="title">Search Trade</p>
+<div fxLayout="row" style="margin-bottom: 20px; margin-top: 5px;">
+	<div fxFlex="50" fxLayoutAlign="start center">
+        <span class="title">Search Trade</span>
+    </div>
+    <div fxFlex="50" fxLayoutAlign="end center">
+        <button class="button button-settled" mat-raised-button routerLink="/home/trade/step-1">New Trade</button>
+    </div>
 </div>
 
 <mat-card>

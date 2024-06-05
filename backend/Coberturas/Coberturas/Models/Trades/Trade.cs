@@ -33,7 +33,7 @@ namespace Coberturas.Models.Trades
     public string? volume_unit { set; get; }
     public int? id_bank { set; get; }
     public string? bank { set; get; }
-    public int? id_client { set; get; }
+    public int? id_plant { set; get; }
     public string? client { set; get; }
     public decimal? effective_price { get; set; }
   }
