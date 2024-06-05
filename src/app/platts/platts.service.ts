@@ -10,6 +10,8 @@ import { environment } from 'src/environments/environment';
 export class PlattsService {
     
   private urlPlatts = "https://api.platts.com";
+  private userPlatts = environment.userPlatts;
+  private passPlatts = environment.passPlatts;
 
 
   public headersToken = new HttpHeaders({
@@ -35,8 +37,8 @@ export class PlattsService {
   //Este se habilita al iniciar sesión. 
   getToken():Observable<any>{   
     const body = new URLSearchParams();
-    body.set('username', 'eguel@alfa.com.mx');
-    body.set('password', 'eGuel#1804');
+    body.set('username', this.userPlatts);
+    body.set('password', this.passPlatts);
 
     return this.http.post<any>(this.urlPlatts + '/auth/api', body.toString(), {headers:this.headersToken});        
   }

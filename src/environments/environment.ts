@@ -6,7 +6,9 @@ export const environment = {
   production: false,
   //urlBackLocal: 'https://localhost:7260/',
   urlBackLocal: 'https://localhost:44373/',
-  apiKey: 'UdqntgWRujWthZwPYfFu',    
+  apiKey: 'UdqntgWRujWthZwPYfFu',     
+  userPlatts:'eguel@alfa.com.mx',
+  passPlatts:'eGuel#1804'
 };
 
 /*
