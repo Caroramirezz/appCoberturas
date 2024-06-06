@@ -3,6 +3,6 @@ export interface PlantsInterface {
     name_plant: string;
     inicio_contrato: Date;
     fin_contrato: Date;
-    id_client: number;
+    id_client?: number;
     editing?: boolean;    
 }

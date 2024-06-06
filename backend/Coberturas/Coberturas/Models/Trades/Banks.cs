@@ -4,6 +4,7 @@ namespace Coberturas.Models.Trades
   {
     public int id_bank { get; set; }
     public string bank { get; set; }
-    public int CSA { get; set; } 
+    public int CSA { get; set; }
+    public float threshold { get; set; }
   }
 }

@@ -33,7 +33,10 @@ export class SarsComponent implements OnInit {
     this.cols = [
         { field: 'id_bank', header: 'ID Bank' },
         { field: 'bank', header: 'Bank Name' },
-        { field: 'csa', header: 'CSA Status' }
+        { field: 'csa', header: 'CSA Status' },
+        { field: 'description', header: 'Descripcion' },
+        { field: 'fecha_incio', header: 'Fecha de Inicio' },
+        { field: 'fecha_fin', header: 'Fecha de Fin' },
     ];
     this._selectedColumns = this.cols;
 }
@@ -62,14 +65,14 @@ ngOnInit(): void {
   this.spinner.show(); // Show spinner before loading data
   this.sarsService.getSars().subscribe({
       next: (data) => {
-        console.log("Received banks data:", data);
+        console.log("Received sars data:", data);
           this.products = data; // Assuming 'data' is the array of banks
           console.log("Products set in component:", this.products); 
           this.spinner.hide(); // Hide spinner after data is loaded
       },
       error: (error) => {
-          console.error('Failed to fetch banks', error);
-          this.toastr.error('Failed to load banks');
+          console.error('Failed to fetch sars', error);
+          this.toastr.error('Failed to load sars');
           this.spinner.hide(); // Hide spinner also on error
       }
   });

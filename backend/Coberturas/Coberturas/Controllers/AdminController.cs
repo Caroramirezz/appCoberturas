@@ -45,7 +45,8 @@ namespace Coberturas.Controllers
             {
               id_bank = reader.GetInt32(reader.GetOrdinal("id_bank")),
               bank = reader.GetString(reader.GetOrdinal("bank")),
-              CSA = reader.GetInt32(reader.GetOrdinal("CSA"))
+              CSA = reader.GetInt32(reader.GetOrdinal("CSA")),
+              threshold = reader.GetFloat(reader.GetOrdinal("Threshold"))
             };
             banks.Add(bank);
           }
@@ -99,6 +100,7 @@ namespace Coberturas.Controllers
           };
           command.Parameters.Add(new SqlParameter("@bank", SqlDbType.VarChar) { Value = bank.bank });
           command.Parameters.Add(new SqlParameter("@CSA", SqlDbType.Int) { Value = bank.CSA });
+          command.Parameters.Add(new SqlParameter("threshold", SqlDbType.Float) { Value = bank.threshold });
 
           command.ExecuteNonQuery();
 
@@ -110,7 +112,8 @@ namespace Coberturas.Controllers
             {
               id_bank = (int)reader["id_bank"],
               bank = (string)reader["bank"],
-              CSA = (int)reader["CSA"]
+              CSA = (int)reader["CSA"],
+              threshold = (float)reader["threshold"]
             };
             return Ok(newBank);
           }
@@ -257,6 +260,9 @@ namespace Coberturas.Controllers
             {
               id_sar = reader.GetInt32(reader.GetOrdinal("id_sar")),
               number_sar = reader.GetString(reader.GetOrdinal("number_sar")),
+              description = reader.GetString(reader.GetOrdinal("Description")),
+              fecha_inicio = reader.GetDateTime(reader.GetOrdinal("fecha_inicio")),
+              fecha_fin = reader.GetDateTime(reader.GetOrdinal("fecha_fin"))
             };
             sars.Add(sar);
           }
@@ -315,6 +321,7 @@ namespace Coberturas.Controllers
           command.Parameters.Add(new SqlParameter("@id_bank", bank.id_bank));
           command.Parameters.Add(new SqlParameter("@bank", bank.bank));
           command.Parameters.Add(new SqlParameter("@CSA", bank.CSA));
+          command.Parameters.Add(new SqlParameter("@threshold", bank.threshold));
 
           int result = command.ExecuteNonQuery();
           if (result > 0)
@@ -359,6 +366,9 @@ namespace Coberturas.Controllers
             {
               id_sar = (int)reader["id_sar"],
               number_sar = (string)reader["number_sar"],
+              description = (string)reader["description"],
+              fecha_inicio = (DateTime)reader["fecha_inicio"],
+              fecha_fin = (DateTime)reader["fecha_fin"]
             };
             return Ok(newSar);
           }

@@ -24,7 +24,8 @@
                         <th pReorderableColumn>Action</th>
                         <th pReorderableColumn>ID Banco</th>
                         <th pReorderableColumn>Nombre</th>   
-                        <th pReorderableColumn>CSA</th>                        
+                        <th pReorderableColumn>CSA</th>
+                        <th pReorderableColumn>Threshold</th>                      
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-rowData>
@@ -51,6 +52,10 @@
                         <td *ngIf="!rowData.editing">{{ rowData.csa }}</td>
                         <td *ngIf="rowData.editing">
                             <input type="text" pInputText [(ngModel)]="rowData.csa">
+                        </td>
+                        <td *ngIf="!rowData.editing">{{ rowData.threshold }}</td>
+                        <td *ngIf="rowData.editing">
+                            <input type="text" pInputText [(ngModel)]="rowData.threshold">
                         </td>                         
                     </tr>
                 </ng-template>

@@ -44,36 +44,17 @@ export class ClientsComponent implements OnInit {
     });
   }
 
-  onRowEditInit(client: ClientInterface): void {
-    console.log('Row edit initialized', client);
-  }
-
-  onRowEditSave(client: ClientInterface): void {
-    this.clientsService.updateClient(client).subscribe({
-      next: () => {
-        this.toastr.success('Client updated successfully');
-      },
-      error: (error) => {
-        this.toastr.error('Error updating client');
-        console.error('Error updating client', error);
-      }
-    });
-  }
-
-  onRowEditCancel(client: ClientInterface, index: number): void {
-    console.log('Row edit cancelled', client, index);
-  }
-
   addClient(): void {
     const newClient: ClientInterface = { id_client: 0, client: '', holding: '' };
-    this.products = [...this.products, newClient];
+    this.products = [newClient, ...this.products];
   }
 
-  deleteClient(client: ClientInterface): void {
+  deleteClient(client: ClientInterface, event: MouseEvent): void {
+    event.stopPropagation(); 
     this.clientsService.deleteClient(client.id_client).subscribe({
       next: () => {
         this.toastr.success('Client deleted successfully');
-        this.loadClients(); // Reload clients to reflect changes
+        this.loadClients(); 
       },
       error: (error) => {
         this.toastr.error('Error deleting client');
@@ -88,7 +69,7 @@ export class ClientsComponent implements OnInit {
       next: (plants) => {
         console.log('Plants loaded for client:', plants);
         this.selectedClient = client;
-        this.openDialog(plants);
+        this.openDialog(client, plants);
       },
       error: (err) => {
         console.error('Failed to load plants', err);
@@ -97,25 +78,26 @@ export class ClientsComponent implements OnInit {
     });
   }
 
-  openDialog(plants: PlantsInterface[]): void {
-    if (this.selectedClient) {
-      console.log('Opening dialog for client:', this.selectedClient); // Log client data
-      this.ref = this.dialogService.open(PlantDialogComponent, {
-        header: `Plants for ${this.selectedClient.client}`,
-        width: '70%',
-        contentStyle: { "max-height": "500px", "overflow": "auto" },
-        baseZIndex: 10000,
-        data: {
-          client: this.selectedClient,
-          plants: plants
-        }
-      });
+  openDialog(client: ClientInterface, plants: PlantsInterface[]): void {
+    this.ref = this.dialogService.open(PlantDialogComponent, {
+      header: `Client Information: ${client.client}`,
+      width: '70%',
+      contentStyle: { "max-height": "500px", "overflow": "auto" },
+      baseZIndex: 10000,
+      data: {
+        client: client,
+        plants: plants
+      }
+    });
 
-      this.ref.onClose.subscribe((message) => {
-        if (message) {
-          this.toastr.success(message);
-        }
-      });
-    }
+    this.ref.onClose.subscribe((message) => {
+      if (message) {
+        this.toastr.success(message);
+      }
+    });
+  }
+
+  clear(table: any): void {
+    table.clear();
   }
 }

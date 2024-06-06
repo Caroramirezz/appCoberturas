@@ -36,7 +36,8 @@ export class BanksComponent implements OnInit {
     this.cols = [
         { field: 'id_bank', header: 'ID Bank' },
         { field: 'bank', header: 'Bank Name' },
-        { field: 'csa', header: 'CSA Status' }
+        { field: 'csa', header: 'CSA Status' },
+        { field: 'threshold', header: 'Threshold' },
     ];
     this._selectedColumns = this.cols;
 }

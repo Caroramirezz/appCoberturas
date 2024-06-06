@@ -23,7 +23,10 @@
                     <tr>                            
                         <th pReorderableColumn>Action</th>
                         <th pReorderableColumn>ID Index</th>
-                        <th pReorderableColumn>Nombre</th>   
+                        <th pReorderableColumn>Nombre</th>
+                        <th pReorderableColumn>Descripción</th>
+                        <th pReorderableColumn>Fecha Inicio</th>
+                        <th pReorderableColumn>Fecha Fin</th>   
                   
                     </tr>
                 </ng-template>
@@ -47,6 +50,18 @@
                         <td *ngIf="!rowData.editing">{{ rowData.number_sar }}</td>
                         <td *ngIf="rowData.editing">
                             <input type="text" pInputText [(ngModel)]="rowData.number_sar">
+                        </td>
+                        <td *ngIf="!rowData.editing">{{ rowData.description }}</td>
+                        <td *ngIf="rowData.editing">
+                            <input type="text" pInputText [(ngModel)]="rowData.number_description">
+                        </td>
+                        <td *ngIf="!rowData.editing">{{ rowData.fecha_inicio }}</td>
+                        <td *ngIf="rowData.editing">
+                            <input type="datetime" pInputText [(ngModel)]="rowData.number_fecha_incio">
+                        </td>
+                        <td *ngIf="!rowData.editing">{{ rowData.number_fecha_fin }}</td>
+                        <td *ngIf="rowData.editing">
+                            <input type="datetime" pInputText [(ngModel)]="rowData.number_fecha_fin">
                         </td>                        
                     </tr>
                 </ng-template>

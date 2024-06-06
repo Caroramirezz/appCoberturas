@@ -17,6 +17,9 @@ export class AddSarComponent implements OnInit {
   ngOnInit(): void {
     this.sarForm = this.fb.group({
       sarNum: ['', Validators.required],
+      description : ['', Validators.required],
+      fecha_incio: ['', Validators.required],
+      fecha_fin: ['', Validators.required],
     });
   }
 
