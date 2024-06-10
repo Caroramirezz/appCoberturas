@@ -3,14 +3,27 @@
       <p-table [value]="[client]" dataKey="id_client" editMode="row" class="full-width-table">
         <ng-template pTemplate="header">
           <tr>
+            <th>Actions</th>
             <th>ID</th>
             <th>Client</th>
             <th>Holding</th>
-            <th>Actions</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-client let-editing="editing">
           <tr [pEditableRow]="client">
+            <td>
+                <div class="flex align-items-center justify-content-center gap-2">
+                  <button *ngIf="!editing" mat-icon-button matTooltip="Editar" style="color:#1D4289" (click)="onRowEditInit(client)">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button *ngIf="editing" mat-icon-button matTooltip="Save" (click)="onRowEditSave(client)">
+                    <mat-icon>save</mat-icon>
+                  </button>
+                  <button *ngIf="editing" mat-icon-button matTooltip="Cancel" (click)="onRowEditCancel(client)">
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                </div>
+              </td>
             <td>
               <p-cellEditor>
                 <ng-template pTemplate="input">
@@ -41,34 +54,43 @@
                 </ng-template>
               </p-cellEditor>
             </td>
-            <td>
-              <div class="flex align-items-center justify-content-center gap-2">
-                <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil" (click)="onRowEditInit(client)" class="p-button-rounded p-button-text"></button>
-                <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check" (click)="onRowEditSave(client)" class="p-button-rounded p-button-text p-button-success mr-2"></button>
-                <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" (click)="onRowEditCancel(client)" class="p-button-rounded p-button-text p-button-danger"></button>
-              </div>
-            </td>
           </tr>
         </ng-template>
       </p-table>
     </div>
-
+  
     <h2></h2>
     <h2>Plants</h2>
     <div class="plants-actions">
-      <button pButton type="button" label="Agregar planta" icon="pi pi-plus" (click)="addPlant()" class="button button-nuevo"></button>
+      <button pButton type="button" label="Add Plant" icon="pi pi-plus" (click)="addPlant()" class = "button-nuevo"></button>
     </div>
     <p-table [value]="plants" dataKey="id_plant" editMode="row" class="full-width-table">
       <ng-template pTemplate="header">
         <tr>
+          <th>Actions</th>
           <th>Name</th>
           <th>Start Date</th>
           <th>End Date</th>
-          <th>Actions</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-plant let-editing="editing">
         <tr [pEditableRow]="plant">
+            <td>
+                <div class="flex align-items-center justify-content-center gap-2">
+                  <button *ngIf="!editing" mat-icon-button matTooltip="Editar" style="color:#1D4289" (click)="onRowEditInit(plant)">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button *ngIf="editing" mat-icon-button matTooltip="Save" (click)="onRowEditSave(plant)">
+                    <mat-icon>save</mat-icon>
+                  </button>
+                  <button *ngIf="editing" mat-icon-button matTooltip="Cancel" (click)="onRowEditCancel(plant)">
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                  <button mat-icon-button matTooltip="Eliminar" style="color:#1D4289" (click)="deletePlant(plant)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </td>
           <td>
             <p-cellEditor>
               <ng-template pTemplate="input">
@@ -98,14 +120,6 @@
                 {{ plant.fin_contrato | date }}
               </ng-template>
             </p-cellEditor>
-          </td>
-          <td>
-            <div class="flex align-items-center justify-content-center gap-2">
-              <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil" (click)="onRowEditInit(plant)" class="p-button-rounded p-button-text"></button>
-              <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check" (click)="onRowEditSave(plant)" class="p-button-rounded p-button-text p-button-success mr-2"></button>
-              <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" (click)="onRowEditCancel(plant)" class="p-button-rounded p-button-text p-button-danger"></button>
-              <button pButton pRipple type="button" icon="pi pi-trash" (click)="deletePlant(plant)" class="p-button-rounded p-button-text p-button-danger"></button>
-            </div>
           </td>
         </tr>
       </ng-template>

@@ -25,19 +25,20 @@
                         <th pReorderableColumn>ID Banco</th>
                         <th pReorderableColumn>Nombre</th>   
                         <th pReorderableColumn>CSA</th>
-                        <th pReorderableColumn>Threshold</th>                      
+                        <th pReorderableColumn>Threshold</th>
+                        <th pReorderableColumn>Unit</th>                      
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-rowData>
                     <tr>                           
                         <td style="width:100px">
-                            <button *ngIf="!rowData.editing" (click)="toggleEdit(rowData, true)" mat-icon-button matTooltip="Editar">
+                            <button *ngIf="!rowData.editing" (click)="toggleEdit(rowData, true)" mat-icon-button matTooltip="Editar" style="color:#1D4289">
                                 <mat-icon>edit</mat-icon>                             
                             </button>  
                             <button *ngIf="rowData.editing" (click)="saveBank(rowData)" mat-icon-button matTooltip="Save">
                                 <mat-icon>save</mat-icon>
                             </button>
-                            <button *ngIf="!rowData.editing" (click)="deleteBank(rowData.id_bank)" mat-icon-button matTooltip="Eliminar">
+                            <button *ngIf="!rowData.editing" (click)="deleteBank(rowData.id_bank)" mat-icon-button matTooltip="Eliminar" style="color:#1D4289">
                                 <mat-icon>delete</mat-icon>
                             </button>                                                               
                         </td>                            
@@ -56,7 +57,8 @@
                         <td *ngIf="!rowData.editing">{{ rowData.threshold }}</td>
                         <td *ngIf="rowData.editing">
                             <input type="text" pInputText [(ngModel)]="rowData.threshold">
-                        </td>                         
+                        </td>
+                        <td >MDlls</td>                         
                     </tr>
                 </ng-template>
             </p-table>

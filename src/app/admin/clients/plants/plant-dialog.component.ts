@@ -50,7 +50,7 @@ export class PlantDialogComponent implements OnInit {
 
   cancelEditClient(): void {
     this.editingClient = false;
-    this.client = { ...this.config.data.client }; // Reset client data to original
+    this.client = { ...this.config.data.client }; 
   }
 
   onRowEditInit(item: any): void {
@@ -91,7 +91,7 @@ export class PlantDialogComponent implements OnInit {
 
   addPlant(): void {
     const newPlant: PlantsInterface = { id_plant: 0, name_plant: '', inicio_contrato: new Date(), fin_contrato: new Date() };
-    this.plants = [newPlant, ...this.plants]; // Add the new plant to top
+    this.plants = [newPlant, ...this.plants];
   }
 
   deletePlant(plant: PlantsInterface): void {

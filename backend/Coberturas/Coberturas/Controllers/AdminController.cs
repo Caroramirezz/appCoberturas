@@ -46,7 +46,7 @@ namespace Coberturas.Controllers
               id_bank = reader.GetInt32(reader.GetOrdinal("id_bank")),
               bank = reader.GetString(reader.GetOrdinal("bank")),
               CSA = reader.GetInt32(reader.GetOrdinal("CSA")),
-              threshold = reader.GetFloat(reader.GetOrdinal("Threshold"))
+              threshold = reader.GetDouble(reader.GetOrdinal("threshold"))
             };
             banks.Add(bank);
           }
@@ -56,9 +56,11 @@ namespace Coberturas.Controllers
       }
       catch (Exception ex)
       {
+        Console.WriteLine("Error details: " + ex.ToString());
         return BadRequest($"An error occurred: {ex.Message}");
       }
     }
+
 
     [HttpDelete("banks/{id}")]
     public IActionResult DeleteBank(int id)
@@ -100,7 +102,7 @@ namespace Coberturas.Controllers
           };
           command.Parameters.Add(new SqlParameter("@bank", SqlDbType.VarChar) { Value = bank.bank });
           command.Parameters.Add(new SqlParameter("@CSA", SqlDbType.Int) { Value = bank.CSA });
-          command.Parameters.Add(new SqlParameter("threshold", SqlDbType.Float) { Value = bank.threshold });
+          command.Parameters.Add(new SqlParameter("@threshold", SqlDbType.Float) { Value = bank.threshold });
 
           command.ExecuteNonQuery();
 
@@ -113,7 +115,7 @@ namespace Coberturas.Controllers
               id_bank = (int)reader["id_bank"],
               bank = (string)reader["bank"],
               CSA = (int)reader["CSA"],
-              threshold = (float)reader["threshold"]
+              threshold = (double)reader["threshold"]
             };
             return Ok(newBank);
           }
@@ -260,7 +262,7 @@ namespace Coberturas.Controllers
             {
               id_sar = reader.GetInt32(reader.GetOrdinal("id_sar")),
               number_sar = reader.GetString(reader.GetOrdinal("number_sar")),
-              description = reader.GetString(reader.GetOrdinal("Description")),
+              description = reader.GetString(reader.GetOrdinal("description")),
               fecha_inicio = reader.GetDateTime(reader.GetOrdinal("fecha_inicio")),
               fecha_fin = reader.GetDateTime(reader.GetOrdinal("fecha_fin"))
             };

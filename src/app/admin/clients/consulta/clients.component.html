@@ -20,20 +20,22 @@
       <p-table #dt1 [value]="products" responsiveLayout="scroll" [reorderableColumns]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true" currentPageReportTemplate="Mostrando {first} - {last} de {totalRecords} elementos" styleClass="p-datatable-sm">
         <ng-template pTemplate="header">
           <tr>
+            <th>Action</th>
             <th>ID</th>
             <th>Client</th>
             <th>Holding</th>
-            <th>Action</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-client>
           <tr (click)="openPlantDialog(client)">
+            <td style="width:50px; text-align: center;">
+                <button mat-icon-button matTooltip="Eliminar" style="color:#1D4289" (click)="deleteClient(client, $event)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+            </td>
             <td>{{ client.id_client }}</td>
             <td>{{ client.client }}</td>
             <td>{{ client.holding }}</td>
-            <td style="width:50px; text-align: center;">
-                <button pButton type="button" icon="pi pi-trash" (click)="deleteClient(client, $event)" class="p-button-rounded p-button-text p-button-danger"></button>
-            </td>
           </tr>
         </ng-template>
       </p-table>

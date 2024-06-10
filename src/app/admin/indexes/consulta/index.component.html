@@ -31,13 +31,13 @@
                 <ng-template pTemplate="body" let-rowData>
                     <tr>                           
                         <td style="width:100px">
-                            <button *ngIf="!rowData.editing" (click)="toggleEdit(rowData, true)" mat-icon-button matTooltip="Editar">
+                            <button *ngIf="!rowData.editing" (click)="toggleEdit(rowData, true)" mat-icon-button matTooltip="Editar"  style="color:#1D4289">
                                 <mat-icon>edit</mat-icon>                             
                             </button>  
-                            <button *ngIf="rowData.editing" (click)="saveIndex(rowData)" mat-icon-button matTooltip="Save">
+                            <button *ngIf="rowData.editing" (click)="saveIndex(rowData)" mat-icon-button matTooltip="Save"  style="color:#1D4289">
                                 <mat-icon>save</mat-icon>
                             </button>
-                            <button *ngIf="!rowData.editing" (click)="deleteIndex(rowData.id_index)" mat-icon-button matTooltip="Eliminar">
+                            <button *ngIf="!rowData.editing" (click)="deleteIndex(rowData.id_index)" mat-icon-button matTooltip="Eliminar"  style="color:#1D4289">
                                 <mat-icon>delete</mat-icon>
                             </button>                                                               
                         </td>                            

@@ -33,13 +33,13 @@
                 <ng-template pTemplate="body" let-rowData>
                     <tr>                           
                         <td style="width:100px">
-                            <button *ngIf="!rowData.editing" (click)="toggleEdit(rowData, true)" mat-icon-button matTooltip="Editar">
+                            <button *ngIf="!rowData.editing" (click)="toggleEdit(rowData, true)" mat-icon-button matTooltip="Editar"  style="color:#1D4289">
                                 <mat-icon>edit</mat-icon>                             
                             </button>  
-                            <button *ngIf="rowData.editing" (click)="saveSar(rowData)" mat-icon-button matTooltip="Save">
+                            <button *ngIf="rowData.editing" (click)="saveSar(rowData)" mat-icon-button matTooltip="Save"  style="color:#1D4289">
                                 <mat-icon>save</mat-icon>
                             </button>
-                            <button *ngIf="!rowData.editing" (click)="deleteSars(rowData.id_sar)" mat-icon-button matTooltip="Eliminar">
+                            <button *ngIf="!rowData.editing" (click)="deleteSars(rowData.id_sar)" mat-icon-button matTooltip="Eliminar"  style="color:#1D4289">
                                 <mat-icon>delete</mat-icon>
                             </button>                                                               
                         </td>                            
@@ -55,13 +55,13 @@
                         <td *ngIf="rowData.editing">
                             <input type="text" pInputText [(ngModel)]="rowData.number_description">
                         </td>
-                        <td *ngIf="!rowData.editing">{{ rowData.fecha_inicio }}</td>
+                        <td *ngIf="!rowData.editing">{{ rowData.fecha_inicio | date }}</td>
                         <td *ngIf="rowData.editing">
-                            <input type="datetime" pInputText [(ngModel)]="rowData.number_fecha_incio">
+                            <input type="date" pInputText [(ngModel)]="rowData.fecha_incio">
                         </td>
-                        <td *ngIf="!rowData.editing">{{ rowData.number_fecha_fin }}</td>
+                        <td *ngIf="!rowData.editing">{{ rowData.fecha_fin | date }}</td>
                         <td *ngIf="rowData.editing">
-                            <input type="datetime" pInputText [(ngModel)]="rowData.number_fecha_fin">
+                            <input type="date" pInputText [(ngModel)]="rowData.fecha_fin">
                         </td>                        
                     </tr>
                 </ng-template>
