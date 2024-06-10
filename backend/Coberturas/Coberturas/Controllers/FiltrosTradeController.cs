@@ -460,7 +460,7 @@ namespace Coberturas.Controllers
           array.name_plant = (string)reader["name_plant"];
           array.inicio_contrato = (DateTime)reader["inicio_contrato"];
           array.fin_contrato = (DateTime)reader["fin_contrato"];
-          array.client_id = (int)reader["client_id"];
+          array.id_client = (int)reader["client_id"];
           array.client = (string)reader["client"];
           array.holding = (string)reader["holding"];
 

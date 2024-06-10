@@ -427,19 +427,19 @@ namespace Coberturas.Controllers
 
     [HttpGet]
     [Route("plants/consulta")]
-    public IActionResult getPlants(int? clientId)
+    public IActionResult getPlants(int? id_client)
     {
       try
       {
         List<Plants> plants = new List<Plants>();
         using (var conexion = (SqlConnection)_context.Database.GetDbConnection())
         {
-          var query = "SELECT * FROM plants WHERE @clientId IS NULL OR client_id = @clientId";
+          var query = "SELECT * FROM plants WHERE @id_client IS NULL OR id_client = @id_client";
           var command = new SqlCommand(query, conexion)
           {
             CommandType = CommandType.Text
           };
-          command.Parameters.Add(new SqlParameter("@clientId", clientId ?? (object)DBNull.Value));
+          command.Parameters.Add(new SqlParameter("@id_client", id_client ?? (object)DBNull.Value));
 
           conexion.Open();
           using (var reader = command.ExecuteReader())
@@ -452,7 +452,9 @@ namespace Coberturas.Controllers
                 name_plant = reader.GetString(reader.GetOrdinal("name_plant")),
                 inicio_contrato = reader.GetDateTime(reader.GetOrdinal("inicio_contrato")),
                 fin_contrato = reader.GetDateTime(reader.GetOrdinal("fin_contrato")),
-                client_id = reader.GetInt32(reader.GetOrdinal("client_id")) // Make sure to add client_id to the Plants model if it's not already there
+                cmd = reader.GetDouble(reader.GetOrdinal("cmd")),
+                unidad = reader.GetString(reader.GetOrdinal("unidad")),
+                id_client = reader.GetInt32(reader.GetOrdinal("id_client")) 
               };
               plants.Add(plant);
             }
@@ -487,7 +489,9 @@ namespace Coberturas.Controllers
           command.Parameters.Add(new SqlParameter("@name_plant", plant.name_plant));
           command.Parameters.Add(new SqlParameter("@inicio_contrato", plant.inicio_contrato));
           command.Parameters.Add(new SqlParameter("@fin_contrato", plant.fin_contrato));
-          command.Parameters.Add(new SqlParameter("@client_id", plant.client_id));
+          command.Parameters.Add(new SqlParameter("@fin_contrato", plant.fin_contrato));
+          command.Parameters.Add(new SqlParameter("@cmd", plant.cmd));
+          command.Parameters.Add(new SqlParameter("@unidad", plant.unidad));
 
           int result = command.ExecuteNonQuery();
           if (result > 0)

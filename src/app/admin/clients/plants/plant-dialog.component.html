@@ -71,6 +71,8 @@
           <th>Name</th>
           <th>Start Date</th>
           <th>End Date</th>
+          <th>CMD</th>
+          <th>Unit</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-plant let-editing="editing">
@@ -118,6 +120,26 @@
               </ng-template>
               <ng-template pTemplate="output">
                 {{ plant.fin_contrato | date }}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText type="text" [(ngModel)]="plant.cmd" required />
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{ plant.cmd }}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText type="text" [(ngModel)]="plant.unidad" required />
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{ plant.unidad }}
               </ng-template>
             </p-cellEditor>
           </td>

@@ -26,8 +26,8 @@ export class PlantsService {
 
   }  
  
-  getPlantsByClientId(clientId: number): Observable<PlantsInterface[]> {
-    return this.http.get<PlantsInterface[]>(`${this.urlBackLocal}Admin/plants/consulta?clientId=${clientId}`);
+  getPlantsByClientId(id_client: number): Observable<PlantsInterface[]> {
+    return this.http.get<PlantsInterface[]>(`${this.urlBackLocal}Admin/plants/consulta?id_client=${id_client}`);
   }
 
   deletePlant(id: number): Observable<any> {

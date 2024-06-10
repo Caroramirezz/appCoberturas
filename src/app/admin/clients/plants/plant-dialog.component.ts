@@ -85,12 +85,14 @@ export class PlantDialogComponent implements OnInit {
         item.name_plant = originalPlant.name_plant;
         item.inicio_contrato = originalPlant.inicio_contrato;
         item.fin_contrato = originalPlant.fin_contrato;
+        item.cmd = originalPlant.cmd;
+        item.unidad = originalPlant.unidad;
       }
     }
   }
 
   addPlant(): void {
-    const newPlant: PlantsInterface = { id_plant: 0, name_plant: '', inicio_contrato: new Date(), fin_contrato: new Date() };
+    const newPlant: PlantsInterface = { id_plant: 0, name_plant: '', inicio_contrato: new Date(), fin_contrato: new Date(), cmd: 0, unidad: ''};
     this.plants = [newPlant, ...this.plants];
   }
 
