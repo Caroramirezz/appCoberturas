@@ -28,7 +28,7 @@ export class PlantsService {
  
   getPlantsByClientId(id_client: number): Observable<PlantsInterface[]> {
     return this.http.get<PlantsInterface[]>(`${this.urlBackLocal}Admin/plants/consulta?id_client=${id_client}`);
-  }
+}
 
   deletePlant(id: number): Observable<any> {
     return this.http.delete(`${this.urlBackLocal}admin/plants/${id}`);
@@ -38,8 +38,8 @@ export class PlantsService {
     return this.http.put(`${this.urlBackLocal}admin/plants/update/${plant.id_plant}`, plant);
   }
 
-  addPlant(plant: PlantsInterface): Observable<any> {
-    return this.http.post(`${this.urlBackLocal}admin/plants/add`, plant);
+  addPlant(plant: Omit<PlantsInterface, 'id_plant'>): Observable<any> {
+    return this.http.post(`${this.urlBackLocal}Admin/plants/add`, plant);
   }
 
 }

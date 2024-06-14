@@ -5,14 +5,16 @@
 
 .full-width-table {
     width: 100%;
+    overflow-x: hidden;
 }
+
 .plants-actions {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 1em;
-  }
-  
-  .p-button-text-right {
+}
+
+.p-button-text-right {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -22,24 +24,101 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
-  }
+}
 
-  .buttons-filters {
-    margin-bottom:20px;
+.buttons-filters {
+    margin-bottom: 20px;
     width: 120px;
     height: 45px;
 }
 
-.button-nuevo {
-    background-color:#00843b !important;
-    color:white;
+.button-nuevo,
+.button-cancel,
+.button-save,
+.button-clear {
+    color: white !important;
     min-height: 40px;
-    min-width: 85px;
+    min-width: 100px;
     margin-left: 10px;
+    transition: background-color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.button-cancel {
+    background-color: red !important;
 }
 
 .button-clear {
-    min-height: 35px;
     background-color: #02109C !important;
-    color:white;
+}
+
+.button-save,
+.button-nuevo {
+    background-color: #00843b !important;
+}
+
+.button-nuevo:hover,
+.button-save:hover {
+    background-color: darkgreen !important;
+}
+
+.button-cancel:hover {
+    background-color: darkred !important;
+}
+
+.button-clear:hover {
+    background-color: rgb(0, 0, 125) !important;
+}
+
+.buttons {
+    margin-bottom: 10px;
+    width: 120px;
+}
+
+.mat-icon:hover {
+    cursor: pointer;
+    color: rgb(0, 0, 54) !important;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.div-table {
+    margin-top: 20px;
+}
+
+mat-cell, mat-footer-cell, mat-header-cell {
+    text-align: center !important;
+    justify-content: center !important;
+    overflow: inherit !important;
+    display: flex !important;
+    word-break: inherit !important;
+    width: 100%;
+}
+
+mat-header-cell {
+    justify-content: center !important;
+    text-overflow: ellipsis !important;
+}
+
+mat-row, mat-header-row, mat-footer-row {
+    width: 100%;
+}
+
+td, th {
+    text-align: center !important;
+}
+
+p-cellEditor {
+    cursor: pointer;
+}
+
+/* Ensure tooltips appear within the dialog */
+.cdk-overlay-container .mat-tooltip {
+    z-index: 10001 !important; /* Ensure tooltip is above the dialog */
 }

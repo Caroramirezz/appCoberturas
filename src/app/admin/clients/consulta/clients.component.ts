@@ -19,6 +19,9 @@ export class ClientsComponent implements OnInit {
   selectedClient: ClientInterface | null = null;
   ref: DynamicDialogRef | undefined;
 
+  // Store original client values
+  originalClients: { [id: number]: ClientInterface } = {};
+
   constructor(
     private clientsService: ClientsService,
     private plantsService: PlantsService,
@@ -36,6 +39,12 @@ export class ClientsComponent implements OnInit {
       next: (clients) => {
         console.log('Clients loaded:', clients);
         this.products = clients;
+        // Store original client values
+        clients.forEach(client => {
+          if (client.id_client !== undefined) {
+            this.originalClients[client.id_client] = { ...client };
+          }
+        });
       },
       error: (error) => {
         console.error('Failed to load clients', error);
@@ -45,13 +54,30 @@ export class ClientsComponent implements OnInit {
   }
 
   addClient(): void {
-    const newClient: ClientInterface = { id_client: 0, client: '', holding: '' };
-    this.products = [newClient, ...this.products];
+    const newClient: Omit<ClientInterface, 'id_client'> = { client: '', holding: '' };
+    this.clientsService.addClient(newClient).subscribe({
+      next: (response) => {
+        this.toastr.success('Client added successfully');
+        // Add the new client at the top of the list
+        const addedClient: ClientInterface = {
+          id_client: response.id,
+          client: newClient.client,
+          holding: newClient.holding
+        };
+        this.products = [addedClient, ...this.products]; // Prepend the new client
+
+        // Open the dialog for the newly added client
+        this.openPlantDialog(addedClient);
+      },
+      error: (error) => {
+        this.toastr.error('Error adding client');
+      }
+    });
   }
 
   deleteClient(client: ClientInterface, event: MouseEvent): void {
     event.stopPropagation(); 
-    this.clientsService.deleteClient(client.id_client).subscribe({
+    this.clientsService.deleteClient(client.id_client!).subscribe({
       next: () => {
         this.toastr.success('Client deleted successfully');
         this.loadClients(); 
@@ -64,10 +90,8 @@ export class ClientsComponent implements OnInit {
   }
 
   openPlantDialog(client: ClientInterface): void {
-    console.log('Loading plants for clientId:', client.id_client);
-    this.plantsService.getPlantsByClientId(client.id_client).subscribe({
+    this.plantsService.getPlantsByClientId(client.id_client!).subscribe({
       next: (plants) => {
-        console.log('Plants loaded for client:', plants);
         this.selectedClient = client;
         this.openDialog(client, plants);
       },
@@ -80,7 +104,7 @@ export class ClientsComponent implements OnInit {
 
   openDialog(client: ClientInterface, plants: PlantsInterface[]): void {
     this.ref = this.dialogService.open(PlantDialogComponent, {
-      header: `Client Information: ${client.client}`,
+      header: `${client.client}`,
       width: '70%',
       contentStyle: { "max-height": "500px", "overflow": "auto" },
       baseZIndex: 10000,
@@ -93,6 +117,33 @@ export class ClientsComponent implements OnInit {
     this.ref.onClose.subscribe((message) => {
       if (message) {
         this.toastr.success(message);
+      }
+      this.loadClients(); // Reload clients to reflect changes
+    });
+  }
+
+  // Method to revert client changes
+  cancelEditClient(client: ClientInterface): void {
+    if (client.id_client !== undefined) {
+      const originalClient = this.originalClients[client.id_client];
+      if (originalClient) {
+        Object.assign(client, originalClient);
+      }
+    }
+  }
+
+  // Method to save client changes
+  saveClient(client: ClientInterface): void {
+    this.clientsService.updateClient(client).subscribe({
+      next: () => {
+        this.toastr.success('Client updated successfully');
+        if (client.id_client !== undefined) {
+          this.originalClients[client.id_client] = { ...client }; // Update original values after save
+        }
+      },
+      error: (error) => {
+        this.toastr.error('Error updating client');
+        console.error('Error updating client', error);
       }
     });
   }

@@ -23,6 +23,9 @@ namespace Coberturas.Controllers
       _context = context;
     }
 
+    // ************************************************ BANKS *****************************************************************
+
+    // READ
     [HttpGet]
     [Route("banks/consulta")]
     public IActionResult getBanks()
@@ -61,7 +64,7 @@ namespace Coberturas.Controllers
       }
     }
 
-
+    // DELETE
     [HttpDelete("banks/{id}")]
     public IActionResult DeleteBank(int id)
     {
@@ -86,7 +89,8 @@ namespace Coberturas.Controllers
         return BadRequest($"Error deleting bank: {ex.Message}");
       }
     }
-
+     
+    // CREATE
     [HttpPost]
     [Route("banks/add")]
     public IActionResult AddBank([FromBody] Banks bank)
@@ -131,6 +135,49 @@ namespace Coberturas.Controllers
       }
     }
 
+    // UPDATE
+    [HttpPut("banks/update/{id}")]
+    public IActionResult UpdateClient(int id, [FromBody] Banks bank)
+    {
+      try
+      {
+        if (id != bank.id_bank)
+        {
+          return BadRequest("Bank ID mismatch");
+        }
+
+        using (var connection = (SqlConnection)_context.Database.GetDbConnection())
+        {
+          connection.Open();
+          var command = new SqlCommand("sp_upd_banks", connection)
+          {
+            CommandType = CommandType.StoredProcedure
+          };
+          command.Parameters.Add(new SqlParameter("@id_bank", bank.id_bank));
+          command.Parameters.Add(new SqlParameter("@bank", bank.bank));
+          command.Parameters.Add(new SqlParameter("@CSA", bank.CSA));
+          command.Parameters.Add(new SqlParameter("@threshold", bank.threshold));
+
+          int result = command.ExecuteNonQuery();
+          if (result > 0)
+          {
+            return Ok(new { message = "Bank updated successfully." });
+          }
+          else
+          {
+            return NotFound("Bank not found.");
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+        return BadRequest($"An error occurred: {ex.Message}");
+      }
+    }
+
+    // ********************************************* INDEX ******************************************************
+
+    // READ
     [HttpGet]
     [Route("index/consulta")]
     public IActionResult getIndexes()
@@ -168,6 +215,7 @@ namespace Coberturas.Controllers
       }
     }
 
+    // DELETE
     [HttpDelete("index/{id}")]
     public IActionResult DeleteIndex(int id)
     {
@@ -193,6 +241,7 @@ namespace Coberturas.Controllers
       }
     }
 
+    // CREATE
     [HttpPost]
     [Route("index/add")]
     public IActionResult AddIndex([FromBody] IndexTypes indextypes)
@@ -238,8 +287,12 @@ namespace Coberturas.Controllers
       }
     }
 
+    // UPDATE
 
 
+    // ************************************************ SARS *************************************************************************
+
+    // READ
     [HttpGet]
     [Route("sars/consulta")]
     public IActionResult getSars()
@@ -278,6 +331,7 @@ namespace Coberturas.Controllers
       }
     }
 
+    // DELETE
     [HttpDelete("sars/{id}")]
     public IActionResult DeleteSars(int id)
     {
@@ -303,46 +357,7 @@ namespace Coberturas.Controllers
       }
     }
 
-    [HttpPut("banks/update/{id}")]
-    public IActionResult UpdateClient(int id, [FromBody] Banks bank)
-    {
-      try
-      {
-        if (id != bank.id_bank)
-        {
-          return BadRequest("Bank ID mismatch");
-        }
-
-        using (var connection = (SqlConnection)_context.Database.GetDbConnection())
-        {
-          connection.Open();
-          var command = new SqlCommand("sp_upd_banks", connection)
-          {
-            CommandType = CommandType.StoredProcedure
-          };
-          command.Parameters.Add(new SqlParameter("@id_bank", bank.id_bank));
-          command.Parameters.Add(new SqlParameter("@bank", bank.bank));
-          command.Parameters.Add(new SqlParameter("@CSA", bank.CSA));
-          command.Parameters.Add(new SqlParameter("@threshold", bank.threshold));
-
-          int result = command.ExecuteNonQuery();
-          if (result > 0)
-          {
-            return Ok(new { message = "Bank updated successfully." });
-          }
-          else
-          {
-            return NotFound("Bank not found.");
-          }
-        }
-      }
-      catch (Exception ex)
-      {
-        return BadRequest($"An error occurred: {ex.Message}");
-      }
-    }
-
-
+    // CREATE
     [HttpPost]
     [Route("sars/add")]
     public IActionResult AddSar([FromBody] SAR sar)
@@ -387,7 +402,38 @@ namespace Coberturas.Controllers
     }
 
 
+    // ******************************************* CLIENTS ************************************************
 
+    // CREATE
+    [HttpPost]
+    [Route("clients/add")]
+    public IActionResult AddClient([FromBody] Clients client)
+    {
+      try
+      {
+        using (var connection = (SqlConnection)_context.Database.GetDbConnection())
+        {
+          connection.Open();
+          var command = new SqlCommand("sp_ins_clients", connection)
+          {
+            CommandType = CommandType.StoredProcedure
+          };
+          command.Parameters.Add(new SqlParameter("@client", client.client));
+          command.Parameters.Add(new SqlParameter("@holding", client.holding));
+
+          // Execute the command and get the newly inserted ID
+          var newId = command.ExecuteScalar();
+
+          return Ok(new { message = "Client added successfully.", id = newId });
+        }
+      }
+      catch (Exception ex)
+      {
+        return BadRequest(new { error = $"An error occurred: {ex.Message}" });
+      }
+    }
+
+    // READ
     [HttpGet]
     [Route("clients/consulta")]
     public IActionResult getClients()
@@ -424,92 +470,7 @@ namespace Coberturas.Controllers
       }
     }
 
-
-    [HttpGet]
-    [Route("plants/consulta")]
-    public IActionResult getPlants(int? id_client)
-    {
-      try
-      {
-        List<Plants> plants = new List<Plants>();
-        using (var conexion = (SqlConnection)_context.Database.GetDbConnection())
-        {
-          var query = "SELECT * FROM plants WHERE @id_client IS NULL OR id_client = @id_client";
-          var command = new SqlCommand(query, conexion)
-          {
-            CommandType = CommandType.Text
-          };
-          command.Parameters.Add(new SqlParameter("@id_client", id_client ?? (object)DBNull.Value));
-
-          conexion.Open();
-          using (var reader = command.ExecuteReader())
-          {
-            while (reader.Read())
-            {
-              Plants plant = new Plants
-              {
-                id_plant = reader.GetInt32(reader.GetOrdinal("id_plant")),
-                name_plant = reader.GetString(reader.GetOrdinal("name_plant")),
-                inicio_contrato = reader.GetDateTime(reader.GetOrdinal("inicio_contrato")),
-                fin_contrato = reader.GetDateTime(reader.GetOrdinal("fin_contrato")),
-                cmd = reader.GetDouble(reader.GetOrdinal("cmd")),
-                unidad = reader.GetString(reader.GetOrdinal("unidad")),
-                id_client = reader.GetInt32(reader.GetOrdinal("id_client")) 
-              };
-              plants.Add(plant);
-            }
-          }
-        }
-        return Ok(plants);
-      }
-      catch (Exception ex)
-      {
-        return BadRequest($"An error occurred: {ex.Message}");
-      }
-    }
-
-    [HttpPut("plants/update/{id}")]
-    public IActionResult UpdatePlant(int id, [FromBody] Plants plant)
-    {
-      try
-      {
-        if (id != plant.id_plant)
-        {
-          return BadRequest("Plant ID mismatch");
-        }
-
-        using (var connection = (SqlConnection)_context.Database.GetDbConnection())
-        {
-          connection.Open();
-          var command = new SqlCommand("sp_upd_plant", connection)
-          {
-            CommandType = CommandType.StoredProcedure
-          };
-          command.Parameters.Add(new SqlParameter("@id_plant", id));
-          command.Parameters.Add(new SqlParameter("@name_plant", plant.name_plant));
-          command.Parameters.Add(new SqlParameter("@inicio_contrato", plant.inicio_contrato));
-          command.Parameters.Add(new SqlParameter("@fin_contrato", plant.fin_contrato));
-          command.Parameters.Add(new SqlParameter("@fin_contrato", plant.fin_contrato));
-          command.Parameters.Add(new SqlParameter("@cmd", plant.cmd));
-          command.Parameters.Add(new SqlParameter("@unidad", plant.unidad));
-
-          int result = command.ExecuteNonQuery();
-          if (result > 0)
-          {
-            return Ok(new { message = "Plant updated successfully." });
-          }
-          else
-          {
-            return NotFound("Plant not found.");
-          }
-        }
-      }
-      catch (Exception ex)
-      {
-        return BadRequest($"An error occurred: {ex.Message}");
-      }
-    }
-
+    // UPDATE
     [HttpPut("clients/update/{id}")]
     public IActionResult UpdateClient(int id, [FromBody] Clients client)
     {
@@ -531,23 +492,35 @@ namespace Coberturas.Controllers
           command.Parameters.Add(new SqlParameter("@client", client.client));
           command.Parameters.Add(new SqlParameter("@holding", client.holding));
 
-          int result = command.ExecuteNonQuery();
+          // Add a parameter to capture the return value
+          var returnValue = new SqlParameter("@ReturnVal", SqlDbType.Int)
+          {
+            Direction = ParameterDirection.ReturnValue
+          };
+          command.Parameters.Add(returnValue);
+
+          command.ExecuteNonQuery();
+
+          int result = (int)returnValue.Value;
+          Console.WriteLine($"Update result: {result}");
           if (result > 0)
           {
             return Ok(new { message = "Client updated successfully." });
           }
           else
           {
-            return NotFound("Client not found.");
+            return NotFound(new { message = "Client not found." });
           }
         }
       }
       catch (Exception ex)
       {
-        return BadRequest($"An error occurred: {ex.Message}");
+        Console.WriteLine($"An error occurred: {ex.Message}"); 
+        return BadRequest(new { error = $"An error occurred: {ex.Message}" });
       }
     }
 
+    // DELETE
     [HttpDelete("clients/{id}")]
     public IActionResult DeleteClient(int id)
     {
@@ -561,7 +534,7 @@ namespace Coberturas.Controllers
             command.CommandType = CommandType.StoredProcedure;
             command.Parameters.Add(new SqlParameter("@id_client", SqlDbType.Int) { Value = id });
 
-            command.ExecuteNonQuery(); 
+            command.ExecuteNonQuery();
           }
           connection.Close();
           return Ok(new { message = "Client successfully deleted." });
@@ -573,6 +546,137 @@ namespace Coberturas.Controllers
       }
     }
 
+    // ***************************************** PLANTS ************************************************************
+
+    // CREATE
+    [HttpPost]
+    [Route("plants/add")]
+    public IActionResult AddPlant([FromBody] Plants plant)
+    {
+      try
+      {
+        using (var connection = (SqlConnection)_context.Database.GetDbConnection())
+        {
+          connection.Open();
+          var command = new SqlCommand("sp_ins_plants", connection)
+          {
+            CommandType = CommandType.StoredProcedure
+          };
+          command.Parameters.Add(new SqlParameter("@name_plant", plant.name_plant));
+          command.Parameters.Add(new SqlParameter("@inicio_contrato", plant.inicio_contrato));
+          command.Parameters.Add(new SqlParameter("@fin_contrato", plant.fin_contrato));
+          command.Parameters.Add(new SqlParameter("@cmd", plant.cmd));
+          command.Parameters.Add(new SqlParameter("@unidad", plant.unidad));
+          command.Parameters.Add(new SqlParameter("@id_client", plant.id_client));
+
+          var newId = command.ExecuteScalar();
+
+          return Ok(new { message = "Plant added successfully.", id = newId });
+        }
+      }
+      catch (Exception ex)
+      {
+        return BadRequest(new { error = $"An error occurred: {ex.Message}" });
+      }
+    }
+
+    // READ
+    [HttpGet]
+    [Route("plants/consulta")]
+    public IActionResult GetPlantsByClientId(int id_client)
+    {
+      try
+      {
+        List<Plants> plants = new List<Plants>();
+        using (var connection = (SqlConnection)_context.Database.GetDbConnection())
+        {
+          connection.Open();
+          var command = new SqlCommand("sp_get_plants_by_client_id", connection)
+          {
+            CommandType = CommandType.StoredProcedure
+          };
+          command.Parameters.Add(new SqlParameter("@id_client", id_client));
+
+          using (var reader = command.ExecuteReader())
+          {
+            while (reader.Read())
+            {
+              var plant = new Plants
+              {
+                id_plant = reader.GetInt32(reader.GetOrdinal("id_plant")),
+                name_plant = reader.GetString(reader.GetOrdinal("name_plant")),
+                inicio_contrato = reader.GetDateTime(reader.GetOrdinal("inicio_contrato")),
+                fin_contrato = reader.GetDateTime(reader.GetOrdinal("fin_contrato")),
+                cmd = reader.GetDouble(reader.GetOrdinal("cmd")),
+                unidad = reader.GetString(reader.GetOrdinal("unidad")),
+                id_client = reader.GetInt32(reader.GetOrdinal("id_client"))
+              };
+              plants.Add(plant);
+            }
+          }
+        }
+        return Ok(plants);
+      }
+      catch (Exception ex)
+      {
+        return BadRequest(new { error = $"An error occurred: {ex.Message}" });
+      }
+    }
+
+
+    // UPDATE
+    [HttpPut("plants/update/{id}")]
+    public IActionResult UpdatePlant(int id, [FromBody] Plants plant)
+    {
+      try
+      {
+        if (id != plant.id_plant)
+        {
+          return BadRequest("Plant ID mismatch");
+        }
+
+        using (var connection = (SqlConnection)_context.Database.GetDbConnection())
+        {
+          connection.Open();
+          var command = new SqlCommand("sp_upd_plants", connection)
+          {
+            CommandType = CommandType.StoredProcedure
+          };
+          command.Parameters.Add(new SqlParameter("@id_plant", plant.id_plant));
+          command.Parameters.Add(new SqlParameter("@name_plant", plant.name_plant));
+          command.Parameters.Add(new SqlParameter("@inicio_contrato", plant.inicio_contrato));
+          command.Parameters.Add(new SqlParameter("@fin_contrato", plant.fin_contrato));
+          command.Parameters.Add(new SqlParameter("@cmd", plant.cmd));
+          command.Parameters.Add(new SqlParameter("@unidad", plant.unidad));
+          command.Parameters.Add(new SqlParameter("@id_client", plant.id_client));
+
+          var returnValue = new SqlParameter("@ReturnVal", SqlDbType.Int)
+          {
+            Direction = ParameterDirection.ReturnValue
+          };
+          command.Parameters.Add(returnValue);
+
+          command.ExecuteNonQuery();
+
+          int result = (int)returnValue.Value;
+          if (result == -1)
+          {
+            return NotFound(new { message = "Plant not found." });
+          }
+          else
+          {
+            return Ok(new { message = "Plant updated successfully." });
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+        return BadRequest(new { error = $"An error occurred: {ex.Message}" });
+      }
+    }
+
+
+    // DELETE
     [HttpDelete("plants/{id}")]
     public IActionResult DeletePlant(int id)
     {
@@ -586,17 +690,33 @@ namespace Coberturas.Controllers
             command.CommandType = CommandType.StoredProcedure;
             command.Parameters.Add(new SqlParameter("@id_plant", SqlDbType.Int) { Value = id });
 
-            command.ExecuteNonQuery();  
+            // Execute the command and check the return value
+            var returnValue = new SqlParameter("@ReturnVal", SqlDbType.Int)
+            {
+              Direction = ParameterDirection.ReturnValue
+            };
+            command.Parameters.Add(returnValue);
+
+            command.ExecuteNonQuery();
+
+            int result = (int)returnValue.Value;
+            if (result == -1)
+            {
+              return NotFound(new { message = "Plant not found." });
+            }
+            else
+            {
+              return Ok(new { message = "Plant successfully deleted." });
+            }
           }
-          connection.Close();
-          return Ok(new { message = "Plant successfully deleted." });
         }
       }
       catch (Exception ex)
       {
-        return BadRequest($"Error deleting plant: {ex.Message}");
+        return BadRequest(new { error = $"Error deleting plant: {ex.Message}" });
       }
     }
+
 
   }
 }

@@ -45,4 +45,9 @@ export class ClientsService {
   updateClient(client: ClientInterface): Observable<any> {
     return this.http.put(`${this.urlBackLocal}admin/clients/update/${client.id_client}`, client);
   }
+
+  addClient(client: Omit<ClientInterface, 'id_client'>): Observable<any> {
+    return this.http.post(`${this.urlBackLocal}Admin/clients/add`, client);
+  }
+  
 }
