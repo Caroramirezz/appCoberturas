@@ -24,6 +24,8 @@ import { TagModule } from 'primeng/tag';
 import { MessageService } from 'primeng/api';
 import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { ToastModule } from 'primeng/toast';
+import { MatSortModule } from '@angular/material/sort';
+
 
 
 
@@ -54,7 +56,8 @@ import { ToastModule } from 'primeng/toast';
     DropdownModule,
     TagModule,
     DynamicDialogModule,
-    ToastModule
+    ToastModule,
+    MatSortModule,
   ],
   providers: [MessageService],
 })

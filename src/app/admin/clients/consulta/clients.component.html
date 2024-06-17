@@ -1,29 +1,55 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
 <div style="margin-bottom: 20px; margin-top: 5px;">
-  <p class="title">Catalogo de Clientes</p>
+  <p class="title">Client Catalog</p>
 </div>
 
 <mat-card>
   <mat-card-header fxLayout="row" fxLayout.xs="column">
-    <div fxFlex="50" fxFlex.xs="100" fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.xs="center center">
-      <mat-card-title>Lista de Clientes</mat-card-title>
+    <div fxFlex="50" fFlex.xs="100" fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.xs="center center">
+      <mat-card-title>Client List</mat-card-title>
     </div>
     <div fxFlex="50" fxFlex.xs="100" fxLayoutAlign="end center" fxLayoutAlign.xs="center center" style="margin-bottom: 15px;">
       <button class="button-clear" pButton label="Clear" type="button" icon="pi pi-filter-slash" iconPos="left" (click)="clear(dt1)"></button>
-      <button pButton type="button"   icon="pi pi-plus" mat-raised-button (click)="addClient()" label="Add client" class="button-nuevo"></button>
+      <button pButton type="button" icon="pi pi-plus" mat-raised-button (click)="addClient()" label="Add client" class="button-nuevo"></button>
     </div>
   </mat-card-header>
 
   <mat-card-content>
     <div>
-      <p-table #dt1 [value]="products" responsiveLayout="scroll" [reorderableColumns]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true" currentPageReportTemplate="Mostrando {first} - {last} de {totalRecords} elementos" styleClass="p-datatable-sm">
+      <p-table #dt1 [value]="filteredClients" dataKey="id_client"
+        [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [loading]="loading"
+        [paginator]="true" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} elementos"
+        [globalFilterFields]="['client','holding']">
+        <ng-template pTemplate="caption">
+            <div class="flex">
+                <span class="p-input-icon-left ml-auto">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="applyFilter($event)" placeholder="Search clients" />
+                </span>
+            </div>
+        </ng-template>
         <ng-template pTemplate="header">
           <tr>
             <th>Action</th>
-            <th>ID</th>
-            <th>Client</th>
-            <th>Holding</th>
+            <th style="min-width:15rem">
+              <div class="flex justify-content-center align-items-center">
+                ID
+                <p-columnFilter type="numeric" field="id_client" display="menu"></p-columnFilter>
+              </div>
+            </th>
+            <th style="min-width:15rem">
+              <div class="flex justify-content-center align-items-center">
+                Client
+                <p-columnFilter type="text" field="client" display="menu"></p-columnFilter>
+              </div>
+            </th>
+            <th style="min-width:15rem">
+              <div class="flex justify-content-center align-items-center">
+                Holding
+                <p-columnFilter type="text" field="holding" display="menu"></p-columnFilter>
+              </div>
+            </th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-client>
@@ -36,6 +62,11 @@
             <td>{{ client.id_client }}</td>
             <td>{{ client.client }}</td>
             <td>{{ client.holding }}</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="4">No data matching the filter</td>
           </tr>
         </ng-template>
       </p-table>
