@@ -35,8 +35,14 @@ export class IndexService {
         );
   }
 
-  updateIndex(bank: IndexInterface): Observable<any> {
-    return this.http.put(`${this.urlBackLocal}admin/index/update/${bank.id_index}`, this.index);
+  updateIndex(index: IndexInterface): Observable<any> {
+    return this.http.put(`${this.urlBackLocal}admin/index/update/${index.id_index}`, index)
+      .pipe(
+        catchError(error => {
+          console.error('Error updating index:', error);
+          return throwError(() => new Error('Failed to update index'));
+        })
+      );
   }
 
 }

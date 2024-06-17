@@ -1,67 +1,103 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
 <div style="margin-bottom: 20px; margin-top: 5px;">
-	<p class="title">Catalogo de Bancos</p>
+  <p class="title">Bank Catalog</p>
 </div>
 
 <mat-card>
-    <mat-card-header fxLayout="row" fxLayout.xs="column">
-        <div fxFlex="50" fxFlex.xs="100" fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.xs="center center">
-            <mat-card-title>Lista de Bancos</mat-card-title>
-        </div>
-        <div fxFlex="50" fxFlex.xs="100" fxLayoutAlign="end center" fxLayoutAlign.xs="center center" style="margin-bottom: 15px;">
-            <button class="button-clear" pButton label="Clear" type="button" icon="pi pi-filter-slash" iconPos="left" (click)="clear(dt1)"></button>
-            <button class="button button-nuevo" mat-raised-button (click)="openAddBankDialog()">Agregar Banco</button>            
-        </div>                
-    </mat-card-header>
+  <mat-card-header fxLayout="row" fxLayout.xs="column">
+    <div fxFlex="50" fxFlex.xs="100" fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.xs="center center">
+      <mat-card-title>Bank List</mat-card-title>
+    </div>
+    <div fxFlex="50" fxFlex.xs="100" fxLayoutAlign="end center" fxLayoutAlign.xs="center center" style="margin-bottom: 15px;">
+      <button class="button-clear" pButton label="Clear" type="button" icon="pi pi-filter-slash" iconPos="left" (click)="clear(dt1)"></button>
+      <button class="button button-nuevo" mat-raised-button (click)="openAddDialog()">Add Bank</button>
+    </div>
+  </mat-card-header>
 
-    <mat-card-content>
-        <div>           
-            <p-table #dt1 [value]="products" responsiveLayout="scroll" [reorderableColumns]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true" currentPageReportTemplate="Mostrando {first} - {last} de {totalRecords} elementos" styleClass="p-datatable-sm">           
+  <mat-card-content>
+    <div>
+      <p-table #dt1 [value]="filteredBanks" dataKey="id_bank" responsiveLayout="scroll" [reorderableColumns]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true" currentPageReportTemplate="Mostrando {first} - {last} de {totalRecords} elementos" styleClass="p-datatable-sm" [globalFilterFields]="['bank', 'csa', 'threshold']">
 
-                <ng-template pTemplate="header">                        
-                    <tr>                            
-                        <th pReorderableColumn>Action</th>
-                        <th pReorderableColumn>ID Banco</th>
-                        <th pReorderableColumn>Nombre</th>   
-                        <th pReorderableColumn>CSA</th>
-                        <th pReorderableColumn>Threshold</th>
-                        <th pReorderableColumn>Unit</th>                      
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-rowData>
-                    <tr>                           
-                        <td style="width:100px">
-                            <button *ngIf="!rowData.editing" (click)="toggleEdit(rowData, true)" mat-icon-button matTooltip="Editar" style="color:#1D4289">
-                                <mat-icon>edit</mat-icon>                             
-                            </button>  
-                            <button *ngIf="rowData.editing" (click)="saveBank(rowData)" mat-icon-button matTooltip="Save">
-                                <mat-icon>save</mat-icon>
-                            </button>
-                            <button *ngIf="!rowData.editing" (click)="deleteBank(rowData.id_bank)" mat-icon-button matTooltip="Eliminar" style="color:#1D4289">
-                                <mat-icon>delete</mat-icon>
-                            </button>                                                               
-                        </td>                            
-                        <td *ngIf="!rowData.editing">{{ rowData.id_bank }}</td>
-                        <td *ngIf="rowData.editing">
-                            <input type="text" [(ngModel)]="rowData.id_bank" disabled>
-                        </td>
-                        <td *ngIf="!rowData.editing">{{ rowData.bank }}</td>
-                        <td *ngIf="rowData.editing">
-                            <input type="text" pInputText [(ngModel)]="rowData.bank">
-                        </td>
-                        <td *ngIf="!rowData.editing">{{ rowData.csa }}</td>
-                        <td *ngIf="rowData.editing">
-                            <input type="text" pInputText [(ngModel)]="rowData.csa">
-                        </td>
-                        <td *ngIf="!rowData.editing">{{ rowData.threshold }}</td>
-                        <td *ngIf="rowData.editing">
-                            <input type="text" pInputText [(ngModel)]="rowData.threshold">
-                        </td>
-                        <td >MDlls</td>                         
-                    </tr>
-                </ng-template>
-            </p-table>
-        </div>
-    </mat-card-content>
+        <ng-template pTemplate="caption">
+          <div class="flex">
+            <span class="p-input-icon-left ml-auto">
+              <i class="pi pi-search"></i>
+              <input pInputText type="text" (input)="applyFilter($event)" placeholder="Search keyword" />
+            </span>
+          </div>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Action</th>
+            <th>
+              <div class="flex justify-content-center align-items-center">
+                ID Bank
+                <p-columnFilter type="text" field="id_bank" display="menu"></p-columnFilter>
+              </div>
+            </th>
+            <th>
+              <div class="flex justify-content-center align-items-center">
+                Bank Name
+                <p-columnFilter type="text" field="bank" display="menu"></p-columnFilter>
+              </div>
+            </th>
+            <th>
+              <div class="flex justify-content-center align-items-center">
+                CSA Status
+                <p-columnFilter type="text" field="csa" display="menu"></p-columnFilter>
+              </div>
+            </th>
+            <th>
+              <div class="flex justify-content-center align-items-center">
+                Threshold
+                <p-columnFilter type="numeric" field="threshold" display="menu"></p-columnFilter>
+              </div>
+            </th>
+            <th>Unit</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData>
+          <tr>
+            <td style="width:100px">
+              <button *ngIf="!rowData.editing" (click)="toggleEdit(rowData, true)" mat-icon-button matTooltip="Edit" style="color:#1D4289">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button *ngIf="rowData.editing" (click)="saveBank(rowData)" mat-icon-button matTooltip="Save" style="color:#1D4289">
+                <mat-icon>save</mat-icon>
+              </button>
+              <button *ngIf="!rowData.editing" (click)="deleteBank(rowData.id_bank)" mat-icon-button matTooltip="Delete" style="color:#1D4289">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+            <td *ngIf="!rowData.editing">{{ rowData.id_bank }}</td>
+            <td *ngIf="rowData.editing">
+              <input type="text" [(ngModel)]="rowData.id_bank" disabled>
+            </td>
+            <td *ngIf="!rowData.editing">{{ rowData.bank }}</td>
+            <td *ngIf="rowData.editing">
+              <input type="text" pInputText [(ngModel)]="rowData.bank">
+            </td>
+            <td *ngIf="!rowData.editing">{{ rowData.csa }}</td>
+            <td *ngIf="rowData.editing">
+              <input type="text" pInputText [(ngModel)]="rowData.csa">
+            </td>
+            <td *ngIf="!rowData.editing">{{ rowData.threshold }}</td>
+            <td *ngIf="rowData.editing">
+              <input type="text" pInputText [(ngModel)]="rowData.threshold">
+            </td>
+            <td>MDlls</td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6">No banks found.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </mat-card-content>
 </mat-card>

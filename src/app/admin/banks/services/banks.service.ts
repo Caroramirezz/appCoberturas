@@ -38,6 +38,6 @@ export class BanksService {
 
   updateBank(bank: BankInterface): Observable<any> {
     return this.http.put(`${this.urlBackLocal}admin/banks/update/${bank.id_bank}`, bank);
-  }
+  }  
 
 }

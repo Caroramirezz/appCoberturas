@@ -65,7 +65,8 @@ mat-sidenav {
     background: transparent !important;  
     border: none !important;            
     box-shadow: none !important;        
-    align-items: center;                
+    align-items: center;
+    color: #fff !important;                
 }
 .mat-expansion-panel-header{
     padding: 0 16px !important; 
@@ -91,4 +92,7 @@ mat-sidenav {
     color: #fff;            
     vertical-align: middle;   
     margin-right: 5px;
+}
+.mat-expansion-panel-header-description, .mat-expansion-indicator::after {
+    color: #fff; 
 }

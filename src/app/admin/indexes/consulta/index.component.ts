@@ -6,8 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Table } from 'primeng/table';
 import { IndexService } from  '../services/index.service';
 import { MatDialog } from '@angular/material/dialog';
-import { AddIndexComponent } from '../add/addIndex.component';
-
+import { AddDialogComponent } from '../../add-dialog/add-dialog.component';
 
 @Component({
   selector: 'app-indexes',
@@ -17,10 +16,10 @@ import { AddIndexComponent } from '../add/addIndex.component';
 export class IndexComponent implements OnInit {
   
   products:IndexInterface[] = [];  
+  filteredIndex: IndexInterface[] = [];
   cols: any[] = [];  
   _selectedColumns: any[] = [];
   _selectedColumnsFilter:any[] = [];
-  // banksService: any;
   selectedProducts3:IndexInterface[] = [];
 
   index: any;
@@ -41,43 +40,49 @@ export class IndexComponent implements OnInit {
     this._selectedColumns = this.cols;
 }
 
-openAddIndexDialog(): void {
-  const dialogRef = this.dialog.open(AddIndexComponent, {
-      width: '250px'
-  });
-
-  dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-          this.indexService.addIndex(result).subscribe({
-              next: (newIndex) => {
-                  this.products.push(newIndex);
-                  this.toastr.success('Index added successfully');
-              },
-              error: (error) => {
-                  this.toastr.error('Error adding index', error.message);
-              }
-          });
+openAddDialog(): void {
+    const dialogRef = this.dialog.open(AddDialogComponent, {
+      width: '250px',
+      data: {
+        title: 'Index',
+        fields: [
+          { name: 'index_name', label: 'Index Name' },
+          { name: 'index_symbol', label: 'Index Symbol' },
+          { name: 'source', label: 'Source' }
+        ]
       }
-  });
-}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.indexService.addIndex(result).subscribe({
+          next: (newIndex) => {
+            this.products.push(newIndex);
+            this.filteredIndex.push(newIndex);
+            this.toastr.success('Index added successfully');
+          },
+          error: (error) => {
+            this.toastr.error('Error adding index', error.message);
+          }
+        });
+      }
+    });
+  }
 
 ngOnInit(): void {
-  this.spinner.show(); // Show spinner before loading data
+  this.spinner.show(); 
   this.indexService.getIndexes().subscribe({
-      next: (data) => {
-        console.log("Received index data:", data);
-          this.products = data; // Assuming 'data' is the array of banks
-          console.log("Products set in component:", this.products); 
-          this.spinner.hide(); // Hide spinner after data is loaded
+    next: (data) => {
+        this.products = data;
+        this.filteredIndex = [...data];
+        this.spinner.hide();
       },
       error: (error) => {
-          console.error('Failed to fetch indexes', error);
-          this.toastr.error('Failed to load indexes');
-          this.spinner.hide(); // Hide spinner also on error
+        this.toastr.error('Failed to load indexes');
+        this.spinner.hide();
       }
   });
 }
-
   
   @Input() get selectedColumns(): any[] {     
     return this._selectedColumns;
@@ -85,13 +90,14 @@ ngOnInit(): void {
 
   clear(table: Table) {
     table.clear();
-    this.selectedProducts3 = []; //
+    this.selectedProducts3 = []; 
   } 
 
   deleteIndex(id: number): void {
     this.indexService.deleteIndex(id).subscribe({
         next: (res) => {
             this.products = this.products.filter(product => product.id_index !== id);
+            this.filteredIndex = this.filteredIndex.filter(product => product.id_index !== id);
             this.toastr.success('Index successfully deleted.');
         },
         error: (err) => {
@@ -102,13 +108,13 @@ ngOnInit(): void {
   }
 
   toggleEdit(index: IndexInterface, value: boolean): void {
-    index.editing = value; // Toggle edit state
+    index.editing = value;
 }
 
 saveIndex(index: IndexInterface): void {
     this.indexService.updateIndex(index).subscribe({
         next: () => {
-            this.toastr.success('Bank updated successfully!');
+            this.toastr.success('Index updated successfully!');
             index.editing = false; 
         },
         error: (error) => {
@@ -117,4 +123,13 @@ saveIndex(index: IndexInterface): void {
         }
     });
 }
+
+applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
+    this.filteredIndex = this.products.filter((index) => {
+      return Object.values(index).some((value) =>
+        value && value.toString().toLowerCase().includes(filterValue)
+      );
+    });
+  }
 }

@@ -1,0 +1,25 @@
+<h1 mat-dialog-title>Add {{ data.title }}</h1>
+<div mat-dialog-content>
+  <form [formGroup]="dialogForm">
+    <ng-container *ngFor="let field of data.fields">
+      <div *ngIf="field.name === 'fecha_inicio' || field.name === 'fecha_fin'; else defaultField">
+        <mat-form-field>
+          <mat-label>{{ field.label }}</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="{{ field.name }}">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <ng-template #defaultField>
+        <mat-form-field>
+          <mat-label>{{ field.label }}</mat-label>
+          <input matInput formControlName="{{ field.name }}">
+        </mat-form-field>
+      </ng-template>
+    </ng-container>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-button [mat-dialog-close]="dialogForm.value" [disabled]="!dialogForm.valid">Add</button>
+</div>

@@ -9,10 +9,6 @@ import { MaterialModule } from '../material/material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { MatDialogModule } from '@angular/material/dialog';
-import { AddBankComponent } from './banks/add/addBank.component';
-import { AddSarComponent } from './sars/add/addSar.component';
-import { AddIndexComponent } from './indexes/add/addIndex.component';
-import { EditBanksDialog } from './banks/edit/edit-banks.component';
 import { PlantDialogComponent } from './clients/plants/plant-dialog.component';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
@@ -25,6 +21,7 @@ import { MessageService } from 'primeng/api';
 import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { ToastModule } from 'primeng/toast';
 import { MatSortModule } from '@angular/material/sort';
+import { AddDialogComponent } from './add-dialog/add-dialog.component';
 
 
 
@@ -35,11 +32,8 @@ import { MatSortModule } from '@angular/material/sort';
     ClientsComponent,
     SarsComponent,
     IndexComponent,
-    AddBankComponent,
-    AddSarComponent,
-    EditBanksDialog,
-    AddIndexComponent,
-    PlantDialogComponent
+    PlantDialogComponent,
+    AddDialogComponent,
   ],
   imports: [
     CommonModule,

@@ -66,7 +66,7 @@ namespace Coberturas.Controllers
 
     // DELETE
     [HttpDelete("banks/{id}")]
-    public IActionResult DeleteBank(int id)
+    public IActionResult DeleteBanks(int id)
     {
       try
       {
@@ -78,7 +78,7 @@ namespace Coberturas.Controllers
             command.CommandType = CommandType.StoredProcedure;
             command.Parameters.Add(new SqlParameter("@id_bank", SqlDbType.Int) { Value = id });
 
-            command.ExecuteNonQuery();  // Execute the command
+            command.ExecuteNonQuery();
           }
           connection.Close();
           return Ok(new { message = "Bank successfully deleted." });
@@ -89,7 +89,7 @@ namespace Coberturas.Controllers
         return BadRequest($"Error deleting bank: {ex.Message}");
       }
     }
-     
+
     // CREATE
     [HttpPost]
     [Route("banks/add")]
@@ -137,7 +137,7 @@ namespace Coberturas.Controllers
 
     // UPDATE
     [HttpPut("banks/update/{id}")]
-    public IActionResult UpdateClient(int id, [FromBody] Banks bank)
+    public IActionResult UpdateBank(int id, [FromBody] Banks bank)
     {
       try
       {
@@ -158,22 +158,31 @@ namespace Coberturas.Controllers
           command.Parameters.Add(new SqlParameter("@CSA", bank.CSA));
           command.Parameters.Add(new SqlParameter("@threshold", bank.threshold));
 
-          int result = command.ExecuteNonQuery();
-          if (result > 0)
+          var returnValue = new SqlParameter("@ReturnVal", SqlDbType.Int)
           {
-            return Ok(new { message = "Bank updated successfully." });
+            Direction = ParameterDirection.ReturnValue
+          };
+          command.Parameters.Add(returnValue);
+
+          command.ExecuteNonQuery();
+
+          int result = (int)returnValue.Value;
+          if (result == -1)
+          {
+            return NotFound(new { message = "Bank not found." });
           }
           else
           {
-            return NotFound("Bank not found.");
+            return Ok(new { message = "Bank updated successfully." });
           }
         }
       }
       catch (Exception ex)
       {
-        return BadRequest($"An error occurred: {ex.Message}");
+        return BadRequest(new { error = $"An error occurred: {ex.Message}" });
       }
     }
+
 
     // ********************************************* INDEX ******************************************************
 
@@ -262,7 +271,7 @@ namespace Coberturas.Controllers
 
           command.ExecuteNonQuery();
 
-          command = new SqlCommand("SELECT TOP 1 * FROM IndexTypes ORDER BY id_index DESC", connection);
+          command = new SqlCommand("SELECT TOP 1 * FROM index_types ORDER BY id_index DESC", connection);
           var reader = command.ExecuteReader();
           if (reader.Read())
           {
@@ -288,7 +297,52 @@ namespace Coberturas.Controllers
     }
 
     // UPDATE
+    [HttpPut("index/update/{id}")]
+    public IActionResult UpdateIndex(int id, [FromBody] IndexTypes indextypes)
+    {
+      try
+      {
+        if (id != indextypes.id_index)
+        {
+          return BadRequest("Index ID mismatch");
+        }
 
+        using (var connection = (SqlConnection)_context.Database.GetDbConnection())
+        {
+          connection.Open();
+          var command = new SqlCommand("sp_upd_index_type", connection)
+          {
+            CommandType = CommandType.StoredProcedure
+          };
+          command.Parameters.Add(new SqlParameter("@id_index", indextypes.id_index));
+          command.Parameters.Add(new SqlParameter("@index_name", indextypes.index_name));
+          command.Parameters.Add(new SqlParameter("@index_symbol", indextypes.index_symbol));
+          command.Parameters.Add(new SqlParameter("@source", indextypes.source));
+
+          var returnValue = new SqlParameter("@ReturnVal", SqlDbType.Int)
+          {
+            Direction = ParameterDirection.ReturnValue
+          };
+          command.Parameters.Add(returnValue);
+
+          command.ExecuteNonQuery();
+
+          int result = (int)returnValue.Value;
+          if (result == -1)
+          {
+            return NotFound(new { message = "Index not found." });
+          }
+          else
+          {
+            return Ok(new { message = "Index updated successfully." });
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+        return BadRequest(new { error = $"An error occurred: {ex.Message}" });
+      }
+    }
 
     // ************************************************ SARS *************************************************************************
 
@@ -348,12 +402,12 @@ namespace Coberturas.Controllers
             command.ExecuteNonQuery();  
           }
           connection.Close();
-          return Ok(new { message = "Bank successfully deleted." });
+          return Ok(new { message = "SAR successfully deleted." });
         }
       }
       catch (Exception ex)
       {
-        return BadRequest($"Error deleting bank: {ex.Message}");
+        return BadRequest($"Error deleting SAR: {ex.Message}");
       }
     }
 
@@ -372,6 +426,9 @@ namespace Coberturas.Controllers
             CommandType = CommandType.StoredProcedure
           };
           command.Parameters.Add(new SqlParameter("@number_sar", SqlDbType.VarChar) { Value = sar.number_sar });
+          command.Parameters.Add(new SqlParameter("@description", SqlDbType.VarChar) { Value = sar.description });
+          command.Parameters.Add(new SqlParameter("@fecha_inicio", SqlDbType.Date) { Value = sar.fecha_inicio });
+          command.Parameters.Add(new SqlParameter("@fecha_fin", SqlDbType.Date) { Value = sar.fecha_fin });
 
           command.ExecuteNonQuery();
 
@@ -400,6 +457,56 @@ namespace Coberturas.Controllers
         return BadRequest(new { error = $"An error occurred: {ex.Message}" });
       }
     }
+
+    // UPDATE
+    [HttpPut("sars/update/{id}")]
+    public IActionResult UpdateSar(int id, [FromBody] SAR sar)
+    {
+      try
+      {
+        if (id != sar.id_sar)
+        {
+          return BadRequest("SAR ID mismatch");
+        }
+
+        using (var connection = (SqlConnection)_context.Database.GetDbConnection())
+        {
+          connection.Open();
+          var command = new SqlCommand("sp_upd_sars", connection)
+          {
+            CommandType = CommandType.StoredProcedure
+          };
+          command.Parameters.Add(new SqlParameter("@id_sar", sar.id_sar));
+          command.Parameters.Add(new SqlParameter("@number_sar", sar.number_sar));
+          command.Parameters.Add(new SqlParameter("@description", sar.description));
+          command.Parameters.Add(new SqlParameter("@fecha_inicio", sar.fecha_inicio));
+          command.Parameters.Add(new SqlParameter("@fecha_fin", sar.fecha_fin));
+
+          var returnValue = new SqlParameter("@ReturnVal", SqlDbType.Int)
+          {
+            Direction = ParameterDirection.ReturnValue
+          };
+          command.Parameters.Add(returnValue);
+
+          command.ExecuteNonQuery();
+
+          int result = (int)returnValue.Value;
+          if (result == -1)
+          {
+            return NotFound(new { message = "SAR not found." });
+          }
+          else
+          {
+            return Ok(new { message = "SAR updated successfully." });
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+        return BadRequest(new { error = $"An error occurred: {ex.Message}" });
+      }
+    }
+
 
 
     // ******************************************* CLIENTS ************************************************
@@ -716,7 +823,6 @@ namespace Coberturas.Controllers
         return BadRequest(new { error = $"Error deleting plant: {ex.Message}" });
       }
     }
-
 
   }
 }
