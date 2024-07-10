@@ -40,6 +40,67 @@ export class BloombergService {
       throw error;
     }
   }
+  /* async createDataRequest() {
+    if (!this.token) {
+      await this.getToken();
+    }
+
+    const catalogId = '53000'; // Use the discovered catalog ID
+    const requestName = 'AngularDataRequest';
+
+    const requestPayload = {
+      '@type': 'DataRequest',
+      'name': requestName,
+      'description': 'Some description',
+      'universe': {
+        '@type': 'Universe',
+        'contains': [
+          {
+            '@type': 'Identifier',
+            'identifierType': 'TICKER',
+            'identifierValue': 'AAPL US Equity',
+          },
+          {
+            '@type': 'Identifier',
+            'identifierType': 'BB_GLOBAL',
+            'identifierValue': 'BBG009S3NB30',  // GOOG US Equity
+          },
+          {
+            '@type': 'Identifier',
+            'identifierType': 'ISIN',
+            'identifierValue': 'US88160R1014',  // TSLA US Equity
+          },
+        ]
+      },
+      'fieldList': {
+        '@type': 'DataFieldList',
+        'contains': [
+          { 'mnemonic': 'NAME' },
+          { 'mnemonic': 'SECURITY_TYP' },
+          { 'mnemonic': 'COUNTRY' },
+        ],
+      },
+      'trigger': {
+        '@type': 'SubmitTrigger',
+      },
+      'formatting': {
+        '@type': 'MediaType',
+        'outputMediaType': 'application/json',
+      },
+    };
+
+    const url = `${this.host}/eap/catalogs/${catalogId}/requests/`;
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`).set('api-version', '2');
+
+    try {
+      const response = await this.http.post<any>(url, requestPayload, { headers }).toPromise();
+      console.log('Data request created:', response);
+      return response.headers['Location'];
+    } catch (error) {
+      console.error('Error creating data request:', error);
+      throw error;
+    }
+  } */
 
   async getDistributionUrl(requestIdentifier: string, snapshotDate: string): Promise<any> {
     if (!this.token) {

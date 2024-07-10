@@ -1,95 +1,123 @@
-<p>platts works!</p>
-
-<button (click)="request()">Prueba</button>
-<br><br>
-{{response | json}}
-<hr>
-
-<button (click)="getHistory()">Request</button>
-<br><br>
-<hr>
-{{responseHistory | json}}
-<br><br>
-
-<br><br>
-<br>
-1.- ¿Como agrego el access key al request? <br>
-2.- Request del token - params: user and pass <br>
-3.- Refresh Token<br>
-
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
-<div fxLayout="row" style="margin-bottom: 20px; margin-top: 5px;">
-  <div fxFlex="50" fxLayoutAlign="start center">
-    <span class="title">Search Data</span>
-  </div>
+<div style="margin-bottom: 20px; margin-top: 5px;">
+  <p class="title">Platts Data Catalog</p>
 </div>
 
 <mat-card>
   <mat-card-header fxLayout="row" fxLayout.xs="column">
     <div fxFlex="50" fxFlex.xs="100" fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.xs="center center">
-      <mat-card-title>Filters</mat-card-title>
+      <mat-card-title>Platts Data List</mat-card-title>
+    </div>
+    <div fxFlex="50" fxFlex.xs="100" fxLayoutAlign="end center" fxLayoutAlign.xs="center center" style="margin-bottom: 15px;">
+      <button pButton type="button" icon="pi pi-refresh" mat-raised-button (click)="getHistory()" label="Refresh Data" class="button-clear"></button>
     </div>
   </mat-card-header>
-  <mat-card-content>
-    <div fxLayout="row" fxLayoutGap="10px">
-      <mat-form-field appearance="outline" fxFlex="30">
-        <mat-label>Period</mat-label>
-        <mat-date-range-input [rangePicker]="picker">
-          <input matStartDate [(ngModel)]="fechaInicio">
-          <input matEndDate [(ngModel)]="fechaFin">
-        </mat-date-range-input>
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-date-range-picker #picker>
-          <mat-date-range-picker-actions>
-            <button mat-button matDateRangePickerCancel>Cancel</button>
-            <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
-          </mat-date-range-picker-actions>
-        </mat-date-range-picker>
-      </mat-form-field>
-      
-      <mat-form-field appearance="outline" fxFlex="20">
-        <mat-label>Bate</mat-label>
-        <input matInput [(ngModel)]="bate">
-      </mat-form-field>
-      
-      <mat-form-field appearance="outline" fxFlex="20">
-        <mat-label>Symbol</mat-label>
-        <input matInput [(ngModel)]="symbol">
-      </mat-form-field>
 
-      <button class="buttons-filters button-create-list" mat-raised-button color="accent" (click)="filterData()" fxFlex="15">Search</button>
-    </div>
-  </mat-card-content>
-</mat-card>
-<br>
-<mat-card>
-  <mat-card-header fxLayout="row" fxLayout.xs="column">
-    <div fxFlex="50" fxFlex.xs="100" fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.xs="center center">
-      <mat-card-title>Data list</mat-card-title>
-    </div>
-  </mat-card-header>
   <mat-card-content>
-    <div class="table-responsive">
-      <table>
-        <thead>
+    <div>
+      <div fxLayout="row" fxLayoutGap="10px">
+        <mat-form-field appearance="outline" fxFlex="30">
+          <mat-label>Period</mat-label>
+          <mat-date-range-input [rangePicker]="picker">
+            <input matStartDate [(ngModel)]="fechaInicio" placeholder="Start date">
+            <input matEndDate [(ngModel)]="fechaFin" placeholder="End date">
+          </mat-date-range-input>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline" fxFlex="20">
+          <mat-label>Bate</mat-label>
+          <input matInput [(ngModel)]="bate">
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline" fxFlex="20">
+          <mat-label>Index</mat-label>
+          <mat-select [(ngModel)]="selectedSymbols" multiple>
+            <mat-select-trigger>
+              {{selectedSymbols.length}} selected
+            </mat-select-trigger>
+            <mat-option>
+              <ngx-mat-select-search [formControl]="symbolSearchCtrl" placeholderLabel="Search symbols"></ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let symbol of filteredSymbols | async" [value]="symbol.ticker">
+              {{ symbol.index }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <button class="button-nuevo mat-raised-button" mat-raised-button color="accent" (click)="filterData()" fxFlex="20" style="height: 56px;">Search</button>
+      </div>
+
+      <p-table #dt1 [value]="filteredData" dataKey="symbol" responsiveLayout="scroll" [reorderableColumns]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 25, 50, 100]" [paginator]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" styleClass="p-datatable-sm alternating-rows" [globalFilterFields]="['symbol', 'bate', 'value', 'assessDate', 'index']">
+
+        <ng-template pTemplate="caption">
+          <div class="flex">
+            <span class="p-input-icon-left ml-auto">
+              <i class="pi pi-search"></i>
+              <input pInputText type="text" (input)="applyFilter($event)" placeholder="Search data" />
+            </span>
+          </div>
+        </ng-template>
+
+        <ng-template pTemplate="header">
           <tr>
-            <th>Bate</th>
-            <th>Value</th>
-            <th>Assess Date</th>
-            <th>Symbol</th>
+            <th>
+              <div class="flex justify-content-center align-items-center">
+                Number
+              </div>
+            </th>
+            <th>
+              <div class="flex justify-content-center align-items-center">
+                Index
+                <p-columnFilter type="text" field="index" display="menu"></p-columnFilter>
+              </div>
+            </th>
+            <th>
+              <div class="flex justify-content-center align-items-center">
+                Symbol
+                <p-columnFilter type="text" field="symbol" display="menu"></p-columnFilter>
+              </div>
+            </th>
+            <th>
+              <div class="flex justify-content-center align-items-center">
+                Bate
+                <p-columnFilter type="text" field="bate" display="menu"></p-columnFilter>
+              </div>
+            </th>
+            <th>
+              <div class="flex justify-content-center align-items-center">
+                Value
+                <p-columnFilter type="numeric" field="value" display="menu"></p-columnFilter>
+              </div>
+            </th>
+            <th>
+              <div class="flex justify-content-center align-items-center">
+                Assess Date
+                <p-columnFilter type="date" field="assessDate" display="menu"></p-columnFilter>
+              </div>
+            </th>
           </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let row of filteredData">
-            <td>{{ row.bate }}</td>
-            <td>{{ row.value }}</td>
-            <td>{{ row.assessDate | date: 'yyyy-MM-dd' }}</td>
-            <td>{{ row.symbol }}</td>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData>
+          <tr>
+            <td>{{ rowData.num }}</td>
+            <td>{{ rowData.index }}</td>
+            <td>{{ rowData.symbol }}</td>
+            <td>{{ rowData.bate }}</td>
+            <td>${{ rowData.value }}</td>
+            <td>{{ rowData.assessDate | date: 'MMM dd, yyyy' }}</td>
           </tr>
-        </tbody>
-      </table>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6">No data found.</td>
+          </tr>
+        </ng-template>
+      </p-table>
     </div>
   </mat-card-content>
 </mat-card>
-
