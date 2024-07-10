@@ -1,63 +1,61 @@
-  <div class="overflow-h">
+<div class="overflow-h">
   <mat-card-header fxLayout="row" fxLayout.xs="column">
     <div fxFlex="50" fxFlex.xs="100" fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.xs="center center">
       <mat-card-title>Client Information</mat-card-title>
-      <!--<mat-card-subtitle>Please fill out all fields</mat-card-subtitle>-->
     </div>
     <div fxFlex="50" fxFlex.xs="100" fxLayoutAlign="end center" fxLayoutAlign.xs="center center">
-      <!-- add pencil icon in button icon="pi pi-pencil" -->
       <button pButton type="button" label="Edit client" class="button-clear" style="margin-bottom: 15px;" mat-raised-button color="accent" (click)="editClient()" icon="pi pi-pencil"></button>
     </div>
   </mat-card-header>
 
   <mat-card-content>
     <form [formGroup]="formClient" *ngIf="editingClient" novalidate>
-      <div fxLayout="row" fxLayoutAlign="space-around center">
-        <div fxFlex="25">
-          <mat-form-field appearance="outline" class="custom-input">
+      <div fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="10px">
+        <div fxFlex="30" fxFlex.xs="100">
+          <mat-form-field appearance="outline" class="full-width-input">
             <mat-label>Client ID</mat-label>
             <input matInput placeholder="Client ID" formControlName="client_id" [(ngModel)]="client.id_client" readonly>
-            <mat-error *ngIf="this.formClient.get('client_id')?.hasError('required')">Es necesario ingresar información</mat-error>
+            <mat-error *ngIf="this.formClient.get('client_id')?.hasError('required')">Required</mat-error>
           </mat-form-field>
         </div>
-        <div fxFlex="25">
-          <mat-form-field appearance="outline" class="custom-input">
+        <div fxFlex="30" fxFlex.xs="100">
+          <mat-form-field appearance="outline" class="full-width-input">
             <mat-label>Client Name</mat-label>
             <input matInput placeholder="Client Name" formControlName="client_name" [(ngModel)]="client.client">
-            <mat-error *ngIf="this.formClient.get('client_name')?.hasError('required')">Es necesario ingresar información</mat-error>
+            <mat-error *ngIf="this.formClient.get('client_name')?.hasError('required')">Required</mat-error>
           </mat-form-field>
         </div>
-        <div fxFlex="25">
-          <mat-form-field appearance="outline" class="custom-input">
+        <div fxFlex="30" fxFlex.xs="100">
+          <mat-form-field appearance="outline" class="full-width-input">
             <mat-label>Holding</mat-label>
             <input matInput placeholder="Holding" formControlName="holding" [(ngModel)]="client.holding">
-            <mat-error *ngIf="this.formClient.get('holding')?.hasError('required')">Es necesario ingresar información</mat-error>
+            <mat-error *ngIf="this.formClient.get('holding')?.hasError('required')">Required</mat-error>
           </mat-form-field>
         </div>
       </div>
       <div style="margin-top:20px" fxLayoutAlign="end center">
-        <button pButton type="button" label="Save" icon="pi pi-check" mat-raised-button color="warn" style="margin-right: 15px;" class="button-nuevo" (click)="saveClient()"></button>
+        <button pButton type="button" label="Save" icon="pi pi-check" mat-raised-button color="warn" style="margin-right: 15px;" class="button-nuevo" (click)="saveClient()" [disabled]="formClient.invalid"></button>
         <button pButton type="button" label="Cancel" icon="pi pi-times" class="button-cancel" (click)="cancelEditClient()"></button>
       </div>
     </form>
     <div *ngIf="!editingClient">
-      <div fxLayout="row" fxLayoutAlign="space-around center">
-        <div fxFlex="25">
-          <mat-form-field appearance="outline" class="custom-input">
+      <div fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="10px">
+        <div fxFlex="30" fxFlex.xs="100">
+          <mat-form-field appearance="outline" class="full-width-input readonly-field">
             <mat-label>Client ID</mat-label>
-            <input matInput placeholder="Client ID" value="{{client.id_client}}" readonly class="readonly-input">
+            <input matInput placeholder="Client ID" value="{{client.id_client}}" class="readonly-input" disabled>
           </mat-form-field>
         </div>
-        <div fxFlex="25">
-          <mat-form-field appearance="outline" class="custom-input">
+        <div fxFlex="30" fxFlex.xs="100">
+          <mat-form-field appearance="outline" class="full-width-input readonly-field">
             <mat-label>Client Name</mat-label>
-            <input matInput placeholder="Client Name" value="{{client.client}}" readonly class="readonly-input">
+            <input matInput placeholder="Client Name" value="{{client.client}}" class="readonly-input" disabled>
           </mat-form-field>
         </div>
-        <div fxFlex="25">
-          <mat-form-field appearance="outline" class="custom-input">
+        <div fxFlex="30" fxFlex.xs="100">
+          <mat-form-field appearance="outline" class="full-width-input readonly-field">
             <mat-label>Holding</mat-label>
-            <input matInput placeholder="Holding" value="{{client.holding}}" readonly class="readonly-input">
+            <input matInput placeholder="Holding" value="{{client.holding}}" class="readonly-input" disabled>
           </mat-form-field>
         </div>
       </div>
@@ -65,86 +63,91 @@
   </mat-card-content>
 </div>
 
-  <h2></h2>
-  <h2>Plants</h2>
-  <div class="plants-actions">
-    <button pButton type="button" label="Add Plant" icon="pi pi-plus" (click)="addPlant()" class="button-nuevo"></button>
-  </div>
-  <p-table [value]="plants" dataKey="id_plant" editMode="row" class="full-width-table" responsiveLayout="scroll">
-    <ng-template pTemplate="header">
-      <tr>
-        <th>Actions</th>
-        <th>Name</th>
-        <th>Start Date</th>
-        <th>End Date</th>
-        <th>CMD</th>
-        <th>Unit</th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-plant let-editing="editing">
-      <tr [pEditableRow]="plant" >
-        <td>
-          <div class="flex align-items-center justify-content-center gap-2" style = "white-space: nowrap">
-            <button *ngIf="!editing" mat-icon-button matTooltip="Editar" style="color:#1D4289" pInitEditableRow (click)="onRowEditInit(plant)">
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check" (click)="onRowEditSave(plant)" class="p-button-rounded p-button-text p-button-success mr-2"></button>
-            <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" (click)="onRowEditCancel(plant)" class="p-button-rounded p-button-text p-button-danger"></button>
-            <button mat-icon-button matTooltip="Eliminar" style="color:#1D4289" (click)="deletePlant(plant)">
-                <mat-icon>delete</mat-icon>
-            </button>
-          </div>
-        </td>
-        <td>
-          <p-cellEditor>
-            <ng-template pTemplate="input">
-              <input pInputText type="text" [(ngModel)]="plant.name_plant" required />
-            </ng-template>
-            <ng-template pTemplate="output">
-              {{ plant.name_plant }}
-            </ng-template>
-          </p-cellEditor>
-        </td>
-        <td>
-          <p-cellEditor>
-            <ng-template pTemplate="input">
+<h2></h2>
+<h2>Plants</h2>
+<div class="plants-actions">
+  <button pButton type="button" label="Add Plant" icon="pi pi-plus" (click)="addPlant()" class="button-nuevo"></button>
+</div>
+<p-table [value]="plants" dataKey="id_plant" editMode="row" class="full-width-table" responsiveLayout="scroll">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Actions</th>
+      <th>Name</th>
+      <th>Start Date</th>
+      <th>End Date</th>
+      <th>CMD</th>
+      <th>Unit</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-plant let-editing="editing">
+    <tr [pEditableRow]="plant">
+      <td>
+        <div class="flex align-items-center justify-content-center gap-2" style="white-space: nowrap">
+          <button *ngIf="!editing" mat-icon-button matTooltip="Edit" style="color:#1D4289" pInitEditableRow (click)="onRowEditInit(plant)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check" (click)="onRowEditSave(plant)" class="p-button-rounded p-button-text p-button-success mr-2" [disabled]="isInvalidDateRange(plant)"></button>
+          <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" (click)="onRowEditCancel(plant)" class="p-button-rounded p-button-text p-button-danger"></button>
+          <button mat-icon-button matTooltip="Delete" style="color:#1D4289" (click)="deletePlant(plant)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </td>
+      <td>
+        <p-cellEditor>
+          <ng-template pTemplate="input">
+            <input pInputText type="text" [(ngModel)]="plant.name_plant" required />
+          </ng-template>
+          <ng-template pTemplate="output">
+            {{ plant.name_plant }}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+      <td>
+        <p-cellEditor>
+          <ng-template pTemplate="input">
+            <div class="input-wrapper">
               <input pInputText type="date" [(ngModel)]="plant.inicio_contrato" required />
-            </ng-template>
-            <ng-template pTemplate="output">
-              {{ plant.inicio_contrato | date }}
-            </ng-template>
-          </p-cellEditor>
-        </td>
-        <td>
-          <p-cellEditor>
-            <ng-template pTemplate="input">
+              <mat-error *ngIf="isInvalidDateRange(plant)">Start date cannot be later than the end date</mat-error>
+            </div>
+          </ng-template>
+          <ng-template pTemplate="output">
+            {{ plant.inicio_contrato | date }}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+      <td>
+        <p-cellEditor>
+          <ng-template pTemplate="input">
+            <div class="input-wrapper">
               <input pInputText type="date" [(ngModel)]="plant.fin_contrato" required />
-            </ng-template>
-            <ng-template pTemplate="output">
-              {{ plant.fin_contrato | date }}
-            </ng-template>
-          </p-cellEditor>
-        </td>
-        <td>
-          <p-cellEditor>
-            <ng-template pTemplate="input">
-              <input pInputText type="text" [(ngModel)]="plant.cmd" required />
-            </ng-template>
-            <ng-template pTemplate="output">
-              {{ plant.cmd }}
-            </ng-template>
-          </p-cellEditor>
-        </td>
-        <td>
-          <p-cellEditor>
-            <ng-template pTemplate="input">
-              <p-dropdown [options]="unitOptions" [(ngModel)]="plant.unidad" placeholder="Select a Unit" [style]="{ width: '100%' }"></p-dropdown>
-            </ng-template>
-            <ng-template pTemplate="output">
-              {{ plant.unidad }}
-            </ng-template>
-          </p-cellEditor>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
+            </div>
+          </ng-template>
+          <ng-template pTemplate="output">
+            {{ plant.fin_contrato | date }}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+      <td>
+        <p-cellEditor>
+          <ng-template pTemplate="input">
+            <input pInputText type="text" [(ngModel)]="plant.cmd" required />
+          </ng-template>
+          <ng-template pTemplate="output">
+            {{ plant.cmd }}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+      <td>
+        <p-cellEditor>
+          <ng-template pTemplate="input">
+            <p-dropdown [options]="unitOptions" [(ngModel)]="plant.unidad" placeholder="Select a Unit" [style]="{ width: '100%' }"></p-dropdown>
+          </ng-template>
+          <ng-template pTemplate="output">
+            {{ plant.unidad }}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

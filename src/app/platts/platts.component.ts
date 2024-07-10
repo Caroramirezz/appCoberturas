@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PlattsService } from './platts.service';
+import { DataItem } from './platts.interface';
+import moment from 'moment';
 
 @Component({
   selector: 'app-platts',
@@ -8,14 +10,39 @@ import { PlattsService } from './platts.service';
 })
 export class PlattsComponent implements OnInit {
 
-  response:any;
-  responseHistory:any;
+  response: any;
+  responseHistory: any;
+  tableData: DataItem[] = [];
+  filteredData: DataItem[] = [];
+  
+  fechaInicio: Date = moment().startOf('month').toDate();
+  fechaFin: Date = moment().endOf('month').toDate();
+  bate: string = '';
+  symbol: string = '';
 
   constructor(
     private WsPlatts:PlattsService
   ) { }
 
   ngOnInit(): void {
+    this.WsPlatts.HistoryData().subscribe((data: DataItem[]) => {
+      this.tableData = data;
+      this.filteredData = data;
+    });
+  }
+
+  filterData() {
+    const startDate = moment(this.fechaInicio);
+    const endDate = moment(this.fechaFin);
+    
+    this.filteredData = this.tableData.filter(item => {
+      const assessDate = moment(item.assessDate);
+      const matchDate = !this.fechaInicio || !this.fechaFin || (assessDate.isBetween(startDate, endDate, undefined, '[]'));
+      const matchBate = !this.bate || item.bate.includes(this.bate);
+      const matchSymbol = !this.symbol || item.symbol.includes(this.symbol);
+      
+      return matchDate && matchBate && matchSymbol;
+    });
   }
 
 

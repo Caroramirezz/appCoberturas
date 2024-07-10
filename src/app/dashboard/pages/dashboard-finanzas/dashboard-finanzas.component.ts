@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DashboardService } from '../../services/dashboard.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
-import * as moment from 'moment';
+import moment from 'moment';
 import { ChartData, ChartOptions } from 'chart.js';
 import { CurrencyPipe, DecimalPipe } from '@angular/common';
 import { EChartsOption  } from 'echarts';

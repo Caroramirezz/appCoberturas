@@ -30,6 +30,8 @@ export class HomeComponent implements OnInit {
     if(this.permiso_usuario === '1'){
       this.arrayMenu = [
         {title:'Dashboard', icon:'dashboard',link:'/home/dashboard/usuario'},
+        {title:'Platts', icon:'receipt_long',link:'/home/platts'},
+        {title:'Bloomberg', icon:'receipt_long',link:'/home/bloomberg'},
         {title:'Trades', icon:'receipt_long',link:'/home/trade'},
         {
           title: 'Administración',

@@ -19,9 +19,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon'
 import { EditClientsDialog } from './admin/clients/edit/edit-clients.component';
 import { PlattsComponent } from './platts/platts.component';
-
-
-
+import { BloombergComponent } from './bloomberg/bloomberg.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +27,8 @@ import { PlattsComponent } from './platts/platts.component';
     HomeComponent,
     DialogComponent,
     EditClientsDialog,
-    PlattsComponent
+    PlattsComponent,
+    BloombergComponent,
   ],
   imports: [
     BrowserModule,
@@ -43,7 +42,7 @@ import { PlattsComponent } from './platts/platts.component';
     NgxSpinnerModule,
     MatDatepickerModule,    
     ToastrModule.forRoot(), // ToastrModule added
-    DynamicDialogModule        
+    DynamicDialogModule,        
   ],  
   entryComponents:[
     DetalleComponent

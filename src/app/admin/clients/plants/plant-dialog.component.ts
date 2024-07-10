@@ -11,21 +11,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   selector: 'app-plant-dialog',
   templateUrl: './plant-dialog.component.html',
   styleUrls: ['./plant-dialog.component.scss'],
-  styles: [ 
-    `td.editing{ 
-        background-color: red; 
-        color: white; 
-    } 
-    ` 
-  ] 
 })
 export class PlantDialogComponent implements OnInit {
 
   client: ClientInterface;
   originalClient: ClientInterface; // Store the original client data
-  clientName: string = '';
-  clientHolding: string = '';
-  isNewClient: boolean = false; 
   plants: PlantsInterface[] = [];
   originalPlants: { [id: number]: PlantsInterface } = {}; // Store original plant data
   editingClient: boolean = false;
@@ -34,7 +24,7 @@ export class PlantDialogComponent implements OnInit {
     { label: 'MMBtu', value: 'MMBtu' }
   ];
   formClient: FormGroup;
-  
+
   constructor(
     public ref: DynamicDialogRef,
     public config: DynamicDialogConfig,
@@ -46,7 +36,6 @@ export class PlantDialogComponent implements OnInit {
     this.client = this.config.data.client;
     this.originalClient = { ...this.client }; // Make a copy of the original client data
     this.plants = this.config.data.plants;
-    this.isNewClient = this.config.data.isNewClient || false;
     this.formClient = this.fb.group({
       client_id: [this.client.id_client, Validators.required],
       client_name: [this.client.client, Validators.required],
@@ -68,6 +57,12 @@ export class PlantDialogComponent implements OnInit {
   }
 
   saveClient(): void {
+    if (this.formClient.invalid) {
+      this.toastr.error('Please fill all required fields');
+      this.editingClient = true; // Remain in editing mode
+      return;
+    }
+
     this.clientsService.updateClient(this.client).subscribe({
       next: () => {
         this.toastr.success('Client updated successfully');
@@ -75,6 +70,7 @@ export class PlantDialogComponent implements OnInit {
         this.originalClient = { ...this.client }; // Update the original values after save
       },
       error: (error) => {
+        this.editingClient = true; // Remain in editing mode
         if (error.status === 404) {
           this.toastr.error('Client not found');
         } else {
@@ -98,36 +94,44 @@ export class PlantDialogComponent implements OnInit {
   }
 
   onRowEditSave(plant: PlantsInterface): void {
-    if (plant.id_plant === 0) {
-        // Add new plant
-        this.plantsService.addPlant(plant).subscribe({
-            next: (response) => {
-                this.toastr.success('Plant added successfully');
-                plant.id_plant = response.id; // Update the ID with the response from the server
-                plant.editing = false;
-                this.originalPlants[plant.id_plant] = { ...plant }; // Store original plant data
-            },
-            error: (error) => {
-                this.toastr.error('Error adding plant');
-                console.error('Error adding plant', error);
-            }
-        });
-    } else {
-        // Update existing plant
-        this.plantsService.updatePlant(plant).subscribe({
-            next: () => {
-                this.toastr.success('Plant updated successfully');
-                plant.editing = false;
-                this.originalPlants[plant.id_plant] = { ...plant }; // Store original plant data
-            },
-            error: (error) => {
-                this.toastr.error('Error updating plant');
-                console.error('Error updating plant', error);
-            }
-        });
+    // No need to check dates here as it will be done by the form validator
+    if (!plant.name_plant || !plant.inicio_contrato || !plant.fin_contrato || !plant.cmd || !plant.unidad) {
+      this.toastr.error('Please fill all required fields');
+      plant.editing = true; // Remain in editing mode
+      return;
     }
-}
 
+    if (plant.id_plant === 0) {
+      // Add new plant
+      this.plantsService.addPlant(plant).subscribe({
+        next: (response) => {
+          this.toastr.success('Plant added successfully');
+          plant.id_plant = response.id; // Update the ID with the response from the server
+          plant.editing = false;
+          this.originalPlants[plant.id_plant] = { ...plant }; // Store original plant data
+        },
+        error: (error) => {
+          this.toastr.error('Error adding plant');
+          console.error('Error adding plant', error);
+          setTimeout(() => { plant.editing = true; }, 0); // Ensure editing mode remains active
+        }
+      });
+    } else {
+      // Update existing plant
+      this.plantsService.updatePlant(plant).subscribe({
+        next: () => {
+          this.toastr.success('Plant updated successfully');
+          plant.editing = false;
+          this.originalPlants[plant.id_plant] = { ...plant }; // Store original plant data
+        },
+        error: (error) => {
+          this.toastr.error('Error updating plant');
+          console.error('Error updating plant', error);
+          setTimeout(() => { plant.editing = true; }, 0); // Ensure editing mode remains active
+        }
+      });
+    }
+  }
 
   onRowEditCancel(plant: PlantsInterface): void {
     plant.editing = false;
@@ -140,7 +144,14 @@ export class PlantDialogComponent implements OnInit {
   }
 
   addPlant(): void {
-    const newPlant: PlantsInterface = { id_plant: 0, name_plant: '', inicio_contrato: new Date(), fin_contrato: new Date(), cmd: 0, unidad: ''};
+    const newPlant: PlantsInterface = {
+      id_plant: 0,
+      name_plant: '',
+      inicio_contrato: new Date(),
+      fin_contrato: new Date(),
+      cmd: 0,
+      unidad: ''
+    };
     this.plants = [newPlant, ...this.plants];
   }
 
@@ -166,5 +177,10 @@ export class PlantDialogComponent implements OnInit {
       this.client = { ...this.originalClient }; // Revert to original client values if not saved
     }
     this.ref.close();
+  }
+
+  // Custom validation for date logic
+  isInvalidDateRange(plant: PlantsInterface): boolean {
+    return new Date(plant.inicio_contrato) > new Date(plant.fin_contrato);
   }
 }

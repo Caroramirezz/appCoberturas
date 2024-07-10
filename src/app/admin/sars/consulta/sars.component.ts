@@ -40,7 +40,7 @@ export class SarsComponent implements OnInit {
     this._selectedColumns = this.cols;
   }
 
-  openAddSarDialog(): void {
+  openAddDialog(): void {
     const dialogRef = this.dialog.open(AddDialogComponent, {
       width: '400px',
       data: {

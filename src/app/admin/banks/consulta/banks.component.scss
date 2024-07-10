@@ -2,25 +2,45 @@
     background-color: rgb(188, 219, 255); 
 }
 
-.buttons-filters {
-    margin-bottom:20px;
-    width: 120px;
-    height: 45px;
+.button-nuevo,
+.button-cancel,
+.button-save,
+.button-clear {
+    color: white !important;
+    min-height: 40px;
+    min-width: 100px;
+    margin-left: 10px;
+    transition: background-color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
 }
 
-
-.button-nuevo {
-    background-color:#00843b !important;
-    color:white;
-    min-height: 40px;
-    min-width: 85px;
-    margin-left: 10px;
+.button-cancel {
+    background-color: red !important;
 }
 
 .button-clear {
-    min-height: 35px;
     background-color: #02109C !important;
-    color:white;
+}
+
+.button-save,
+.button-nuevo {
+    background-color: #00843b !important;
+}
+
+.button-nuevo:hover,
+.button-save:hover {
+    background-color: darkgreen !important;
+}
+
+.button-cancel:hover {
+    background-color: darkred !important;
+}
+
+.button-clear:hover {
+    background-color: rgb(0, 0, 125) !important;
 }
 
 
@@ -58,4 +78,7 @@ td, th {
 p-cellEditor {
     cursor: pointer;
 }
-
+.mat-icon:hover {
+    cursor: pointer;
+    color: rgb(0, 0, 54) !important;
+}

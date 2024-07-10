@@ -8,8 +8,13 @@ export const environment = {
   urlBackLocal: 'https://localhost:44373/',
   apiKey: 'UdqntgWRujWthZwPYfFu',     
   userPlatts:'eguel@alfa.com.mx',
-  passPlatts:'eGuel#1804'
+  passPlatts:'eGuel#1804',
+  bloombergCredentials: {
+    client_id: 'b96fe7d7e53268595ad1f0eadc03e56c',
+    client_secret: '349aab04e60d0912aedc0f68a555fb3d93a64eee2eaf736a1d0bb4b8433de5d4'
+  }
 };
+
 
 /*
  * For easier debugging in development mode, you can import the following file

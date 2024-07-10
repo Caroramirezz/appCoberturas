@@ -11,7 +11,7 @@
     </div>
     <div fxFlex="50" fxFlex.xs="100" fxLayoutAlign="end center" fxLayoutAlign.xs="center center" style="margin-bottom: 15px;">
       <button class="button-clear" pButton label="Clear" type="button" icon="pi pi-filter-slash" iconPos="left" (click)="clear(dt1)"></button>
-      <button class="button button-nuevo" mat-raised-button (click)="openAddDialog()">Add Bank</button>
+      <button pButton type="button" icon="pi pi-plus" mat-raised-button (click)="openAddDialog()" label="Add Bank" class="button-nuevo"></button>
     </div>
   </mat-card-header>
 
@@ -23,7 +23,7 @@
           <div class="flex">
             <span class="p-input-icon-left ml-auto">
               <i class="pi pi-search"></i>
-              <input pInputText type="text" (input)="applyFilter($event)" placeholder="Search keyword" />
+              <input pInputText type="text" (input)="applyFilter($event)" placeholder="Search bank" />
             </span>
           </div>
         </ng-template>
