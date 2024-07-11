@@ -89,3 +89,21 @@ p-cellEditor {
 .alternating-rows tbody tr:nth-child(even) {
   background-color: #ffffff; /* Color para filas pares */
 }
+.search-container {
+  padding: 8px;
+}
+
+.add-new-index-option {
+  display: flex;
+  align-items: center;
+  color: blue;
+  cursor: pointer;
+}
+
+.add-icon {
+  margin-right: 8px;
+}
+
+.add-text {
+  color: blue;
+}

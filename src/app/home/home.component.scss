@@ -96,3 +96,25 @@ mat-sidenav {
 .mat-expansion-panel-header-description, .mat-expansion-indicator::after {
     color: #fff; 
 }
+.menu-icon-container {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 5px;
+  }
+  
+  .menu-icon {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+  }
+  .bloomberg-icon{
+    max-width: 70%;
+    max-height: 70%;
+  }
+  
+  
+  

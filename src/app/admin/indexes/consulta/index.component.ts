@@ -33,8 +33,8 @@ export class IndexComponent implements OnInit {
 ) { 
     this.cols = [
         { field: 'id_index', header: 'ID Bank' },
-        { field: 'index_name', header: 'Index Name' },
-        { field: 'index_symbol', header: 'Index Symbol' },
+        { field: 'index_name', header: 'Index' },
+        { field: 'index_symbol', header: 'Ticker' },
         { field: 'source', header: 'Source' },
     ];
     this._selectedColumns = this.cols;
@@ -46,8 +46,8 @@ openAddDialog(): void {
       data: {
         title: 'Index',
         fields: [
-          { name: 'index_name', label: 'Index Name' },
-          { name: 'index_symbol', label: 'Index Symbol' },
+          { name: 'index_name', label: 'Index' },
+          { name: 'index_symbol', label: 'Ticker' },
           { name: 'source', label: 'Source' }
         ]
       }

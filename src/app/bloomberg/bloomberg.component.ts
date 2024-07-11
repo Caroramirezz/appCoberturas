@@ -8,8 +8,8 @@ import { BloombergService } from './bloomberg.service';
 })
 export class BloombergComponent implements OnInit {
   content: any;
-  private requestIdentifier = 'uYDjpyki9yaX'; // id en el url
-  private snapshotDate = '20240710'; // fecha creada del url
+  private requestIdentifier = 'uRd82uAR5oyU'; // id en el url
+  private snapshotDate = '20240711'; // fecha creada del url
 
   constructor(private bloombergService: BloombergService) {}
 

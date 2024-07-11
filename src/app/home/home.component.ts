@@ -30,11 +30,17 @@ export class HomeComponent implements OnInit {
     if(this.permiso_usuario === '1'){
       this.arrayMenu = [
         {title:'Dashboard', icon:'dashboard',link:'/home/dashboard/usuario'},
-        {title:'Platts', icon:'receipt_long',link:'/home/platts'},
-        {title:'Bloomberg', icon:'receipt_long',link:'/home/bloomberg'},
         {title:'Trades', icon:'receipt_long',link:'/home/trade'},
         {
-          title: 'Administración',
+          title: 'Market Prices',
+          icon: 'query_stats',
+          children: [
+            {title:'Platts', iconPath:'assets/images/platts_logo.png', link:'/home/platts'},
+            {title:'Bloomberg', iconPath:'assets/images/bloomberg_logo.png',link:'/home/bloomberg',  customClass: 'bloomberg-icon'},
+          ]
+        },
+        {
+          title: 'Catalogs',
           icon: 'admin_panel_settings',
           children: [
             { title: 'Clients', icon: 'groups', link: '/home/admin/clients/consulta' },

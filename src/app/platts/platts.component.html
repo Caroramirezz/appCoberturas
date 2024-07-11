@@ -33,16 +33,21 @@
         </mat-form-field>
         
         <mat-form-field appearance="outline" fxFlex="20">
-          <mat-label>Index</mat-label>
-          <mat-select [(ngModel)]="selectedSymbols" multiple>
+          <mat-label>Symbols</mat-label>
+          <mat-select [(ngModel)]="selectedSymbols" multiple (openedChange)="onSelectOpen($event)">
             <mat-select-trigger>
               {{selectedSymbols.length}} selected
             </mat-select-trigger>
-            <mat-option>
-              <ngx-mat-select-search [formControl]="symbolSearchCtrl" placeholderLabel="Search symbols"></ngx-mat-select-search>
+            <div class="search-container">
+              <input matInput #searchInput placeholder="Search symbols" [formControl]="symbolSearchCtrl">
+            </div>
+            <mat-option *ngFor="let symbol of filteredSymbols | async" [value]="symbol.index_symbol">
+              {{ symbol.index_name }}
             </mat-option>
-            <mat-option *ngFor="let symbol of filteredSymbols | async" [value]="symbol.ticker">
-              {{ symbol.index }}
+            <mat-divider></mat-divider>
+            <mat-option class="add-new-index-option" (click)="openAddDialog()">
+              <mat-icon class="add-icon">add_circle</mat-icon>
+              <span class="add-text">Add New Index</span>
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -107,7 +112,7 @@
             <td>{{ rowData.index }}</td>
             <td>{{ rowData.symbol }}</td>
             <td>{{ rowData.bate }}</td>
-            <td>${{ rowData.value }}</td>
+            <td>\${{ rowData.value }}</td>
             <td>{{ rowData.assessDate | date: 'MMM dd, yyyy' }}</td>
           </tr>
         </ng-template>
@@ -121,3 +126,4 @@
     </div>
   </mat-card-content>
 </mat-card>
+

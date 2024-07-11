@@ -1,72 +1,90 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
 <mat-sidenav-container fullscreen>
-    <mat-sidenav mode="side" #sidenav opened position="start" color="primary">
-      <p class="title">Planeación Gas & Power</p>
-      <div fxLayoutAlign="center center">
-        <img class="neg-logo" src="http://10.128.47.70/SolicitudesApp/assets/images/NEG%20logo-04.png" alt="NEG">
-      </div>
+  <mat-sidenav mode="side" #sidenav opened position="start" color="primary">
+    <p class="title">Planeación Gas & Power</p>
+    <div fxLayoutAlign="center center">
+      <img class="neg-logo" src="http://10.128.47.70/SolicitudesApp/assets/images/NEG%20logo-04.png" alt="NEG">
+    </div>
 
-      <mat-nav-list class="mat-nav-list mat-list-base">
-        <ng-container *ngFor="let item of arrayMenu">
-          <!-- Only 'Administración' gets an expansion panel -->
-          <ng-container *ngIf="item.title === 'Administración'; else otherLinks">
-            <mat-expansion-panel class="plain-expansion-panel mat-list-item-content">
-              <mat-expansion-panel-header>
-                <mat-panel-title>
+    <mat-nav-list class="mat-nav-list mat-list-base">
+      <ng-container *ngFor="let item of arrayMenu">
+        <!-- Only 'Administración' and 'Market Prices' get an expansion panel -->
+        <ng-container *ngIf="item.children && item.children.length > 0; else otherLinks">
+          <mat-expansion-panel class="plain-expansion-panel mat-list-item-content">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <ng-container *ngIf="item.iconPath; else defaultIcon">
+                  <div class="menu-icon-container">
+                    <img [src]="item.iconPath" alt="{{item.title}} icon" class="menu-icon" [ngClass]="item.customClass ?? ''">
+                  </div>
+                </ng-container>
+                <ng-template #defaultIcon>
                   <mat-icon>{{item.icon}}</mat-icon>
-                  {{item.title}}
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <mat-nav-list>
-                <a *ngFor="let child of item.children" mat-list-item [routerLink]="child.link">
+                </ng-template>
+                {{item.title}}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a *ngFor="let child of item.children" mat-list-item [routerLink]="child.link">
+                <ng-container *ngIf="child.iconPath; else childDefaultIcon">
+                  <div class="menu-icon-container">
+                    <img [src]="child.iconPath" alt="{{child.title}} icon" class="menu-icon" [ngClass]="child.customClass ?? ''">
+                  </div>
+                </ng-container>
+                <ng-template #childDefaultIcon>
                   <mat-icon>{{child.icon}}</mat-icon>
-                  {{child.title}}
-                </a>
-              </mat-nav-list>
-            </mat-expansion-panel>
-          </ng-container>
-      
-          <!-- Template for all other links -->
-          <ng-template #otherLinks>
-            <a *ngIf="item.link" mat-list-item [routerLink]="item.link">
-              <mat-icon>{{item.icon}}</mat-icon>
-              {{item.title}}
-            </a>
-          </ng-template>
+                </ng-template>
+                {{child.title}}
+              </a>
+            </mat-nav-list>
+          </mat-expansion-panel>
         </ng-container>
-      </mat-nav-list>
-      
-      
+    
+        <!-- Template for all other links -->
+        <ng-template #otherLinks>
+          <a *ngIf="item.link" mat-list-item [routerLink]="item.link">
+            <ng-container *ngIf="item.iconPath; else itemDefaultIcon">
+              <div class="menu-icon-container">
+                <img [src]="item.iconPath" alt="{{item.title}} icon" class="menu-icon" [ngClass]="item.customClass ?? ''">
+              </div>
+            </ng-container>
+            <ng-template #itemDefaultIcon>
+              <mat-icon>{{item.icon}}</mat-icon>
+            </ng-template>
+            {{item.title}}
+          </a>
+        </ng-template>
+      </ng-container>
+    </mat-nav-list>
+  </mat-sidenav>
+  
+  <mat-sidenav-content>
+    <mat-toolbar class="mat-toolbar-style shadow">
+      <div fxFlex="30" fxFlex.xs="100">
+        <button mat-icon-button (click)="sidenav.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>   
+      </div>
+      <div fxFlex="70" fxLayoutAlign="end center" fxLayoutGap="10px" fxHide.xs fxShow>
+        <div fxFlex="80" fxLayoutAlign="end center">
+          {{nombre_usuario}}
+        </div>
         
-        
-    </mat-sidenav>
-    <mat-sidenav-content>
-      <mat-toolbar class="mat-toolbar-style shadow">
-        <div fxFlex="30" fxFlex.xs="100">
-          <button mat-icon-button (click)="sidenav.toggle()">
-            <mat-icon>menu</mat-icon>
+        <div fxFlex="20" fxLayoutAlign="end center">
+          <button mat-icon-button>
+            <mat-icon>account_circle</mat-icon>
+          </button>   
+
+          <button mat-icon-button (click)="cerrarSesion()">
+            <mat-icon>login</mat-icon>
           </button>   
         </div>
-        <div fxFlex="70" fxLayoutAlign="end center" fxLayoutGap="10px" fxHide.xs fxShow>
-          <div fxFlex="80" fxLayoutAlign="end center">
-            {{nombre_usuario}}
-          </div>
-          
-          <div fxFlex="20" fxLayoutAlign="end center">
-            <button mat-icon-button >
-              <mat-icon>account_circle</mat-icon>
-              </button>   
-    
-              <button mat-icon-button (click)="cerrarSesion()">
-              <mat-icon>login</mat-icon>
-            </button>   
-          </div>
-          
-        </div>
-      </mat-toolbar>
-      <div class="main-content">
-        <router-outlet></router-outlet>
+        
       </div>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
+    </mat-toolbar>
+    <div class="main-content">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

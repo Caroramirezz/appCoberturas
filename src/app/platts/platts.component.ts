@@ -1,15 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { PlattsService } from './platts.service';
 import moment from 'moment';
 import { DataItem } from './platts.interface';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-
-interface SymbolOption {
-  index: string;
-  ticker: string;
-}
+import { IndexService } from 'src/app/admin/indexes/services/index.service'; // Ajuste del path
+import { IndexInterface } from 'src/app/admin/indexes/interfaces/indexes.interface'; // Ajuste del path
+import { AddDialogComponent } from 'src/app/admin/add-dialog/add-dialog.component'; // Ajuste del path
 
 @Component({
   selector: 'app-platts',
@@ -17,6 +16,8 @@ interface SymbolOption {
   styleUrls: ['./platts.component.scss']
 })
 export class PlattsComponent implements OnInit {
+
+  @ViewChild('searchInput') searchInput!: ElementRef;
 
   response: any;
   responseHistory: DataItem[] = [];
@@ -28,35 +29,64 @@ export class PlattsComponent implements OnInit {
   bate: string = '';
   selectedSymbols: string[] = [];
 
-  symbols: SymbolOption[] = [
-    { index: 'Houston ShipChl Mo', ticker: 'IGBAP03' },
-    { index: 'Tenn Zn0 Mo', ticker: 'IGBBA03' },
-    { index: 'TX Eastern E TX Mo', ticker: 'IGBAN03' },
-    { index: 'TX Eastern S TX Mo', ticker: 'IGBBB03' },
-    { index: 'Henry Hub Mo', ticker: 'IGBBL03' },
-    { index: 'Waha Mo', ticker: 'IGBAD03' },
-    { index: 'Oneok OK Mo', ticker: 'IGBCD03' },
-    { index: 'Enable Gas Transmission Mo', ticker: 'IGBCA03' },
-    { index: 'Transco Zone 5 South Mo', ticker: 'IGCHL03' },
-    { index: 'TC Alb AECO-C Mo', ticker: 'IGBCU03' },
-    { index: 'Katy Mo', ticker: 'IGBAQ03' },
-  ];
-
+  symbols: IndexInterface[] = []; // Usar la interfaz IndexInterface para los símbolos
   symbolSearchCtrl = new FormControl('');
-  filteredSymbols!: Observable<SymbolOption[]>;
+  filteredSymbols!: Observable<IndexInterface[]>;
 
-  constructor(private WsPlatts: PlattsService) { }
+  constructor(private WsPlatts: PlattsService, private indexService: IndexService, public dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.filteredSymbols = this.symbolSearchCtrl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filterSymbols(value))
-    );
+    this.indexService.getIndexes().subscribe(data => {
+      this.symbols = data;
+      this.filteredSymbols = this.symbolSearchCtrl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filterSymbols(value))
+      );
+    });
   }
 
-  private _filterSymbols(value: string): SymbolOption[] {
+  private _filterSymbols(value: string): IndexInterface[] {
     const filterValue = value.toLowerCase();
-    return this.symbols.filter(symbol => symbol.index.toLowerCase().includes(filterValue));
+    return this.symbols.filter(symbol => symbol.index_name.toLowerCase().includes(filterValue));
+  }
+
+  onSelectOpen(isOpen: boolean): void {
+    if (isOpen) {
+      setTimeout(() => {
+        this.searchInput.nativeElement.focus();
+      });
+    }
+  }
+
+  openAddDialog(): void {
+    const dialogRef = this.dialog.open(AddDialogComponent, {
+      width: '250px',
+      data: {
+        title: 'Index',
+        fields: [
+          { name: 'index_name', label: 'Index' },
+          { name: 'index_symbol', label: 'Ticker' },
+          { name: 'source', label: 'Source' }
+        ]
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.indexService.addIndex(result).subscribe({
+          next: (newIndex) => {
+            this.symbols.push(newIndex);
+            this.filteredSymbols = this.symbolSearchCtrl.valueChanges.pipe(
+              startWith(this.symbolSearchCtrl.value),
+              map(value => this._filterSymbols(value))
+            );
+          },
+          error: (error) => {
+            console.error('Error adding index', error);
+          }
+        });
+      }
+    });
   }
 
   filterData() {
@@ -73,7 +103,7 @@ export class PlattsComponent implements OnInit {
       this.tableData = result.map((item, index) => ({
         ...item,
         num: index + 1,
-        index: this.symbols.find(symbol => symbol.ticker === item.symbol)?.index || ''
+        index: this.symbols.find(symbol => symbol.index_symbol === item.symbol)?.index_name || ''
       })); // Asigna el número y el índice a cada fila
       this.filteredData = this.tableData;
     },
@@ -107,7 +137,7 @@ export class PlattsComponent implements OnInit {
       this.tableData = result.map((item, index) => ({
         ...item,
         num: index + 1,
-        index: this.symbols.find(symbol => symbol.ticker === item.symbol)?.index || ''
+        index: this.symbols.find(symbol => symbol.index_symbol === item.symbol)?.index_name || ''
       })); // Asigna el número y el índice a cada fila
       this.filteredData = this.tableData;
     },

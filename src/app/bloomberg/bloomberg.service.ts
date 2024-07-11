@@ -45,7 +45,7 @@ export class BloombergService {
       await this.getToken();
     }
 
-    const catalogId = '53000'; // Use the discovered catalog ID
+    const catalogId = '39321'; // Use the discovered catalog ID
     const requestName = 'AngularDataRequest';
 
     const requestPayload = {
