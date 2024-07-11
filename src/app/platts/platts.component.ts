@@ -6,9 +6,9 @@ import moment from 'moment';
 import { DataItem } from './platts.interface';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { IndexService } from 'src/app/admin/indexes/services/index.service'; // Ajuste del path
-import { IndexInterface } from 'src/app/admin/indexes/interfaces/indexes.interface'; // Ajuste del path
-import { AddDialogComponent } from 'src/app/admin/add-dialog/add-dialog.component'; // Ajuste del path
+import { IndexService } from 'src/app/admin/indexes/services/index.service';
+import { IndexInterface } from 'src/app/admin/indexes/interfaces/indexes.interface'; 
+import { AddDialogComponent } from 'src/app/admin/add-dialog/add-dialog.component'; 
 
 @Component({
   selector: 'app-platts',
