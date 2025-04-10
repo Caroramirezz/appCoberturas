@@ -1,6 +1,6 @@
 <p align="center">
-  <img src="[https://tu-servidor.com/ruta-al-logo.png](https://www.google.com/url?sa=i&url=https%3A%2F%2Fnegnatural.com%2F&psig=AOvVaw1aZiPcMrnGX4lrszW16BYC&ust=1744395062801000&source=images&cd=vfe&opi=89978449&ved=0CBUQjRxqFwoTCIiWn5KIzowDFQAAAAAdAAAAABBH
-)" alt="Logo NEG" width="200"/>
+  <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fnegnatural.com%2F&psig=AOvVaw1aZiPcMrnGX4lrszW16BYC&ust=1744395062801000&source=images&cd=vfe&opi=89978449&ved=0CBUQjRxqFwoTCIiWn5KIzowDFQAAAAAdAAAAABBH
+" alt="Logo NEG" width="200"/>
 </p>
 
 # App Coberturas
