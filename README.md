@@ -1,3 +1,8 @@
+<p align="center">
+  <img src="[https://tu-servidor.com/ruta-al-logo.png](https://www.google.com/url?sa=i&url=https%3A%2F%2Fnegnatural.com%2F&psig=AOvVaw1aZiPcMrnGX4lrszW16BYC&ust=1744395062801000&source=images&cd=vfe&opi=89978449&ved=0CBUQjRxqFwoTCIiWn5KIzowDFQAAAAAdAAAAABBH
+)" alt="Logo NEG" width="200"/>
+</p>
+
 # App Coberturas
 
 Aplicación web interna para la gestión y visualización de coberturas financieras, desarrollada como una solución **fullstack** con **Angular** y **.NET Core**. Esta herramienta está diseñada para permitir a usuarios internos consultar, editar y registrar operaciones relacionadas con instrumentos financieros, integrando precios de mercado en tiempo real desde fuentes externas como Bloomberg y Platts.
