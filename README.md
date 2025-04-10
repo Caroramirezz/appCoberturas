@@ -149,9 +149,9 @@ AppCoberturas/
 
 ## ✨ Créditos
 
-Proyecto desarrollado por el equipo de **Planeación Gas & Power** como parte del sistema interno de gestión de coberturas.
+Proyecto desarrollado por el equipo de **Planeación** como parte del sistema interno de gestión de coberturas, en colaboración con el equipo de **TI**.
 
 ## 📌 Notas adicionales
 
-- Este repositorio no contiene credenciales ni claves API. Estas deben configurarse localmente en `environment.ts` (Angular) y `appsettings.json` (.NET).
+- Las credenciales de Bloomberg se pueden consultar  actualizar anualmente desde el portal de Data<Go> de Bloomberg.
 - Las rutas sensibles están protegidas mediante autenticación y permisos.
