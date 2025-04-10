@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Usuario } from './interfaces/usuario.interface';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -23,13 +24,43 @@ export class AuthService {
     return this.http.post<any>(this.urlBaseAlliaxProductivo, formData);    
   }
 
-  iniciarSesion(user:Usuario):Observable<any>{
+  iniciarSesion(user: Usuario): Observable<any> {
     var params = {
       user: user.email_usuario,
       password: user.password_usuario
-    }
-    return this.http.post<any>(this.urlBase + 'Auth/Autenticar', params);    
-    //return this.http.post(link , params, {headers:this.headers });
+    };
+  
+    return this.http.post<any>(this.urlBase + 'Auth/Autenticar', params).pipe(
+      tap(response => {
+  
+        if (response.token && response.token.token) { 
+          localStorage.setItem('authToken', response.token.token);
+          localStorage.setItem('permisoUsuario', response.token.data.permiso_usuario.toString()); 
+
+          const permissions = {
+            newTrade: response.token.data.permiso_new_trade,
+            uploadFile: response.token.data.permiso_upload_file,
+            settled: response.token.data.permiso_settled,
+            editTrade: response.token.data.permiso_edit_trade,
+            actionColumn: response.token.data.permiso_action_column,
+            catalogs: response.token.data.permiso_catalogs
+          };
+      
+          localStorage.setItem('userPermissions', JSON.stringify(permissions));
+        }
+      })
+    );
   }
+  
+
+  getPermisoUsuario(): number {
+    return Number(localStorage.getItem('permisoUsuario')) || 0;
+  }
+
+  logout(): void {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('permisoUsuario');
+  }
+  
   
 }

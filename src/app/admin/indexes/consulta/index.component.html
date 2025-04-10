@@ -17,7 +17,7 @@
 
   <mat-card-content>
     <div>
-      <p-table #dt1 [value]="filteredIndex" dataKey="id_index" responsiveLayout="scroll" [reorderableColumns]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true" currentPageReportTemplate="Mostrando {first} - {last} de {totalRecords} elementos" styleClass="p-datatable-sm" [globalFilterFields]="['index_name', 'index_symbol', 'source']">
+      <p-table #dt1 [value]="filteredIndex" dataKey="id_index" responsiveLayout="scroll" [reorderableColumns]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true" currentPageReportTemplate="Mostrando {first} - {last} de {totalRecords} elementos" styleClass="p-datatable-sm" [globalFilterFields]="['index_name', 'index_symbol_P', 'index_symbol_B']">
 
         <ng-template pTemplate="caption">
           <div class="flex">
@@ -45,14 +45,20 @@
             </th>
             <th>
               <div class="flex justify-content-center align-items-center">
-                Ticker
-                <p-columnFilter type="text" field="Ticker" display="menu"></p-columnFilter>
+                Ticker Platts
+                <p-columnFilter type="text" field="Ticker Platts" display="menu"></p-columnFilter>
               </div>
             </th>
             <th>
               <div class="flex justify-content-center align-items-center">
-                Source
-                <p-columnFilter type="numeric" field="source" display="menu"></p-columnFilter>
+                Ticker Bloomberg
+                <p-columnFilter type="text" field="Ticker Bloomberg" display="menu"></p-columnFilter>
+              </div>
+            </th>
+            <th>
+              <div class="flex justify-content-center align-items-center">
+                Ticker Neg
+                <p-columnFilter type="text" field="Ticker Neg" display="menu"></p-columnFilter>
               </div>
             </th>
           </tr>
@@ -79,16 +85,20 @@
             <td *ngIf="rowData.editing">
               <input type="text" pInputText [(ngModel)]="rowData.index_name">
             </td>
-            <td *ngIf="!rowData.editing">{{ rowData.index_symbol }}</td>
+            <td *ngIf="!rowData.editing">{{ rowData.index_symbol_P }}</td>
             <td *ngIf="rowData.editing">
-              <input type="text" pInputText [(ngModel)]="rowData.index_symbol">
+              <input type="text" pInputText [(ngModel)]="rowData.index_symbol_P">
             </td>
-            <td *ngIf="!rowData.editing">{{ rowData.source }}</td>
+            <td *ngIf="!rowData.editing">{{ rowData.index_symbol_B }}</td>
             <td *ngIf="rowData.editing">
-              <input type="text" pInputText [(ngModel)]="rowData.source">
+              <input type="text" pInputText [(ngModel)]="rowData.index_symbol_B">
+            </td>
+            <td *ngIf="!rowData.editing">{{ rowData.index_symbol_Neg }}</td>
+            <td *ngIf="rowData.editing">
+              <input type="text" pInputText [(ngModel)]="rowData.index_symbol_Neg">
             </td>
           </tr>
-        </ng-template>
+        </ng-template>        
 
         <ng-template pTemplate="emptymessage">
           <tr>

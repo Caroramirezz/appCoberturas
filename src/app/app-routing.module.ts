@@ -3,6 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { PlattsComponent } from './platts/platts.component';
 import { BloombergComponent } from './bloomberg/bloomberg.component';
+import { UserComponent } from './users/user.component';
+import { PermissionGuard } from './auth/permission.guard';
 
 
 const routes: Routes = [   
@@ -32,7 +34,14 @@ const routes: Routes = [
       },
       {
         path: 'admin',
-        loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
+        loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule),
+        canActivate: [PermissionGuard],
+        data: { requiredPermission: 'catalogs' }
+      },
+      {
+        path:'permissions',
+        component:UserComponent,
+        canActivate: [PermissionGuard]
       },
     ] 
   }, 

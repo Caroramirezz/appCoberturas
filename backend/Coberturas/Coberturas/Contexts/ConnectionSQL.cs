@@ -11,6 +11,7 @@ namespace Coberturas.Contexts
 
     public DbSet<Usuario> usuarios { get; set; }
 
+
   }
 
 }

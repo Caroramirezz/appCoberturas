@@ -19,7 +19,7 @@ export class AddDialogComponent implements OnInit {
   ngOnInit(): void {
     const group: any = {};
     this.data.fields.forEach((field: any) => {
-      group[field.name] = ['', Validators.required];
+      group[field.name] = [''];
     });
     this.dialogForm = this.fb.group(group);
   }

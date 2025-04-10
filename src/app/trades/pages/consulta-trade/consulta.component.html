@@ -1,118 +1,257 @@
-<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
-
+<!-- Title and New Trade Button -->
 <div fxLayout="row" style="margin-bottom: 20px; margin-top: 5px;">
-	<div fxFlex="50" fxLayoutAlign="start center">
-        <span class="title">Search Trade</span>
+    <div fxFlex="50" fxLayoutAlign="start center">
+      <span class="title">Search Trade</span>
     </div>
     <div fxFlex="50" fxLayoutAlign="end center">
-        <button class="button button-settled" mat-raised-button routerLink="/home/trade/step-1">New Trade</button>
-    </div>
+      <button *ngIf="permissions.newTrade" class="button button-settled" mat-raised-button routerLink="/home/trade/step-1">New Trade</button>
+      <input
+      type="file"
+      id="tradeFile"
+      (change)="onFileSelected($event)"
+      accept=".csv"
+      style="display: none;"
+    />
+
+    <!-- Label for Upload Button -->
+    <!-- Hidden File Input for CSV -->
+<input
+type="file"
+id="tradeFile"
+(change)="uploadFile($event)"
+accept=".csv"
+style="display: none;"
+/>
+
+<!-- Styled Label acting as a Button -->
+<label
+*ngIf="permissions.uploadFile"
+for="tradeFile"
+class="button button-settled mat-raised-button"
+matTooltip="Upload trade file"
+style="display: inline-flex; align-items: center; justify-content: center; gap: 4px; cursor: pointer;"
+[ngClass]="{ 'disabled-label': !permissions.uploadFile }"
+>
+<mat-icon style="margin: auto;">upload</mat-icon>
+</label>
+
+  </div>
 </div>
 
-<mat-card>
-	<mat-card-header fxLayout="row" fxLayout.xs="column">
-	<div fxFlex="50" fxFlex.xs="100" fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.xs="center center">
-		<mat-card-title>Filters</mat-card-title>
-		<!-- <mat-card-subtitle>Please fill out all fields</mat-card-subtitle> -->
-	</div>
-	<!-- <div fxFlex="50" fxFlex.xs="100" fxLayoutAlign="end center" fxLayoutAlign.xs="center center">
-		<button class="buttons button-create-list"  mat-raised-button color="accent" >Create list</button>
-	</div> -->		
-	</mat-card-header>
-	<mat-card-content>		
-			<div fxFlex="100">
-				<div fxFlex="50" fxLayoutAlign="start center">
-					<mat-form-field appearance="outline" style="width: 90%;">
-						<mat-label>Period</mat-label>
-						<mat-date-range-input [rangePicker]="picker">
-						<input matStartDate  [(ngModel)]="fechaInicio">
-						<input matEndDate  [(ngModel)]="fechaFin">
-						</mat-date-range-input>					
-						<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-						<mat-date-range-picker #picker>
-							<mat-date-range-picker-actions>
-								<button mat-button matDateRangePickerCancel>Cancelar</button>
-								<button mat-raised-button color="primary" matDateRangePickerApply>Aceptar</button>
-								</mat-date-range-picker-actions>
-						</mat-date-range-picker>					
-					</mat-form-field>
-				</div>
-				<div fxFlex="50" fxLayoutAlign="start center">
-                    <button class="buttons-filters button-create-list"  mat-raised-button color="accent" (click)="consultarTrades()">Search</button>
-				</div>				
-			</div>						
-	</mat-card-content>
-</mat-card>
-<br>
-<mat-card>
+<!-- Conditionally Render Process File Button -->
+<div fxLayout="row" fxLayoutAlign="end center" style="margin-top: 20px;" *ngIf="selectedFile">
+  <button
+    mat-raised-button
+    color="primary"
+    class="button"
+    (click)="processFile()"
+  >
+    Process File
+  </button>
+</div>
+
+  
+  <!-- Filters Section -->
+  <mat-card>
     <mat-card-header fxLayout="row" fxLayout.xs="column">
+      <div fxFlex="50" fxFlex.xs="100" fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.xs="center center">
+        <mat-card-title>Filters</mat-card-title>
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <div fxFlex="100">
+        <div fxFlex="50" fxLayoutAlign="start center">
+          <mat-form-field appearance="outline" style="width: 90%;">
+            <mat-label>Period</mat-label>
+            <mat-date-range-input [rangePicker]="picker">
+              <input matStartDate [(ngModel)]="fechaInicio" />
+              <input matEndDate [(ngModel)]="fechaFin" />
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker>
+              <mat-date-range-picker-actions>
+                <button mat-button matDateRangePickerCancel>Cancelar</button>
+                <button mat-raised-button color="primary" matDateRangePickerApply>Aceptar</button>
+              </mat-date-range-picker-actions>
+            </mat-date-range-picker>
+          </mat-form-field>
+        </div>
+        <div fxFlex="50" fxLayoutAlign="start center">
+          <button class="button buttons-filters button-create-list" mat-raised-button color="accent" (click)="consultarTrades()">Search</button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <br />
+  
+  
+ <!-- Tabs Section -->
+<div class="tabs-container">
+  <div class="tabs">
+
+    <!-- Loop over all views -->
+    <ng-container *ngFor="let view of views">
+      <!-- Only show the tab if the user has permission -->
+      <div
+        *ngIf="permissions.actionColumn"
+        class="tab"
+        [ngClass]="{ 'active-tab': view === activeView }"
+        (click)="setActiveView(view)"
+      >
+        {{ view.name }}
+        <mat-icon
+          class="tab-close-icon"
+          style="display: inline-flex; align-items: center; justify-content: center; gap: 4px;"
+          matTooltip="Close"
+          (click)="deleteView(view); $event.stopPropagation()"
+        >
+          close
+        </mat-icon>
+      </div>
+    </ng-container>
+
+    <!-- Add View Button (only with permission) -->
+    <div
+      *ngIf="permissions.actionColumn"
+      class="tab add-tab"
+      matTooltip="Add View"
+      (click)="toggleCreateView()"
+    >
+      <mat-icon>add</mat-icon>
+    </div>
+
+  </div>
+</div>
+
+   <!-- Create New View Section -->
+   <div *ngIf="creatingView" class="create-view-form div-table">
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px" style="margin: 20px 0;">
+      <div fxFlex="25">
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>View Name</mat-label>
+          <input matInput [(ngModel)]="newViewName" />
+        </mat-form-field>
+      </div>
+      <div fxFlex="50">
+        <p-multiSelect
+          [options]="cols"
+          [(ngModel)]="newViewColumns"
+          optionLabel="header"
+          selectedItemsLabel="{0} columns selected"
+          [style]="{ width: '100%' }"
+          placeholder="Choose Columns"
+        ></p-multiSelect>
+      </div>
+      <div fxFlex="25" fxLayoutAlign="end">
+        <button class="button button-settled" mat-raised-button (click)="createView()">Create</button>
+        <button class="button button-settled" mat-raised-button (click)="cancelCreateView()">Cancel</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Tab Content Section -->
+  <div *ngIf="activeView" class="tab-content div-table">
+   
+    <mat-card>
+      <mat-card-header fxLayout="row" fxLayout.xs="column">
         <div fxFlex="50" fxFlex.xs="100" fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.xs="center center">
-            <mat-card-title>Trade list</mat-card-title>
-            <!-- <mat-card-subtitle>Please fill out all fields</mat-card-subtitle> -->
+          <mat-card-title>Trade List</mat-card-title>
         </div>
         <div fxFlex="50" fxFlex.xs="100" fxLayoutAlign="end center" fxLayoutAlign.xs="center center">
-            <button class="button button-settled" mat-raised-button (click)="settled('settle')">Settled</button>
-            <button class="button button-settled" mat-raised-button (click)="settled('unsettle')">Undo</button>
+          <button *ngIf="permissions.settled"  class="button button-settled" mat-raised-button (click)="settled('settle')">Settled</button>
+          <button *ngIf="permissions.settled"  class="button button-settled" mat-raised-button (click)="settled('unsettle')" matTooltip="Undo">
+            <mat-icon>undo</mat-icon>
+          </button>
+          <button class="button button-settled" mat-raised-button (click)="exportToCSV()" >
+            <mat-icon>download</mat-icon>
+          </button>
         </div>
-                
-        </mat-card-header>
-        <mat-card-content>
-            <div>
-                <p-table #dt1 scrollDirection="both" [scrollable]="true" scrollHeight="400px" [columns]="selectedColumns" [reorderableColumns]="true" [value]="products"  responsiveLayout="scroll" dataKey="id_mov" 
-                [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]"
-                [paginator]="true" currentPageReportTemplate="Mostrando {first} - {last} de {totalRecords} elementos"
-                [globalFilterFields]="this._selectedColumnsFilter" [(selection)]="selectedProducts3" styleClass="p-datatable-sm" >
-                
-                    <ng-template pTemplate="caption">
-                        <div fxFlex="80" fxLayoutAlign="start center" fxLayoutGap="15px">
-                            <div fxFlex="40">
-                                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
-                                    selectedItemsLabel="{0} columns selected" [style]="{minWidth: '300px'}" placeholder="Choose Columns">
-                                </p-multiSelect>
-                            </div>
-                            <div fxFlex="40">
-                                <button class="button-clear" pButton label="Clear" type="button" icon="pi pi-filter-slash" iconPos="left" (click)="clear(dt1)"></button>
-                            </div>
-                        </div>
-                    </ng-template>
-                    <ng-template pTemplate="header" let-columns>
-                        <tr>
-                            <th style="width:100px">
-                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                            </th>
-                            <th style="width:100px">Action</th>
-                            <th style="width:150px" *ngFor="let col of columns" pReorderableColumn>
-                                <p-columnFilter type="{{col.type}}" field="{{col.field}}" display="menu"></p-columnFilter>
-                                {{col.header}}
-                            </th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-product let-columns="columns">
-                        <tr [ngClass]="{'settled-row': product.settled === true || product.settled === 1 || product.settled === 'settled'}">
-                            <td style="width:100px">
-                                <p-tableCheckbox [value]="product"></p-tableCheckbox>
-                            </td>
-                            <td style="width:100px">
-                                <button mat-icon-button matTooltip="Editar" (click)="editarTrade(product)">                  
-                                    <span class="material-icons" style="color:#1D4289">
-                                        edit
-                                    </span>                             
-                                </button>                                                              
-                            </td>
-                            <td style="width:150px" *ngFor="let col of columns">
-                                <span *ngIf="col.type === 'date'">
-                                    {{ product[col.field] | date }}
-                                </span>
-                                <span *ngIf="col.type === 'numeric'">
-                                    {{ product[col.field] | number }}
-                                </span>
-                                <span *ngIf="col.type === 'text'">
-                                    {{ product[col.field] }}
-                                </span>
-                            </td>
-                        </tr>
-                    </ng-template>                                                            
-                </p-table>
-            </div>
-        </mat-card-content>
-</mat-card>
+      </mat-card-header>
+      <mat-card-content>
+        <div>
+          <p-table
+            #dt1
+            scrollDirection="both"
+            [scrollable]="true"
+            scrollHeight="400px"
+            [columns]="_selectedColumns"
+            [reorderableColumns]="true"
+            [value]="products"
+            responsiveLayout="scroll"
+            dataKey="id_mov"
+            [rows]="10"
+            [showCurrentPageReport]="true"
+            [rowsPerPageOptions]="[10, 25, 50, 100]"
+            [paginator]="true"
+            currentPageReportTemplate="Showing {first} - {last} out of {totalRecords} records"
+            [globalFilterFields]="_selectedColumnsFilter"
+            [(selection)]="selectedProducts3"
+            styleClass="p-datatable-sm"
+          >
+            <ng-template pTemplate="caption">
+              <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+                <!-- Dropdown for columns -->
+                <div class="filter-dropdown">
+                  <p-multiSelect
+                    [options]="cols"
+                    [(ngModel)]="_selectedColumns"
+                    optionLabel="header"
+                    selectedItemsLabel="{0} columns selected"
+                    placeholder="Choose Columns"
+                  ></p-multiSelect>
+                </div>
+                <!-- Clear Button -->
+                <div fxFlex="50" fxFlex.md="10">
+                  <button
+                    class="button button-settled"
+                    pButton
+                    matTooltip="Clear Filters"
+                    type="button"
+                    icon="pi pi-filter-slash"
+                    (click)="clear(dt1)"
+                  ></button>
+                </div>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th style="width: 100px">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th style="width: 100px">Action</th>
+                <th style="width: 150px" *ngFor="let col of columns" pReorderableColumn>
+                  <p-columnFilter type="{{ col.type }}" field="{{ col.field }}" display="menu"></p-columnFilter>
+                  {{ col.header }}
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-product let-columns="columns">
+              <tr
+                [ngClass]="{
+                  'settled-row':
+                    product.settled === true || product.settled === 1 || product.settled === 'settled'
+                }"
+              >
+                <td style="width: 100px">
+                  <p-tableCheckbox [value]="product"></p-tableCheckbox>
+                </td>
+                <td style="width: 100px">
+                  <button mat-icon-button matTooltip="Editar" (click)="editarTrade(product)" [disabled]="!permissions.editTrade">
+                    <span class="material-icons" style="color: #1d4289;">edit</span>
+                  </button>
+                </td>
+                <td style="width: 150px" *ngFor="let col of columns">
+                  <span *ngIf="col.type === 'date'">{{ product[col.field] | date }}</span>
+                  <span *ngIf="col.type === 'numeric'">{{ product[col.field] | number }}</span>
+                  <span *ngIf="col.type === 'text'">{{ product[col.field] }}</span>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </mat-card-content>
+      
+    </mat-card>
+  </div>
+  
+ 

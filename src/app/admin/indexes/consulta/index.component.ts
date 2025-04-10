@@ -15,12 +15,12 @@ import { AddDialogComponent } from '../../add-dialog/add-dialog.component';
 })
 export class IndexComponent implements OnInit {
   
-  products:IndexInterface[] = [];  
+  products: IndexInterface[] = [];  
   filteredIndex: IndexInterface[] = [];
   cols: any[] = [];  
   _selectedColumns: any[] = [];
-  _selectedColumnsFilter:any[] = [];
-  selectedProducts3:IndexInterface[] = [];
+  _selectedColumnsFilter: any[] = [];
+  selectedProducts3: IndexInterface[] = [];
 
   index: any;
 
@@ -30,31 +30,41 @@ export class IndexComponent implements OnInit {
     private toastr: ToastrService,  
     private indexService: IndexService,
     public dialog: MatDialog,
-) { 
+  ) { 
+    // Define las columnas necesarias
     this.cols = [
-        { field: 'id_index', header: 'ID Bank' },
-        { field: 'index_name', header: 'Index' },
-        { field: 'index_symbol', header: 'Ticker' },
-        { field: 'source', header: 'Source' },
+      { field: 'id_index', header: 'ID Bank' },
+      { field: 'index_name', header: 'Index' },
+      { field: 'index_symbol_P', header: 'Ticker Platts' },
+      { field: 'index_symbol_B', header: 'Ticker Bloomberg' },
+      { field: 'index_symbol_Neg', header: 'Ticker Neg' }
     ];
     this._selectedColumns = this.cols;
-}
+  }
 
-openAddDialog(): void {
+  // Método para abrir el diálogo para agregar un índice
+  openAddDialog(): void {
     const dialogRef = this.dialog.open(AddDialogComponent, {
       width: '250px',
       data: {
         title: 'Index',
         fields: [
           { name: 'index_name', label: 'Index' },
-          { name: 'index_symbol', label: 'Ticker' },
-          { name: 'source', label: 'Source' }
+          { name: 'index_symbol_P', label: 'Ticker Platts' },
+          { name: 'index_symbol_B', label: 'Ticker Bloomberg' },
+          { name: 'index_symbol_Neg', label: 'Ticker Neg' }
         ]
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
       if (result) {
+        //if (!result.index_symbol_P || !result.index_symbol_B || !result.index_symbol_Neg) {
+        //  this.toastr.error('At least one ticker (Platts or Bloomberg) must be provided.');
+        //  return;
+        //}
+
         this.indexService.addIndex(result).subscribe({
           next: (newIndex) => {
             this.products.push(newIndex);
@@ -67,12 +77,13 @@ openAddDialog(): void {
         });
       }
     });
-  }
+}
 
-ngOnInit(): void {
-  this.spinner.show(); 
-  this.indexService.getIndexes().subscribe({
-    next: (data) => {
+
+  ngOnInit(): void {
+    this.spinner.show(); 
+    this.indexService.getIndexes().subscribe({
+      next: (data) => {
         this.products = data;
         this.filteredIndex = [...data];
         this.spinner.hide();
@@ -81,9 +92,9 @@ ngOnInit(): void {
         this.toastr.error('Failed to load indexes');
         this.spinner.hide();
       }
-  });
-}
-  
+    });
+  }
+
   @Input() get selectedColumns(): any[] {     
     return this._selectedColumns;
   }
@@ -95,36 +106,36 @@ ngOnInit(): void {
 
   deleteIndex(id: number): void {
     this.indexService.deleteIndex(id).subscribe({
-        next: (res) => {
-            this.products = this.products.filter(product => product.id_index !== id);
-            this.filteredIndex = this.filteredIndex.filter(product => product.id_index !== id);
-            this.toastr.success('Index successfully deleted.');
-        },
-        error: (err) => {
-            this.toastr.error('Failed to delete index. ' + err.message);
-            console.error('Failed to delete index', err);
-        }
+      next: (res) => {
+        this.products = this.products.filter(product => product.id_index !== id);
+        this.filteredIndex = this.filteredIndex.filter(product => product.id_index !== id);
+        this.toastr.success('Index successfully deleted.');
+      },
+      error: (err) => {
+        this.toastr.error('Failed to delete index. ' + err.message);
+        console.error('Failed to delete index', err);
+      }
     });
   }
 
   toggleEdit(index: IndexInterface, value: boolean): void {
     index.editing = value;
-}
+  }
 
-saveIndex(index: IndexInterface): void {
+  saveIndex(index: IndexInterface): void {
     this.indexService.updateIndex(index).subscribe({
-        next: () => {
-            this.toastr.success('Index updated successfully!');
-            index.editing = false; 
-        },
-        error: (error) => {
-            this.toastr.error('Error updating index');
-            console.error('Error updating index', error);
-        }
+      next: () => {
+        this.toastr.success('Index updated successfully!');
+        index.editing = false; 
+      },
+      error: (error) => {
+        this.toastr.error('Error updating index');
+        console.error('Error updating index', error);
+      }
     });
-}
+  }
 
-applyFilter(event: Event) {
+  applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
     this.filteredIndex = this.products.filter((index) => {
       return Object.values(index).some((value) =>

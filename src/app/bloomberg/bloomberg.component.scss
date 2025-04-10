@@ -1,0 +1,199 @@
+
+  .settled-row {
+    background-color: rgb(188, 219, 255); 
+  }
+
+  .button-nuevo,
+  .button-cancel,
+  .button-save,
+  .button-clear {
+    color: white !important;
+    min-height: 40px;
+    min-width: 100px;
+    margin-left: 10px;
+    transition: background-color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+
+  .button-cancel {
+    background-color: red !important;
+  }
+
+  .button-clear {
+    background-color: #02109C !important;
+  }
+
+  .button-save,
+  .button-nuevo {
+    background-color: #00843b !important;
+  }
+
+  .button-nuevo:hover,
+  .button-save:hover {
+    background-color: darkgreen !important;
+  }
+
+  .button-cancel:hover {
+    background-color: darkred !important;
+  }
+
+  .button-clear:hover {
+    background-color: rgb(0, 0, 125) !important;
+  }
+
+  .title { 
+    font-size: 24px;
+    font-weight: 500;
+  }
+
+  .div-table {
+    margin-top: 20px;
+  }
+
+  mat-cell, mat-footer-cell, mat-header-cell {
+    text-align: center !important;
+    justify-content: center !important;
+    overflow: inherit !important; 
+    display: flex !important;
+    word-break: inherit !important;		
+    width: 100%;  
+  }
+  
+  mat-header-cell {
+    justify-content: center !important;
+    text-overflow: ellipsis !important;
+  }
+
+  mat-row, mat-header-row, mat-footer-row {
+    width: 100%;
+  }
+
+  td, th {
+    text-align: center !important;
+  }
+
+  p-cellEditor {
+    cursor: pointer;
+  }
+
+  .mat-icon:hover {
+    cursor: pointer;
+    color: rgb(0, 0, 54) !important;
+  }
+
+  .alternating-rows tbody tr:nth-child(odd) {
+    background-color: #f9f9f9; /* Color para filas impares */
+  }
+
+  .alternating-rows tbody tr:nth-child(even) {
+    background-color: #ffffff; /* Color para filas pares */
+  }
+
+  .search-container {
+    padding: 8px;
+  }
+
+  .add-new-index-option {
+    display: flex;
+    align-items: center;
+    color: blue;
+    cursor: pointer;
+  }
+
+  .add-icon {
+    margin-right: 8px;
+  }
+
+  .add-text {
+    color: blue;
+  }
+
+  .tab-container {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+  }
+  
+  .tab-container button {
+    background-color: #f0f0f0;
+    border: none;
+    padding: 10px 15px;
+    margin-right: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+  }
+  
+  .tab-container button.active-tab {
+    background-color: #02109C;
+    color: white;
+  }
+
+  /* Subtle highlight for today's row */
+.highlight-row {
+  background-color: #f0f4ff !important; /* Soft blue background */
+  font-weight: 500; /* Slightly bold */
+  border-left: 4px solid #4a90e2; /* Subtle left border for focus */
+}
+
+/* Ensure contrast remains readable */
+.highlight-row td {
+  color: #333; /* Darker text */
+}
+
+  
+  .matrix-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+  }
+  
+  .matrix-table th, .matrix-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .matrix-table th {
+    background-color: #f4f4f4;
+  }
+  
+  .last-tradeable-row {
+
+    background-color: #f8f8f8;
+  }
+  
+/* Subtle highlight for today's row */
+.highlight-row {
+  background-color: #e3f2fd !important; /* Light blue */
+  font-weight: 600;
+  border-left: 4px solid #2196F3; /* Blue highlight */
+}
+
+/* Headers: Make them bold and separate from the data */
+.p-datatable thead th {
+  background-color: #f5f5f5; /* Light gray background */
+  font-weight: bold;
+  font-size: 14px;
+  padding: 8px;
+  text-align: center;
+  border-bottom: 2px solid #ddd; /* Separate headers */
+}
+
+/* Last Tradable Date row */
+.last-tradeable-row th {
+  background-color: #eef2f7; /* Light blue-gray */
+  font-style: italic;
+  font-weight: 500;
+  padding: 6px;
+  text-align: center;
+}
+
+/* Reduce Row Height */
+.p-datatable .p-datatable-tbody tr td {
+  padding: 6px 10px; /* Smaller padding makes the table tighter */
+  font-size: 13px; /* Reduce font size slightly for compactness */
+}

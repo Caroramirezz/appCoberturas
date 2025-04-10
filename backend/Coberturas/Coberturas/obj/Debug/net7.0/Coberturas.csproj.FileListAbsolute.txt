@@ -306,3 +306,5 @@ C:\Repositorios\Github\appCoberturas\backend\Coberturas\Coberturas\obj\Debug\net
 C:\Repositorios\Github\appCoberturas\backend\Coberturas\Coberturas\obj\Debug\net7.0\Coberturas.pdb
 C:\Repositorios\Github\appCoberturas\backend\Coberturas\Coberturas\obj\Debug\net7.0\Coberturas.genruntimeconfig.cache
 C:\Repositorios\Github\appCoberturas\backend\Coberturas\Coberturas\obj\Debug\net7.0\ref\Coberturas.dll
+C:\Repos\Coberturas\backend\Coberturas\Coberturas\obj\Debug\net7.0\Coberturas.sourcelink.json
+C:\Repos\Coberturas\backend\Coberturas\Coberturas\bin\Debug\net7.0\CsvHelper.dll

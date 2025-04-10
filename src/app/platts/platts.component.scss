@@ -107,3 +107,22 @@ p-cellEditor {
 .add-text {
   color: blue;
 }
+.editable-field {
+  background-color: #ebebeb;  /* Light blue background */
+  //border: 1px solid #90caf9;  /* Light blue border */
+}
+
+.editable-field:focus {
+  //border-color: #42a5f5;  /* Darker blue border when focused */
+  background-color: #c9c9c9;  /* Change background color when editing */
+}
+.editable-container {
+  display: flex;
+  align-items: center;
+}
+/* Style for the save button when edits are made */
+.save-button {
+  background-color: #4caf50 !important;  /* Green background */
+  color: white !important;               /* White text */
+  transition: background-color 0.3s ease;  /* Smooth transition effect */
+}

@@ -22,6 +22,7 @@ import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { ToastModule } from 'primeng/toast';
 import { MatSortModule } from '@angular/material/sort';
 import { AddDialogComponent } from './add-dialog/add-dialog.component';
+import { WorstCaseComponent } from './worst-case/consulta/worst-case.component';
 
 
 
@@ -34,6 +35,7 @@ import { AddDialogComponent } from './add-dialog/add-dialog.component';
     IndexComponent,
     PlantDialogComponent,
     AddDialogComponent,
+    WorstCaseComponent
   ],
   imports: [
     CommonModule,

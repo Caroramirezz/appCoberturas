@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Coberturas")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c87a66f3dc7c675756dde4b8afd9c7a0cb913dc4")]
 [assembly: System.Reflection.AssemblyProductAttribute("Coberturas")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Coberturas")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

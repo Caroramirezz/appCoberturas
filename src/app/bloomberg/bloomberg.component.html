@@ -1,5 +1,233 @@
-<div>
-    <h1>Bloomberg Data Request</h1>
-    <pre>{{ content | json }}</pre>
+<ngx-spinner type="ball-scale-multiple" [fullScreen]="true" *ngIf="loading"></ngx-spinner>
+
+<div style="margin-bottom: 20px; margin-top: 5px;">
+  <p class="title">Bloomberg Market Data</p>
+</div>
+
+<!-- Tab Selection -->
+<div class="tab-container">
+  <button (click)="switchTab('table')" [ngClass]="{ 'active-tab': selectedTab === 'table' }">
+    All Records
+  </button>
+  <button (click)="switchTab('matrix')" [ngClass]="{ 'active-tab': selectedTab === 'matrix' }">
+    Matrix View
+  </button>
+</div>
+
+<mat-card >
+  <mat-card-header fxLayout="row">
+    <div fxFlex="50">
+      <mat-card-title>Bloomberg Prices</mat-card-title>
+    </div>
+    <div fxFlex="50" fxLayoutAlign="end center">
+      <button pButton type="button" label="Export to CSV" (click)="exportToCSV()" class="button-clear"></button>
+    </div>
+  </mat-card-header>
+
+  <div fxLayout="row" fxLayoutGap="10px">
+    <mat-form-field appearance="outline" fxFlex="30">
+      <mat-label>Period</mat-label>
+      <mat-date-range-input [rangePicker]="picker">
+        <input matStartDate [(ngModel)]="fechaInicio" placeholder="Start date">
+        <input matEndDate [(ngModel)]="fechaFin" placeholder="End date">
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+    
+    
+    <mat-form-field appearance="outline" fxFlex="20">
+      <mat-label>Symbols</mat-label>
+      <mat-select [(ngModel)]="selectedSymbols" multiple (openedChange)="onSelectOpen($event)">
+        <mat-select-trigger>
+          {{selectedSymbols.length}} selected
+        </mat-select-trigger>
+        <div class="search-container">
+          <input matInput #searchInput placeholder="Search symbols" [formControl]="symbolSearchCtrl">
+        </div>
+        <mat-option *ngFor="let symbol of filteredSymbols | async" [value]="symbol.index_symbol_B">
+          {{ symbol.index_name }} ({{ symbol.index_symbol_B }})
+        </mat-option>
+        <mat-divider></mat-divider>
+        <mat-option class="add-new-index-option" (click)="openAddDialog()">
+          <mat-icon class="add-icon">add_circle</mat-icon>
+          <span class="add-text">Add New Index</span>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
   </div>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Search data</mat-label>
+    <mat-icon matPrefix>search</mat-icon>
+    <input matInput type="text" (input)="applyFilter($event)" placeholder="Search data">
+  </mat-form-field>
+
+
+
+
+  <p-table *ngIf="selectedTab === 'table'" #dt2 [value]="filteredStoredRecords" stripedRows 
+  [paginator]="true" 
+  [rows]="10"
+  [rowsPerPageOptions]="[5, 10, 25, 50]"
+  [globalFilterFields]="['id', 'dlSnapshotStartTime', 'identifier', 'pxLast', 'lastTradeableDt']"
+  responsiveLayout="scroll" 
+  dataKey="id">
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="id">Id <p-sortIcon field="id"></p-sortIcon></th>
+        <th pSortableColumn="dlSnapshotStartTime">
+          Snapshot <p-sortIcon field="dlSnapshotStartTime"></p-sortIcon>
+        </th>
+        <th pSortableColumn="identifier">Identifier <p-sortIcon field="identifier"></p-sortIcon></th>
+        <th pSortableColumn="pxLast">PX Last <p-sortIcon field="pxLast"></p-sortIcon></th>
+        <th pSortableColumn="lastTradeableDt">
+          Last Tradeable Date <p-sortIcon field="lastTradeableDt"></p-sortIcon>
+        </th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-record>
+      <tr>
+        <td>{{ record.id }}</td>
+        <td>{{ record.dlSnapshotStartTime | date: 'MM-dd-yyyy' }}</td>
+        <td>{{ record.identifier }}</td>
+        <td>{{ record.pxLast }}</td>
+        <td>{{ record.lastTradeableDt | date: 'MM-dd-yyyy' }}</td>
+      </tr>
+    </ng-template>
+
+  </p-table>
+
+ <!-- Matrix Table View -->
+<p-table *ngIf="selectedTab == 'matrix'" #dtMatrix [value]="uniqueSnapshots" stripedRows 
+  [paginator]="true" 
+  [rows]="10"
+  [rowsPerPageOptions]="[5, 10, 25, 50]"
+  responsiveLayout="scroll"
+  size="small">
   
+  <ng-template pTemplate="header">
+    <tr>
+      <th rowspan="2">Trade Date</th> 
+      <th *ngFor="let identifier of uniqueIdentifiers">
+        {{ symbolToName[identifier] || identifier }}
+      </th>
+    </tr>
+    <tr class="last-tradeable-row">
+      <th *ngFor="let identifier of uniqueIdentifiers">
+        {{ lastTradeableDates[identifier] | date: 'MM/dd/yyyy' || '-' }}
+      </th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-snapshot>
+    <tr [ngClass]="{'highlight-row': isToday(snapshot)}">
+      <td>{{ snapshot | date: 'MM/dd/yyyy' }}</td>
+      <td *ngFor="let identifier of uniqueIdentifiers">
+        {{ matrixData[snapshot][identifier] || '-' }}
+      </td>
+    </tr>
+  </ng-template>
+  
+
+</p-table>
+
+
+
+
+</mat-card>
+<!-- MAKE REQUEST TO API
+
+  <mat-card-content>
+    <div>
+      <div fxLayout="row" fxLayoutGap="10px">
+        <mat-form-field appearance="outline" fxFlex="30">
+          <mat-label>Request ID</mat-label>
+          <input matInput [formControl]="requestIdentifierCtrl" placeholder="Enter request ID">
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline" fxFlex="30">
+          <mat-label>Snapshot Date</mat-label>
+          <input matInput [matDatepicker]="picker" [formControl]="snapshotDateCtrl" placeholder="Enter snapshot date">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <button class="button-nuevo mat-raised-button" mat-raised-button color="accent" (click)="onNewRequest()" fxFlex="20" style="height: 56px;">Fetch Data</button>
+      </div>
+
+      <div fxLayout="row" fxLayoutGap="10px">
+        <mat-form-field appearance="outline" fxFlex="20">
+          <mat-label>Columns</mat-label>
+          <mat-select [(ngModel)]="selectedColumns" multiple (selectionChange)="onColumnChange()">
+            <mat-option *ngFor="let col of allColumns" [value]="col">
+              {{ col }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" fxFlex="20">
+          <mat-label>Symbols</mat-label>
+          <mat-select [(ngModel)]="selectedSymbols" multiple (openedChange)="onSelectOpen($event)">
+            <mat-select-trigger>
+              {{selectedSymbols.length}} selected
+            </mat-select-trigger>
+            <div class="search-container">
+              <input matInput #searchInput placeholder="Search symbols" [formControl]="symbolSearchCtrl">
+            </div>
+            <mat-option *ngFor="let symbol of filteredSymbols | async" [value]="symbol.index_symbol">
+              {{ symbol.index_name }}
+            </mat-option>
+            <mat-divider></mat-divider>
+            <mat-option class="add-new-index-option" (click)="openAddDialog()">
+              <mat-icon class="add-icon">add_circle</mat-icon>
+              <span class="add-text">Add New Index</span>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <button class="button-nuevo mat-raised-button" mat-raised-button color="accent" (click)="filterData()" fxFlex="20" style="height: 56px;">Search</button>
+      </div>
+
+      <p-table #dt1 [value]="filteredData" dataKey="symbol" responsiveLayout="scroll" [reorderableColumns]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 25, 50, 100]" [paginator]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" styleClass="p-datatable-sm alternating-rows" [globalFilterFields]="['symbol', 'bate', 'value', 'assessDate', 'index']">
+
+        <ng-template pTemplate="caption">
+          <div class="flex">
+            <span class="p-input-icon-left ml-auto">
+              <i class="pi pi-search"></i>
+            </span>
+          </div>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+          <tr>
+            <th *ngFor="let col of selectedColumns">
+              <div class="flex justify-content-center align-items-center">
+                {{ col }}
+                <p-columnFilter type="text" [field]="col" display="menu"></p-columnFilter>
+              </div>
+            </th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData>
+          <tr>
+            <td *ngFor="let col of selectedColumns">
+              {{ rowData[col] }}
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td [attr.colspan]="selectedColumns.length">No data found.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </mat-card-content>
+  -->
+

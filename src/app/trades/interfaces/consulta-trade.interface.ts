@@ -18,6 +18,8 @@ export interface ConsultaTrade {
     hedge_type:string;
     id_index:number;
     index_name:string;
+    index_symbol_P?:string;
+    index_symbol_B?:string;
     id_volume_basis:number;
     volume_basis:string;
     id_operation:number;
@@ -33,10 +35,12 @@ export interface ConsultaTrade {
     bank?:string;
     client?:string;
     id_client?:number;
-    effective_price: number;
-
-    //Falta Agrear el MTM 
-
+    market_price: number;
+    wc_price: number;
+    bloomberg_curr: number;
+    worstcase_curr: number;
+    mtm_usd: number;
+    worstcase_usd: number;
 
 
 }

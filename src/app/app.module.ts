@@ -20,7 +20,7 @@ import { MatIconModule } from '@angular/material/icon'
 import { EditClientsDialog } from './admin/clients/edit/edit-clients.component';
 import { PlattsComponent } from './platts/platts.component';
 import { BloombergComponent } from './bloomberg/bloomberg.component';
-
+import { UserComponent } from './users/user.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,6 +29,7 @@ import { BloombergComponent } from './bloomberg/bloomberg.component';
     EditClientsDialog,
     PlattsComponent,
     BloombergComponent,
+    UserComponent
   ],
   imports: [
     BrowserModule,

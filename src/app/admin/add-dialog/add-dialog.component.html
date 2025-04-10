@@ -2,20 +2,33 @@
 <div mat-dialog-content>
   <form [formGroup]="dialogForm">
     <ng-container *ngFor="let field of data.fields">
-      <div *ngIf="field.name === 'fecha_inicio' || field.name === 'fecha_fin'; else defaultField">
-        <mat-form-field>
+      <ng-container [ngSwitch]="field.type">
+        
+        <!-- Dropdown for Index Name -->
+        <mat-form-field *ngSwitchCase="'dropdown'">
+          <mat-label>{{ field.label }}</mat-label>
+          <mat-select formControlName="{{ field.name }}">
+            <mat-option *ngFor="let option of field.options" [value]="option.value">
+              {{ option.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Date Picker -->
+        <mat-form-field *ngSwitchCase="'date'">
           <mat-label>{{ field.label }}</mat-label>
           <input matInput [matDatepicker]="picker" formControlName="{{ field.name }}">
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
-      </div>
-      <ng-template #defaultField>
-        <mat-form-field>
+
+        <!-- Regular Input (Text or Number) -->
+        <mat-form-field *ngSwitchDefault>
           <mat-label>{{ field.label }}</mat-label>
-          <input matInput formControlName="{{ field.name }}">
+          <input matInput formControlName="{{ field.name }}" [type]="field.type || 'text'" />
         </mat-form-field>
-      </ng-template>
+        
+      </ng-container>
     </ng-container>
   </form>
 </div>

@@ -34,34 +34,34 @@ export class LoginComponent implements OnInit {
     
   }
 
-  iniciar(){
+  iniciar() {
     this.spinner.show(); 
-    
-    if(this.formLogin.valid){
+  
+    if (this.formLogin.valid) {
       this.usuario.email_usuario = this.formLogin.controls['email'].value;
       this.usuario.password_usuario = this.formLogin.controls['password'].value;
-      
-      this.wsAuth.iniciarSesion(this.usuario).subscribe(result => {                        
+  
+      this.wsAuth.iniciarSesion(this.usuario).subscribe(result => {
         
-        if(result.resultado){          
-          var data = result.data;
+        if (result.token && result.token.resultado) { 
+          var data = result.token.data; 
           
-          sessionStorage.setItem("permiso_usuario", data.permiso_usuario);
+          sessionStorage.setItem("permiso_usuario", data.permiso_usuario.toString());
           sessionStorage.setItem("nombre_usuario", data.nombre_usuario);
-          sessionStorage.setItem("id_usuario", data.id_usuario);    
+          sessionStorage.setItem("id_usuario", data.id_usuario.toString());    
           sessionStorage.setItem("email_usuario", data.email_usuario);        
-
+  
           this.usuario.id_usuario = data.id_usuario;    
           this.usuario.email_usuario = data.email_usuario;
           this.usuario.nombre_usuario = data.nombre_usuario;
           this.usuario.permiso_usuario = data.permiso_usuario;
-
+  
           this.spinner.hide();
           this.router.navigateByUrl('home/dashboard');
         } 
         else {
           this.spinner.hide();
-          this.toastr.error(result.msg, '', {
+          this.toastr.error(result.token?.msg || 'Error al iniciar sesión', '', {
             timeOut: 5000,
           }); 
         }
@@ -70,17 +70,19 @@ export class LoginComponent implements OnInit {
       error => {
         console.log(error);
         this.spinner.hide();
+        this.toastr.error('Ocurrió un error al iniciar sesión', '', {
+          timeOut: 5000,
+        });
       })  
-        
     } 
-    else{
+    else {
       this.toastr.error('Favor de completar la información', '', {
         timeOut: 5000,
       });
       this.spinner.hide();
     }
   }
-
+  
   // iniciarSesionAliax(){  
   //   this.spinner.show(); 
   //   this.wsAuth.iniciarSesion().subscribe(result => {                              

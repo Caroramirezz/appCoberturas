@@ -238,9 +238,17 @@
 		</div>
 
 		<!-- BUTTON -->
-		<div style="margin-top:20px" fxLayoutAlign="end center">
-			<button class="buttons" mat-raised-button color="primary" (click)="nextTable()">Next</button>
-		</div>
+		<div fxLayoutAlign="space-between center" style="margin-top: 20px">
+			  <button class="buttons" mat-raised-button color="primary" (click)="goToTrades()" style="align-items: center">
+				<i class="pi pi-angle-left"></i>
+				<span>Back</span>
+			  </button>
+			  <button class="buttons" mat-raised-button color="primary" (click)="nextTable()" style=" align-items: center">
+				<span>Next</span>
+				<i class="pi pi-angle-right"></i>
+			  </button>
+		  </div>
+		  
 
 	</mat-card-content>
 </mat-card>

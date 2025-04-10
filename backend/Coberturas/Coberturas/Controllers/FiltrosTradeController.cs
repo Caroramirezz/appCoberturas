@@ -95,6 +95,45 @@ namespace Coberturas.Controllers
       }
     }
 
+    [HttpGet]
+    [Route("ListWC")]
+    public IActionResult WC()
+    {
+      try
+      {
+        List<WC> data = new List<WC>();
+
+        SqlConnection conexion = (SqlConnection)_context.Database.GetDbConnection();
+        SqlCommand comando = conexion.CreateCommand();
+        conexion.Open();
+        comando.CommandType = System.Data.CommandType.StoredProcedure;
+        comando.CommandText = "sp_get_wc";
+
+        //comando.Parameters.Add("idwfc", System.Data.SqlDbType.VarChar, 255).Value = idwfc;
+
+        SqlDataReader reader = comando.ExecuteReader();
+        while (reader.Read())
+        {
+          WC array = new WC();
+
+          array.index_name = (string)reader["index_name"];
+          array.period_case = (DateTime)reader["period_case"];
+          array.wc_price = (decimal)reader["wc_price"];
+          array.id = (int)reader["id"];
+
+          data.Add(array);
+        }
+        conexion.Close();
+
+        var result = new ResponseGeneral() { msg = "Consulta Realizada", data = data, success = true };
+        return Ok(result);
+      }
+      catch (Exception ex)
+      {
+        return BadRequest(ex);
+      }
+    }
+
 
     [HttpGet]
     [Route("ListCurrency")]
@@ -195,8 +234,8 @@ namespace Coberturas.Controllers
 
           array.id_index = (int)reader["id_index"];
           array.index_name = (string)reader["index_name"]; 
-          array.index_symbol = (string?)reader["index_symbol"]; //validar el null
-          array.source = (string?)reader["source"]; //validar el null
+          array.index_symbol_P = (string?)reader["index_symbol_P"]; //validar el null
+          array.index_symbol_B = (string?)reader["index_symbol_B"]; //validar el null
 
           data.Add(array);
         }

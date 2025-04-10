@@ -8,12 +8,15 @@
     ".NETCoreApp,Version=v7.0": {
       "Coberturas/1.0.0": {
         "dependencies": {
+          "CsvHelper": "33.0.1",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "7.0.13",
           "Microsoft.AspNetCore.OpenApi": "7.0.13",
           "Microsoft.EntityFrameworkCore": "7.0.13",
           "Microsoft.EntityFrameworkCore.SqlServer": "7.0.13",
           "Microsoft.EntityFrameworkCore.Tools": "7.0.13",
-          "Swashbuckle.AspNetCore": "6.4.0"
+          "Microsoft.IdentityModel.Tokens": "6.24.0",
+          "Swashbuckle.AspNetCore": "6.4.0",
+          "System.IdentityModel.Tokens.Jwt": "6.24.0"
         },
         "runtime": {
           "Coberturas.dll": {}
@@ -50,6 +53,14 @@
           "lib/netstandard2.0/Azure.Identity.dll": {
             "assemblyVersion": "1.7.0.0",
             "fileVersion": "1.700.22.46903"
+          }
+        }
+      },
+      "CsvHelper/33.0.1": {
+        "runtime": {
+          "lib/net7.0/CsvHelper.dll": {
+            "assemblyVersion": "33.0.0.0",
+            "fileVersion": "33.0.1.24"
           }
         }
       },
@@ -614,6 +625,13 @@
       "sha512": "sha512-eHEiCO/8+MfNc9nH5dVew/+FvxdaGrkRL4OMNwIz0W79+wtJyEoeRlXJ3SrXhoy9XR58geBYKmzMR83VO7bcAw==",
       "path": "azure.identity/1.7.0",
       "hashPath": "azure.identity.1.7.0.nupkg.sha512"
+    },
+    "CsvHelper/33.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-fev4lynklAU2A9GVMLtwarkwaanjSYB4wUqO2nOJX5hnzObORzUqVLe+bDYCUyIIRQM4o5Bsq3CcyJR89iMmEQ==",
+      "path": "csvhelper/33.0.1",
+      "hashPath": "csvhelper.33.0.1.nupkg.sha512"
     },
     "Humanizer.Core/2.14.1": {
       "type": "package",

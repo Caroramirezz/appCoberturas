@@ -7,6 +7,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { ListTrade, TradeInterface } from 'src/app/trades/interfaces/trade.interface';
 import { TradesService } from 'src/app/trades/services/trades.service';
+import { ListPlants } from 'src/app/trades/interfaces/trade.interface';
 
 @Component({
   selector: 'app-first-step',
@@ -24,6 +25,7 @@ export class FirstStepComponent implements OnInit {
   trade_id:string = "";
   fechaInicio = moment().startOf('month').toDate();
   fechaFin = moment().endOf('month').toDate();
+  products:any[] = [];
 
   //Variables de apoyo
   objectDatesList:any[] = [];
@@ -50,6 +52,7 @@ export class FirstStepComponent implements OnInit {
 
   constructor(
     private router:Router,
+    private tradesService: TradesService,
     private route: ActivatedRoute,
     private wsTrade:TradesService,
     public fb: FormBuilder,  
@@ -71,7 +74,8 @@ export class FirstStepComponent implements OnInit {
       'id_volume_basis': new FormControl(null, [Validators.required]), 
       'id_unit': new FormControl(null, [Validators.required]), 
       'id_currency': new FormControl(null, [Validators.required]), 
-      'id_operation': new FormControl(null, [Validators.required])
+      'id_operation': new FormControl(null, [Validators.required]),
+      
     });    
 
   }
@@ -99,24 +103,29 @@ export class FirstStepComponent implements OnInit {
       }      
     });
 
-    if(this.modoView == 'New'){
-      let dataService:TradeInterface = this.wsTrade.getValuesTrade();
-      if(Object.keys(dataService).length > 0){
-        this.mapearInfo(dataService);
+    const tradeData = history.state.trade;
+
+    if (this.modoView === 'New') {
+      let dataService: TradeInterface = this.wsTrade.getValuesTrade();
+      if (Object.keys(dataService).length > 0) {
+          this.populateFormAndTable(dataService);
       }
-    }
-    //Es modo Edición.
-    else {
-      //Consultar la información.
-      this.GetTradeWithId();
+  }
 
-      let dataService:TradeInterface = this.wsTrade.getValuesTrade();
-      if(Object.keys(dataService).length > 0){
-        //this.mapearInfo(dataService);
-      }
-    }
-
-
+  if (tradeData) {
+      this.modoView = 'Edit';
+      this.title = `Edit Trade: ${tradeData.id_trade}`;
+      this.populateFormAndTable(tradeData);
+  } else {
+      this.route.params.subscribe((params) => {
+          if (params['id']) {
+              this.trade_id = params['id'];
+              this.modoView = 'Edit';
+              this.title = 'Edit Trade: ' + this.trade_id;
+              this.GetTradeWithId();
+          }
+      });
+  }
 
     this.spinner.hide();
   }
@@ -207,88 +216,86 @@ export class FirstStepComponent implements OnInit {
   //AQUI TERMINA LAS CONSULTAS BASICAS - INFORMACION TRADE
 
 
-  GetTradeWithId(){    
+  GetTradeWithId() {
     this.spinner.show();
-    
-    this.wsTrade.getTradeWithId(this.trade_id).subscribe(result => {      
-      console.log(result.data);
-      
-      //Obtener el rango del periodo. ¿Cuantos meses involucra?
-      let contador = 0;
-      let datesPeriod = [];
-      let period = [];
-      for(var y = 0; y < result.data.length; y++){
-        if(result.data[y].id_neg == '' || result.data[y].id_neg == undefined){     
-          datesPeriod.push(result.data[y].trade_month);     
-          period.push(result.data[y])
-          contador++;
+
+    this.wsTrade.getTradeWithId(this.trade_id).subscribe(
+        (result) => {
+
+          if (result && result.data && result.data.length > 0) {
+            this.products = result.data; // Populate products with trade data
+            console.log('Fetched trades data:', this.products); // Debugging log
+          } else {
+            console.warn('No trades data found for the given trade ID.');
+          }
+            if (result && result.data && result.data.length > 0) {
+                console.log('Fetched trade data:', result.data);
+
+                // Obtain the range of the period
+                let datesPeriod: Date[] = [];
+                let period: any[] = [];
+
+                for (let y = 0; y < result.data.length; y++) {
+                    if (!result.data[y].id_neg || result.data[y].id_neg === '') {
+                        datesPeriod.push(result.data[y].trade_month);
+                        period.push(result.data[y]);
+                    }
+                }
+
+                // Reset form and dataTable
+                this.formFirstStep.reset(); // Clear previous data
+                this.dataTable = []; // Clear previous dataTable entries
+
+                // Map to basic form fields
+                this.formFirstStep.patchValue({
+                    trade_date: result.data[0].trade_date,
+                    id_trade_type: result.data[0].id_trade_type,
+                    id_bank: result.data[0].id_bank,
+                    id_trade: result.data[0].id_trade,
+                    id_sar: result.data[0].id_sar,
+                    fechaInicio: datesPeriod[0],
+                    fechaFin: datesPeriod[datesPeriod.length - 1],
+                    id_instrument: result.data[0].id_instrument,
+                    id_hedge_type: result.data[0].id_hedge_type,
+                    id_index: result.data[0].id_index,
+                    id_volume_basis: result.data[0].id_volume_basis,
+                    id_unit: result.data[0].id_unit,
+                    id_currency: result.data[0].id_currency,
+                    id_operation: result.data[0].id_operation,
+                });
+
+                // Populate periodsAux and dataTable
+                this.periodsAux = period.map((p) => ({
+                    date: p.trade_month ? new Date(p.trade_month) : null,
+                    vol_daily: Math.trunc(p.vol_daily || 0),
+                    vol_monthly: Math.trunc(p.vol_monthly || 0),
+                    price: p.price || 0,
+                    month: p.month || null,
+                    days: p.days || null,
+                }));
+
+                this.dataTable = [...this.periodsAux];
+                this.dataSource.data = this.dataTable;
+
+                console.log('Periods populated:', this.periodsAux);
+
+                this.spinner.hide();
+            } else {
+                this.toastr.error('No data found for the selected trade.', '', {
+                    timeOut: 5000,
+                });
+                this.spinner.hide();
+            }
+        },
+        (error) => {
+            console.error('Error fetching trade data:', error);
+            this.spinner.hide();
+            this.toastr.error('Error fetching trade data. Please try again.', '', {
+                timeOut: 5000,
+            });
         }
-      }   
-      
-      //Mapear a los filtros basicos. 
-      this.formFirstStep.patchValue({
-        trade_date: result.data[0].trade_date,
-        id_trade_type: result.data[0].id_trade_type,
-        id_bank: result.data[0].id_bank,
-        id_trade: result.data[0].id_trade,
-        id_sar:result.data[0].id_sar,
-        fechaInicio: datesPeriod[0],
-        fechaFin: datesPeriod[datesPeriod.length - 1],
-        id_instrument: result.data[0].id_instrument,    
-        id_hedge_type: result.data[0].id_hedge_type,
-        id_index: result.data[0].id_index,
-        id_volume_basis: result.data[0].id_volume_basis,
-        id_unit: result.data[0].id_unit,
-        id_currency: result.data[0].id_currency,
-        id_operation: result.data[0].id_operation
-      });      
-
-      this.periodsAux = period;
-      this.createList();
-          
-      this.spinner.hide();
-    }, error => {      
-      this.spinner.hide();
-      this.toastr.error(error, '', {
-        timeOut: 5000,
-      });   
-    })
-  }
-
-
-  //Mapear la información cuando se edita o se da click en boton "atras"
-  mapearInfo(dataWS:TradeInterface){
-    this.formFirstStep.patchValue({
-      trade_date: dataWS.trade_date,
-      id_trade_type: dataWS.id_trade_type,
-      id_bank: dataWS.id_bank,
-      id_trade: dataWS.id_trade,
-      id_sar:dataWS.id_sar,
-      fechaInicio: dataWS.period_start,
-      fechaFin: dataWS.period_end,
-      id_instrument: dataWS.id_instrument,    
-      id_hedge_type: dataWS.id_hedge_type,
-      id_index: dataWS.id_index,
-      id_volume_basis: dataWS.id_volume_basis,
-      id_unit: dataWS.id_unit,
-      id_currency: dataWS.id_currency,
-      id_operation: dataWS.id_operation
-    });
-
-    for(var x = 0; x < dataWS.list_trades_period!.length; x++){
-      this.dataTable.push({
-        position:x,
-        date: new Date(dataWS.list_trades_period![x].date),
-        vol_daily: Math.trunc(dataWS.list_trades_period![x].vol_daily),
-        vol_monthly: Math.trunc(dataWS.list_trades_period![x].vol_monthly),
-        price:dataWS.list_trades_period![x].price,
-        month:dataWS.list_trades_period![x].month,
-        days:dataWS.list_trades_period![x].days,       
-      });
-    }
-    
-  }
-
+    );
+}
 
   //BUTTON CREATE LIST-TRADE POR PERIODO
   createList(){
@@ -426,7 +433,16 @@ export class FirstStepComponent implements OnInit {
     }
 
   }
-
+  // BACK BUTTON
+  goToTrades(): void {
+    this.router.navigate(['/home/trade'], {
+      state: {
+        fechaInicio: this.fechaInicio.toISOString(),
+        fechaFin: this.fechaFin.toISOString(),
+      },
+    });
+  }  
+      
 
   //BUTTON NEXT
   nextTable(){    
@@ -528,6 +544,32 @@ export class FirstStepComponent implements OnInit {
       }
     }
   }
+
+  populateFormAndTable(data: any): void {
+    // Populate the form fields
+    this.formFirstStep.patchValue({
+      trade_date: data.trade_date ? new Date(data.trade_date) : null,
+      id_trade_type: data.id_trade_type || null,
+      id_bank: data.id_bank || null,
+      id_trade: data.id_trade || null,
+      id_sar: data.id_sar || null,
+      fechaInicio: data.period_start || data.fechaInicio ? new Date(data.period_start || data.fechaInicio) : null,
+      fechaFin: data.period_end || data.fechaFin ? new Date(data.period_end || data.fechaFin) : null,
+      id_instrument: data.id_instrument || null,
+      id_hedge_type: data.id_hedge_type || null,
+      id_index: data.id_index || null,
+      id_volume_basis: data.id_volume_basis || null,
+      id_unit: data.id_unit || null,
+      id_currency: data.id_currency || null,
+      id_operation: data.id_operation || null,
+    });
+  
+    // Use periodsAux for the dataTable
+    this.dataTable = this.periodsAux || [];
+    this.dataSource.data = this.dataTable;
+    }  
+
+
 
 }
 

@@ -3,7 +3,6 @@
 }
 
 .buttons-filters {
-    margin-bottom:20px;
     width: 120px;
     height: 45px;
 }
@@ -63,4 +62,104 @@ td, th {
 p-cellEditor {
     cursor: pointer;
 }
+:host ::ng-deep .mat-form-field-wrapper {
+    padding-bottom: 0 !important;
+  }
+  
 
+:host ::ng-deep .p-multiselect.p-component {
+    min-width: 400px; // Replace 200px with your desired value
+  }
+  
+    
+
+.active-tab {
+    background-color: #ffffff !important; /* Darker shade of your current color */
+    color: black !important; /* Ensure the text is readable */
+  }
+
+
+  .tabs {
+    display: flex;
+    align-items: center;
+    margin-bottom: -0.5px;
+    //border-bottom: 2px solid #ddd; /* Line below tabs */
+    
+  }
+  
+  .tab {
+    padding: 8px 15px; /* Adjust padding to make tabs compact */
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 5px 5px 0 0; /* Rounded corners on top */
+    border-bottom: none;
+    background-color: #02109C; /* Slightly darker than the background */
+    color: #ffffff;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    position: relative;
+    transition: background-color 0.3s, color 0.3s;
+    
+  }
+  
+  .tab:not(.add-tab):hover {
+    background-color: #020f9cc8;
+  }
+  
+  .tab.add-tab {
+    background-color: #d9f7ff;
+    color: #0077b6;
+  }
+  
+  .tab.active-tab {
+    background-color: #fff;
+    //border: 1px solid #ddd;
+    //border-top: 1px solid #ececec;
+    border-left: 0px solid #ececec;
+    border-right: 1px solid #ececec;
+    //font-weight: bold;
+    color: #0077b6;
+    z-index: 1 !important;
+    box-shadow: -1px -1px .8px -.3px rgba(0,0,0,0.10);
+    //box shadow only top and sides
+    //box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  .tab-close-icon {
+    font-size: 16px;
+    color: #ffffff;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  
+  .tab-close-icon:hover {
+    color: #e63946;
+  }
+  .tab-close-icon:active {
+    color: black;
+  }
+  .div-table {
+    margin-top: 0 !important; 
+  }
+  .mat-card:not([class*=mat-elevation-z]) {
+    box-shadow: 
+      0px 1px 1px 0px rgba(0, 0, 0, 0.14), /* Side shadows */
+      0px 1px 3px 0px rgba(0, 0, 0, 0.12) !important; /* Bottom shadow */
+  }
+  
+    .mat-card {
+        border-radius: 0px 4px 4px 4px;
+    }
+
+
+      
+      /* ✅ Make all disabled elements look the same */
+.disabled-label, 
+button:disabled {
+  opacity: 0.5 !important; /* ✅ Fade effect */
+  pointer-events: none; /* ✅ Prevent interaction */
+  color: white !important; /* ✅ Text color */
+  cursor: not-allowed;
+}

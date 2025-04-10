@@ -4,6 +4,7 @@ import { BanksComponent } from './banks/consulta/banks.component';
 import { ClientsComponent } from './clients/consulta/clients.component';
 import { SarsComponent } from './sars//consulta/sars.component';
 import { IndexComponent } from './indexes/consulta/index.component';
+import { WorstCaseComponent } from './worst-case/consulta/worst-case.component';
 
 // const routes: Routes = [
 //   { path: 'banks', loadChildren: () => import('./banks/banks.module').then(m => m.BanksModule) },
@@ -45,6 +46,13 @@ const routes:Routes = [
     path:'indexes',
     children: [
       { path:'consulta', component:IndexComponent },    
+      { path:'**', redirectTo: '' }
+    ]
+  },
+  {
+    path:'worst-case',
+    children: [
+      { path:'consulta', component:WorstCaseComponent },    
       { path:'**', redirectTo: '' }
     ]
   }

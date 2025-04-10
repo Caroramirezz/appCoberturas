@@ -8,6 +8,7 @@ using Coberturas.Contexts;
 using Coberturas.Models.Trades;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using Microsoft.EntityFrameworkCore;
+using Coberturas.Models.Platts;
 
 
 namespace Coberturas.Controllers
@@ -209,8 +210,9 @@ namespace Coberturas.Controllers
             {
               id_index = reader.GetInt32(reader.GetOrdinal("id_index")),
               index_name = reader.GetString(reader.GetOrdinal("index_name")),
-              index_symbol = reader.GetString(reader.GetOrdinal("index_symbol")),
-              source = reader.GetString(reader.GetOrdinal("source")),
+              index_symbol_P = reader.GetString(reader.GetOrdinal("index_symbol_P")),
+              index_symbol_B = reader.GetString(reader.GetOrdinal("index_symbol_B")),
+              index_symbol_Neg = reader.GetString(reader.GetOrdinal("index_symbol_Neg")),
             };
             indexTypes.Add(indextypes);
           }
@@ -265,9 +267,9 @@ namespace Coberturas.Controllers
             CommandType = CommandType.StoredProcedure
           };
           command.Parameters.Add(new SqlParameter("@index_name", SqlDbType.VarChar) { Value = indextypes.index_name });
-          command.Parameters.Add(new SqlParameter("@index_symbol", SqlDbType.VarChar) { Value = indextypes.index_symbol });
-          command.Parameters.Add(new SqlParameter("@source", SqlDbType.VarChar) { Value = indextypes.source });
-
+          command.Parameters.Add(new SqlParameter("@index_symbol_P", SqlDbType.VarChar) { Value = indextypes.index_symbol_P });
+          command.Parameters.Add(new SqlParameter("@index_symbol_B", SqlDbType.VarChar) { Value = indextypes.index_symbol_B });
+          command.Parameters.Add(new SqlParameter("@index_symbol_Neg", SqlDbType.VarChar) { Value = indextypes.index_symbol_Neg });
 
           command.ExecuteNonQuery();
 
@@ -279,8 +281,9 @@ namespace Coberturas.Controllers
             {
               id_index = (int)reader["id_index"],
               index_name = (string)reader["index_name"],
-              index_symbol = (string)reader["index_symbol"],
-              source = (string)reader["source"]
+              index_symbol_P = (string)reader["index_symbol_P"],
+              index_symbol_B = (string)reader["index_symbol_B"],
+              index_symbol_Neg = (string)reader["index_symbol_Neg"]
             };
             return Ok(newIndex);
           }
@@ -316,8 +319,9 @@ namespace Coberturas.Controllers
           };
           command.Parameters.Add(new SqlParameter("@id_index", indextypes.id_index));
           command.Parameters.Add(new SqlParameter("@index_name", indextypes.index_name));
-          command.Parameters.Add(new SqlParameter("@index_symbol", indextypes.index_symbol));
-          command.Parameters.Add(new SqlParameter("@source", indextypes.source));
+          command.Parameters.Add(new SqlParameter("@index_symbol_P", indextypes.index_symbol_P));
+          command.Parameters.Add(new SqlParameter("@index_symbol_B", indextypes.index_symbol_B));
+          command.Parameters.Add(new SqlParameter("@index_symbol_Neg", indextypes.index_symbol_Neg));
 
           var returnValue = new SqlParameter("@ReturnVal", SqlDbType.Int)
           {
@@ -369,7 +373,7 @@ namespace Coberturas.Controllers
             {
               id_sar = reader.GetInt32(reader.GetOrdinal("id_sar")),
               number_sar = reader.GetString(reader.GetOrdinal("number_sar")),
-              description = reader.GetString(reader.GetOrdinal("description")),
+              description = reader.IsDBNull(reader.GetOrdinal("description")) ? null : reader.GetString(reader.GetOrdinal("description")),
               fecha_inicio = reader.GetDateTime(reader.GetOrdinal("fecha_inicio")),
               fecha_fin = reader.GetDateTime(reader.GetOrdinal("fecha_fin"))
             };
@@ -824,5 +828,242 @@ namespace Coberturas.Controllers
       }
     }
 
+
+
+    // ************************************************ WORST CASE *************************************************************************
+
+
+    // INSERT (Insert New WC Records)
+    [HttpPost("worstcase/insert")]
+    public IActionResult InsertWC([FromBody] List<WC> wcs)
+    {
+      if (wcs == null || wcs.Count == 0)
+      {
+        return BadRequest(new { error = "No records provided." });
+      }
+
+      try
+      {
+        using (SqlConnection connection = (SqlConnection)_context.Database.GetDbConnection())
+        {
+          connection.Open();
+
+          foreach (var wc in wcs)
+          {
+            SqlCommand command = new SqlCommand("sp_ins_wc_alt", connection)
+            {
+              CommandType = CommandType.StoredProcedure
+            };
+            command.Parameters.Add(new SqlParameter("@index_name", SqlDbType.VarChar) { Value = wc.index_name });
+            command.Parameters.Add(new SqlParameter("@period_case", SqlDbType.DateTime) { Value = wc.period_case });
+            command.Parameters.Add(new SqlParameter("@wc_price", SqlDbType.Decimal) { Value = wc.wc_price });
+
+            command.ExecuteNonQuery();
+          }
+        }
+
+        return Ok(new { message = "wc inserted successfully." });
+      }
+      catch (Exception ex)
+      {
+        return BadRequest(new { error = $"An error occurred: {ex.Message}" });
+      }
+    }
+
+
+
+
+
+    // READ
+    [HttpGet]
+    [Route("worstcase/consulta")]
+    public IActionResult getWC()
+    {
+      Console.WriteLine("getWC() method called.");
+      try
+      {
+        List<WC> wcs = new List<WC>();
+        SqlConnection conexion = (SqlConnection)_context.Database.GetDbConnection();
+        SqlCommand command = new SqlCommand("sp_get_wc", conexion)
+        {
+          CommandType = CommandType.StoredProcedure
+        };
+
+        conexion.Open();
+        using (SqlDataReader reader = command.ExecuteReader())
+        {
+          while (reader.Read())
+          {
+            WC wc = new WC
+            {
+              index_name = reader.GetString(reader.GetOrdinal("index_name")),
+              period_case = reader.GetDateTime(reader.GetOrdinal("period_case")),
+              wc_price = reader.GetDecimal(reader.GetOrdinal("wc_price")),
+              id = reader.GetInt32(reader.GetOrdinal("id"))
+            };
+            wcs.Add(wc);
+          }
+        }
+        conexion.Close();
+        return Ok(wcs);
+      }
+      catch (Exception ex)
+      {
+        return BadRequest($"An error occurred: {ex.Message}");
+      }
+    }
+
+    // UPDATE
+    [HttpPut("worstcase/update/{id}")]
+    public IActionResult UpdateWC(int id, [FromBody] WC wc)
+    {
+      try
+      {
+        if (id != wc.id)
+        {
+          return BadRequest("Worst Case ID mismatch");
+        }
+
+        using (var connection = (SqlConnection)_context.Database.GetDbConnection())
+        {
+          connection.Open();
+          var command = new SqlCommand("sp_upd_wc", connection)
+          {
+            CommandType = CommandType.StoredProcedure
+          };
+          command.Parameters.Add(new SqlParameter("@id", wc.id));
+          command.Parameters.Add(new SqlParameter("@index_name", wc.index_name));
+          command.Parameters.Add(new SqlParameter("@period_case", wc.period_case));
+          command.Parameters.Add(new SqlParameter("@wc_price", wc.wc_price));
+
+          var returnValue = new SqlParameter("@ReturnVal", SqlDbType.Int)
+          {
+            Direction = ParameterDirection.ReturnValue
+          };
+          command.Parameters.Add(returnValue);
+
+          command.ExecuteNonQuery();
+
+          int result = (int)returnValue.Value;
+          if (result == -1)
+          {
+            return NotFound(new { message = "Worst Case not found." });
+          }
+          else
+          {
+            return Ok(new { message = "wc updated successfully." });
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+        return BadRequest(new { error = $"An error occurred: {ex.Message}" });
+      }
+    }
+
+    // DELETE
+    [HttpDelete("worstcase/{id}")]
+    public IActionResult DeleteWC(int id)
+    {
+      try
+      {
+        using (var connection = (SqlConnection)_context.Database.GetDbConnection())
+        {
+          connection.Open();
+          using (var command = new SqlCommand("sp_del_wc", connection))
+          {
+            command.CommandType = CommandType.StoredProcedure;
+            command.Parameters.Add(new SqlParameter("@id", SqlDbType.Int) { Value = id });
+
+            command.ExecuteNonQuery();
+          }
+          connection.Close();
+          return Ok(new { message = "Worst case successfully deleted." });
+        }
+      }
+      catch (Exception ex)
+      {
+        return BadRequest($"Error deleting Worst Case: {ex.Message}");
+      }
+    }
+
+    // CREATE
+    [HttpPost]
+    [Route("worstcase/add")]
+    public IActionResult AddWC([FromBody] WC wc)
+    {
+      try
+      {
+        using (var connection = (SqlConnection)_context.Database.GetDbConnection())
+        {
+          connection.Open();
+          var command = new SqlCommand("sp_ins_wc", connection)
+          {
+            CommandType = CommandType.StoredProcedure
+          };
+          command.Parameters.Add(new SqlParameter("@index_name", SqlDbType.VarChar) { Value = wc.index_name });
+          command.Parameters.Add(new SqlParameter("@period_case", SqlDbType.Date) { Value = wc.period_case });
+          command.Parameters.Add(new SqlParameter("@wc_price", SqlDbType.Decimal) { Value = wc.wc_price });
+
+          command.ExecuteNonQuery();
+
+          command = new SqlCommand("SELECT TOP 1 * FROM worst_case ORDER BY period_case DESC", connection);
+          var reader = command.ExecuteReader();
+          if (reader.Read())
+          {
+            var newWC = new WC
+            {
+              id = (int)reader["id"],
+              index_name = (string)reader["index_name"],
+              period_case = (DateTime)reader["period_case"],
+              wc_price = (Decimal)reader["wc_price"],
+            };
+            return Ok(newWC);
+          }
+          else
+          {
+            throw new Exception("Failed to retrieve new Worst Case data.");
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+        return BadRequest(new { error = $"An error occurred: {ex.Message}" });
+      }
+    }
+
+    [HttpGet]
+    [Route("index-types/names")]
+    public IActionResult GetIndexNames()
+    {
+      try
+      {
+        List<string> indexNames = new List<string>();
+        using (SqlConnection connection = (SqlConnection)_context.Database.GetDbConnection())
+        {
+          connection.Open();
+          var command = new SqlCommand("SELECT index_name FROM index_types", connection);
+
+          using (SqlDataReader reader = command.ExecuteReader())
+          {
+            while (reader.Read())
+            {
+              indexNames.Add(reader.GetString(reader.GetOrdinal("index_name")));
+            }
+          }
+        }
+
+        return Ok(indexNames);
+      }
+      catch (Exception ex)
+      {
+        return BadRequest(new { error = $"An error occurred: {ex.Message}" });
+      }
+    }
+
+
   }
+
+
+
 }

@@ -19,10 +19,19 @@ export interface TradeInterface {
     suma_total_daily:number;
     suma_total_monthly:number;
     plants:any[];
+    id_wc:number;
+    products: any[];
+    date:Date;
+    vol_daily:number;
+    vol_monthly:number;
+    price:number;
+    month:number;
+    days:number;
 
     //second step 
     no_plants:number;    
     list_trades_plants:ListPlants[];
+    market_price:number;
     
 }
 
@@ -72,4 +81,15 @@ export interface SaveTrade {
     vol_monthly:number;
     price:number;
     id_unit:number;
+
+    price_platts?: number;
+    price_bloomberg?: number;
+    market_price?: number;
 }
+export interface BloombergRecord {
+    IDENTIFIER: string;
+    PX_LAST: number;
+    LAST_TRADEABLE_DT: string;
+    DL_SNAPSHOT_START_TIME?: string;
+  }
+  

@@ -1,4 +1,4 @@
-<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+<ngx-spinner type="ball-scale-multiple" [fullScreen]="true" *ngIf="loading"></ngx-spinner>
 
 <div style="margin-bottom: 20px; margin-top: 5px;">
   <p class="title">Platts Market Data</p>
@@ -10,7 +10,8 @@
       <mat-card-title>Platts Prices</mat-card-title>
     </div>
     <div fxFlex="50" fxFlex.xs="100" fxLayoutAlign="end center" fxLayoutAlign.xs="center center" style="margin-bottom: 15px;">
-      <button pButton type="button" icon="pi pi-refresh" mat-raised-button (click)="getHistory()" label="Refresh Data" class="button-clear"></button>
+      <button pButton type="button" icon="pi pi-refresh" mat-raised-button (click)="refreshData()" label="Refresh Data" class="button-clear"></button>
+      <button pButton type="button" label="Export to CSV" (click)="exportToCSV()" class="button-clear"></button>
     </div>
   </mat-card-header>
 
@@ -29,8 +30,11 @@
         
         <mat-form-field appearance="outline" fxFlex="20">
           <mat-label>Bate</mat-label>
-          <input matInput [(ngModel)]="bate">
+          <mat-select [(ngModel)]="bate" (selectionChange)="filterByBate()">
+            <mat-option *ngFor="let letter of bateOptions" [value]="letter">{{ letter.toUpperCase() }}</mat-option>
+          </mat-select>
         </mat-form-field>
+        
         
         <mat-form-field appearance="outline" fxFlex="20">
           <mat-label>Symbols</mat-label>
@@ -41,7 +45,7 @@
             <div class="search-container">
               <input matInput #searchInput placeholder="Search symbols" [formControl]="symbolSearchCtrl">
             </div>
-            <mat-option *ngFor="let symbol of filteredSymbols | async" [value]="symbol.index_symbol">
+            <mat-option *ngFor="let symbol of filteredSymbols | async" [value]="symbol.index_symbol_P">
               {{ symbol.index_name }}
             </mat-option>
             <mat-divider></mat-divider>
@@ -51,12 +55,19 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-
-        <button class="button-nuevo mat-raised-button" mat-raised-button color="accent" (click)="filterData()" fxFlex="20" style="height: 56px;">Search</button>
       </div>
 
-      <p-table #dt1 [value]="filteredData" dataKey="symbol" responsiveLayout="scroll" [reorderableColumns]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 25, 50, 100]" [paginator]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" styleClass="p-datatable-sm alternating-rows" [globalFilterFields]="['symbol', 'bate', 'value', 'assessDate', 'index']">
 
+<button pButton type="button" mat-raised-button label="Save Edits"
+[disabled]="!isEdited"
+(click)="saveEdits()"
+[ngClass]="{'save-button': isEdited}" 
+style="margin-bottom: 15px;">
+</button>
+
+
+      <!-- Table with editable "Custom" and "NBP" columns -->
+      <p-table #dt1 [value]="filteredData" dataKey="Date" responsiveLayout="scroll" [reorderableColumns]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 25, 50, 100]" [paginator]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" styleClass="p-datatable-sm alternating-rows" [globalFilterFields]="['Date']">
         <ng-template pTemplate="caption">
           <div class="flex">
             <span class="p-input-icon-left ml-auto">
@@ -68,62 +79,35 @@
 
         <ng-template pTemplate="header">
           <tr>
-            <th>
-              <div class="flex justify-content-center align-items-center">
-                Number
-              </div>
-            </th>
-            <th>
-              <div class="flex justify-content-center align-items-center">
-                Index
-                <p-columnFilter type="text" field="index" display="menu"></p-columnFilter>
-              </div>
-            </th>
-            <th>
-              <div class="flex justify-content-center align-items-center">
-                Ticker
-                <p-columnFilter type="text" field="symbol" display="menu"></p-columnFilter>
-              </div>
-            </th>
-            <th>
-              <div class="flex justify-content-center align-items-center">
-                Bate
-                <p-columnFilter type="text" field="bate" display="menu"></p-columnFilter>
-              </div>
-            </th>
-            <th>
-              <div class="flex justify-content-center align-items-center">
-                Value
-                <p-columnFilter type="numeric" field="value" display="menu"></p-columnFilter>
-              </div>
-            </th>
-            <th>
-              <div class="flex justify-content-center align-items-center">
-                Assess Date
-                <p-columnFilter type="date" field="assessDate" display="menu"></p-columnFilter>
-              </div>
-            </th>
+            <th *ngFor="let col of columns">{{ col }}</th>
           </tr>
         </ng-template>
 
         <ng-template pTemplate="body" let-rowData>
           <tr>
-            <td>{{ rowData.num }}</td>
-            <td>{{ rowData.index }}</td>
-            <td>{{ rowData.symbol }}</td>
-            <td>{{ rowData.bate }}</td>
-            <td>${{ rowData.value }}</td>
-            <td>{{ rowData.assessDate | date: 'MMM dd, yyyy' }}</td>
+            <td *ngFor="let col of columns">
+              <!-- Regular, non-editable columns -->
+              <div *ngIf="col !== 'Custom' && col !== 'NBP' && !isNegColumn(col)">
+                {{ rowData[col] || '-' }}
+              </div>
+        
+              <!-- Editable Neg symbol columns -->
+<div *ngIf="isNegColumn(col)" class="editable-field">
+  <input matInput [(ngModel)]="rowData[col]" (ngModelChange)="onEditChange(rowData, col, $event)" placeholder="Custom value">
+</div>
+
+
+            </td>
           </tr>
         </ng-template>
+        
 
         <ng-template pTemplate="emptymessage">
           <tr>
-            <td colspan="6">No data found.</td>
+            <td [attr.colspan]="columns.length">No data found.</td>
           </tr>
         </ng-template>
       </p-table>
     </div>
   </mat-card-content>
 </mat-card>
-

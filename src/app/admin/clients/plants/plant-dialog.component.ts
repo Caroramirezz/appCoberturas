@@ -94,44 +94,48 @@ export class PlantDialogComponent implements OnInit {
   }
 
   onRowEditSave(plant: PlantsInterface): void {
-    // No need to check dates here as it will be done by the form validator
     if (!plant.name_plant || !plant.inicio_contrato || !plant.fin_contrato || !plant.cmd || !plant.unidad) {
       this.toastr.error('Please fill all required fields');
-      plant.editing = true; // Remain in editing mode
+      plant.editing = true;
       return;
     }
-
+  
+    if (!plant.id_client) {
+      this.toastr.error('No client associated with this plant');
+      return;
+    }
+  
+  
     if (plant.id_plant === 0) {
-      // Add new plant
       this.plantsService.addPlant(plant).subscribe({
         next: (response) => {
           this.toastr.success('Plant added successfully');
-          plant.id_plant = response.id; // Update the ID with the response from the server
+          plant.id_plant = response.id;
           plant.editing = false;
-          this.originalPlants[plant.id_plant] = { ...plant }; // Store original plant data
+          this.originalPlants[plant.id_plant] = { ...plant };
         },
         error: (error) => {
           this.toastr.error('Error adding plant');
           console.error('Error adding plant', error);
-          setTimeout(() => { plant.editing = true; }, 0); // Ensure editing mode remains active
+          setTimeout(() => { plant.editing = true; }, 0);
         }
       });
     } else {
-      // Update existing plant
       this.plantsService.updatePlant(plant).subscribe({
         next: () => {
           this.toastr.success('Plant updated successfully');
           plant.editing = false;
-          this.originalPlants[plant.id_plant] = { ...plant }; // Store original plant data
+          this.originalPlants[plant.id_plant] = { ...plant };
         },
         error: (error) => {
           this.toastr.error('Error updating plant');
           console.error('Error updating plant', error);
-          setTimeout(() => { plant.editing = true; }, 0); // Ensure editing mode remains active
+          setTimeout(() => { plant.editing = true; }, 0);
         }
       });
     }
   }
+  
 
   onRowEditCancel(plant: PlantsInterface): void {
     plant.editing = false;
@@ -144,16 +148,24 @@ export class PlantDialogComponent implements OnInit {
   }
 
   addPlant(): void {
+    if (!this.client) {
+      this.toastr.error('No client selected');
+      return;
+    }
+  
     const newPlant: PlantsInterface = {
       id_plant: 0,
       name_plant: '',
       inicio_contrato: new Date(),
       fin_contrato: new Date(),
       cmd: 0,
-      unidad: ''
+      unidad: '',
+      id_client: this.client.id_client
     };
+  
     this.plants = [newPlant, ...this.plants];
   }
+  
 
   deletePlant(plant: PlantsInterface): void {
     if (plant.id_plant === 0) {

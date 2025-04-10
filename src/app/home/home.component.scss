@@ -89,7 +89,6 @@ mat-sidenav {
 }
 
 .mat-icon {
-    color: #fff;            
     vertical-align: middle;   
     margin-right: 5px;
 }
@@ -117,4 +116,30 @@ mat-sidenav {
   }
   
   
+  .custom-scrollbar {
+    overflow-y: auto;
+    max-height: 100vh;
+  
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e0 transparent;
+  
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+  
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+  
+    &::-webkit-scrollbar-thumb {
+      background-color: #cbd5e0;
+      border-radius: 12px;
+      border: 2px solid transparent;
+      background-clip: content-box;
+    }
+  
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: #a0aec0;
+    }
+  }
   

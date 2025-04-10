@@ -1,0 +1,74 @@
+<ngx-spinner type="ball-scale-multiple" [fullScreen]="true" *ngIf="loading"></ngx-spinner>
+
+<div style="margin-bottom: 20px; margin-top: 5px;">
+  <p class="title">Worst Case's Catalog</p>
+</div>
+
+<mat-card>
+  <mat-card-header fxLayout="row" fxLayout.xs="column">
+    <div fxFlex="50" fxFlex.xs="100" fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.xs="center center">
+      <mat-card-title>Worst Case's Matrix</mat-card-title>
+    </div>
+    <div fxFlex="50" fxFlex.xs="100" fxLayoutAlign="end center" fxLayoutAlign.xs="center center" style="margin-bottom: 15px;">
+      <button pButton type="button" label="Add Worst Case" (click)="openAddDialog()" class="button-add"></button>
+      <button pButton type="button" label="Save Edits" [disabled]="!isEdited" (click)="saveEdits()"></button>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="search-container" style="margin-bottom: 10px;">
+      <span class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input pInputText type="text" (input)="applyFilter($event)" placeholder="Search by Date (e.g., 11/11/2024)" />
+      </span>
+    </div>
+
+    <p-table
+      #dt1
+      [value]="filteredData"
+      dataKey="Date"
+      responsiveLayout="scroll"
+      [rows]="10"
+      [showCurrentPageReport]="true"
+      [rowsPerPageOptions]="[10, 25, 50, 100]"
+      [paginator]="true"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      styleClass="p-datatable-sm alternating-rows"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th (click)="sortByDate()" style="cursor: pointer;">
+            Date <i class="pi" [ngClass]="{ 'pi-sort-up': sortAscending, 'pi-sort-down': !sortAscending }"></i>
+          </th>
+          <th *ngFor="let col of columns.slice(1)">{{ col }}</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-rowData>
+        <tr>
+          <td>{{ rowData.Date }}</td>
+          <td *ngFor="let col of columns.slice(1)">
+            <div *ngIf="!editedRows.has(rowData.Date + '-' + col)" (click)="toggleEdit(rowData, col)">
+              {{ rowData[col] || '-' }}
+            </div>
+            <div *ngIf="editedRows.has(rowData.Date + '-' + col)">
+              <input
+                matInput
+                [(ngModel)]="rowData[col]"
+                (ngModelChange)="onEditChange(rowData, col, $event)"
+                (blur)="toggleEdit(rowData, col)"
+                placeholder="-"
+              />
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td [attr.colspan]="columns.length">No data found.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </mat-card-content>
+</mat-card>
