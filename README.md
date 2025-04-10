@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="src/assets/images/NEG logo-01.png" alt="Logo NEG" width="600"/>
+  <img src="src/assets/images/NEG logo-01.png" alt="Logo NEG" width="500"/>
 </p>
 
 # App Coberturas
